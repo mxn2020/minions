@@ -1,0 +1,176 @@
+#!/usr/bin/env node
+
+/**
+ * @module @minions/cli
+ * CLI tool for the Minions structured object system.
+ */
+
+import { SPEC_VERSION, TypeRegistry, validateFields } from '@minions/core';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as readline from 'node:readline';
+
+const args = process.argv.slice(2);
+const command = args[0];
+const subcommand = args[1];
+
+function printHelp(): void {
+  console.log(`
+minions - CLI for the Minions structured object system
+
+USAGE:
+  minions <command> [options]
+
+COMMANDS:
+  init              Scaffold a new minions project
+  type create       Interactively create a new minion type
+  type list         List all registered types
+  validate <file>   Validate a minion JSON file against its type schema
+  spec              Print the current spec version
+  help              Show this help message
+
+VERSION: ${SPEC_VERSION}
+`);
+}
+
+function printSpec(): void {
+  console.log(`Minions Specification Version: ${SPEC_VERSION}`);
+}
+
+function listTypes(): void {
+  const registry = new TypeRegistry();
+  const types = registry.list();
+  console.log(`\nRegistered Minion Types (${types.length}):\n`);
+  console.log('  Slug                 Name                 System   Description');
+  console.log('  ' + '─'.repeat(80));
+  for (const t of types) {
+    const slug = t.slug.padEnd(20);
+    const name = t.name.padEnd(20);
+    const sys = (t.isSystem ? 'yes' : 'no').padEnd(8);
+    console.log(`  ${slug} ${name} ${sys} ${t.description ?? ''}`);
+  }
+  console.log('');
+}
+
+function validateFile(filePath: string): void {
+  if (!filePath) {
+    console.error('Error: Please provide a file path to validate.');
+    process.exit(1);
+  }
+
+  const resolved = path.resolve(filePath);
+  if (!fs.existsSync(resolved)) {
+    console.error(`Error: File not found: ${resolved}`);
+    process.exit(1);
+  }
+
+  try {
+    const content = fs.readFileSync(resolved, 'utf-8');
+    const minion = JSON.parse(content);
+
+    if (!minion.minionTypeId) {
+      console.error('Error: JSON must have a "minionTypeId" field.');
+      process.exit(1);
+    }
+
+    const registry = new TypeRegistry();
+    const type = registry.getById(minion.minionTypeId) ?? registry.getBySlug(minion.minionTypeId);
+
+    if (!type) {
+      console.error(`Error: Unknown minion type: ${minion.minionTypeId}`);
+      console.error('Available types: ' + registry.list().map(t => t.slug).join(', '));
+      process.exit(1);
+    }
+
+    const result = validateFields(minion.fields ?? {}, type.schema);
+
+    if (result.valid) {
+      console.log(`✅ Valid ${type.name} minion: ${resolved}`);
+    } else {
+      console.log(`❌ Invalid ${type.name} minion: ${resolved}`);
+      for (const err of result.errors) {
+        console.log(`   - ${err.field}: ${err.message}`);
+      }
+      process.exit(1);
+    }
+  } catch (e: any) {
+    console.error(`Error parsing JSON: ${e.message}`);
+    process.exit(1);
+  }
+}
+
+function initProject(): void {
+  const configPath = path.resolve('minions.config.json');
+  if (fs.existsSync(configPath)) {
+    console.log('minions.config.json already exists.');
+    return;
+  }
+
+  const config = {
+    specVersion: SPEC_VERSION,
+    types: [],
+    minionsDir: './minions',
+  };
+
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n');
+  fs.mkdirSync(path.resolve('minions'), { recursive: true });
+  console.log('✅ Initialized minions project.');
+  console.log('   Created: minions.config.json');
+  console.log('   Created: minions/');
+}
+
+async function createType(): Promise<void> {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const ask = (q: string): Promise<string> => new Promise((resolve) => rl.question(q, resolve));
+
+  console.log('\nCreate a new Minion Type\n');
+
+  const name = await ask('Name: ');
+  const slug = await ask(`Slug (${name.toLowerCase().replace(/\s+/g, '-')}): `) || name.toLowerCase().replace(/\s+/g, '-');
+  const description = await ask('Description: ');
+  const icon = await ask('Icon (emoji): ');
+
+  const type = {
+    id: `custom-${slug}`,
+    name,
+    slug,
+    description,
+    icon: icon || undefined,
+    isSystem: false,
+    schema: [],
+  };
+
+  const filename = `${slug}.type.json`;
+  fs.writeFileSync(filename, JSON.stringify(type, null, 2) + '\n');
+  console.log(`\n✅ Created type definition: ${filename}`);
+  rl.close();
+}
+
+// ─── Route Commands ──────────────────────────────────────────────────────────
+
+switch (command) {
+  case 'spec':
+    printSpec();
+    break;
+  case 'type':
+    if (subcommand === 'list') listTypes();
+    else if (subcommand === 'create') createType();
+    else printHelp();
+    break;
+  case 'validate':
+    validateFile(args[1]);
+    break;
+  case 'init':
+    initProject();
+    break;
+  case 'help':
+  case '--help':
+  case '-h':
+  case undefined:
+    printHelp();
+    break;
+  default:
+    console.error(`Unknown command: ${command}`);
+    printHelp();
+    process.exit(1);
+}

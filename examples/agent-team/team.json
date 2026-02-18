@@ -1,0 +1,62 @@
+{
+  "team": {
+    "id": "team-content-001",
+    "title": "Content Creation Team",
+    "minionTypeId": "builtin-team",
+    "status": "active",
+    "fields": {
+      "members": ["agent-writer-001", "agent-editor-001", "agent-seo-001"],
+      "strategy": "sequential",
+      "maxConcurrency": 1
+    },
+    "tags": ["content", "team"],
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  "agents": [
+    {
+      "id": "agent-writer-001",
+      "title": "Writer",
+      "minionTypeId": "builtin-agent",
+      "fields": {
+        "role": "writer",
+        "model": "gpt-4",
+        "systemPrompt": "You write first drafts of blog posts."
+      },
+      "createdAt": "2024-01-15T10:01:00Z",
+      "updatedAt": "2024-01-15T10:01:00Z"
+    },
+    {
+      "id": "agent-editor-001",
+      "title": "Editor",
+      "minionTypeId": "builtin-agent",
+      "fields": {
+        "role": "editor",
+        "model": "gpt-4",
+        "systemPrompt": "You review and improve blog post drafts for clarity, grammar, and style."
+      },
+      "createdAt": "2024-01-15T10:02:00Z",
+      "updatedAt": "2024-01-15T10:02:00Z"
+    },
+    {
+      "id": "agent-seo-001",
+      "title": "SEO Optimizer",
+      "minionTypeId": "builtin-agent",
+      "fields": {
+        "role": "seo-specialist",
+        "model": "gpt-4",
+        "systemPrompt": "You optimize blog posts for search engines.",
+        "tools": ["keyword-research", "meta-tag-generator"]
+      },
+      "createdAt": "2024-01-15T10:03:00Z",
+      "updatedAt": "2024-01-15T10:03:00Z"
+    }
+  ],
+  "relations": [
+    { "id": "rel-t1", "sourceId": "team-content-001", "targetId": "agent-writer-001", "type": "parent_of", "createdAt": "2024-01-15T10:01:00Z" },
+    { "id": "rel-t2", "sourceId": "team-content-001", "targetId": "agent-editor-001", "type": "parent_of", "createdAt": "2024-01-15T10:02:00Z" },
+    { "id": "rel-t3", "sourceId": "team-content-001", "targetId": "agent-seo-001", "type": "parent_of", "createdAt": "2024-01-15T10:03:00Z" },
+    { "id": "rel-seq1", "sourceId": "agent-editor-001", "targetId": "agent-writer-001", "type": "follows", "createdAt": "2024-01-15T10:04:00Z" },
+    { "id": "rel-seq2", "sourceId": "agent-seo-001", "targetId": "agent-editor-001", "type": "follows", "createdAt": "2024-01-15T10:05:00Z" }
+  ]
+}
