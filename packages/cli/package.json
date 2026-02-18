@@ -1,0 +1,23 @@
+{
+  "name": "@minions/cli",
+  "version": "0.1.0",
+  "description": "CLI tool for the Minions structured object system",
+  "license": "AGPL-3.0",
+  "type": "module",
+  "bin": {
+    "minions": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@minions/core": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
