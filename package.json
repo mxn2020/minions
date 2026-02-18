@@ -9,9 +9,9 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w packages/core && npm run build -w packages/cli && npm run build -w apps/docs",
     "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run build -w packages/core && npm run lint -w packages/core && npm run lint -w packages/cli"
   },
   "engines": {
     "node": ">=18"
