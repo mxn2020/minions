@@ -1,0 +1,67 @@
+{
+  "agent": {
+    "id": "agent-writer-001",
+    "title": "Blog Writer",
+    "minionTypeId": "builtin-agent",
+    "status": "active",
+    "fields": {
+      "role": "writer",
+      "model": "gpt-4",
+      "systemPrompt": "You are a professional blog writer.",
+      "temperature": 0.7,
+      "tools": ["web-search", "grammar-check"]
+    },
+    "tags": ["content", "writing"],
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  "children": [
+    {
+      "id": "thought-style-001",
+      "title": "Writing Style Guide",
+      "minionTypeId": "builtin-thought",
+      "fields": {
+        "content": "Use active voice, short paragraphs, and concrete examples. Target 8th-grade reading level. Always include a hook in the introduction.",
+        "confidence": 0.9,
+        "source": "editorial-guidelines"
+      },
+      "createdAt": "2024-01-15T10:01:00Z",
+      "updatedAt": "2024-01-15T10:01:00Z"
+    },
+    {
+      "id": "prompt-blog-001",
+      "title": "Blog Post Template",
+      "minionTypeId": "builtin-prompt-template",
+      "fields": {
+        "template": "Write a blog post about {{topic}}. Target audience: {{audience}}. Length: {{wordCount}} words. Include: introduction with hook, 3-5 main sections, conclusion with CTA.",
+        "variables": ["topic", "audience", "wordCount"],
+        "outputFormat": "markdown"
+      },
+      "createdAt": "2024-01-15T10:02:00Z",
+      "updatedAt": "2024-01-15T10:02:00Z"
+    },
+    {
+      "id": "test-quality-001",
+      "title": "Content Quality Check",
+      "minionTypeId": "builtin-test-case",
+      "fields": {
+        "input": { "topic": "AI agents", "audience": "developers", "wordCount": 800 },
+        "expectedOutput": null,
+        "assertions": {
+          "minWordCount": 600,
+          "maxWordCount": 1000,
+          "containsHeadings": true,
+          "readabilityScore": "8th-grade"
+        },
+        "timeout": 30000
+      },
+      "createdAt": "2024-01-15T10:03:00Z",
+      "updatedAt": "2024-01-15T10:03:00Z"
+    }
+  ],
+  "relations": [
+    { "id": "rel-001", "sourceId": "agent-writer-001", "targetId": "thought-style-001", "type": "parent_of", "createdAt": "2024-01-15T10:01:00Z" },
+    { "id": "rel-002", "sourceId": "agent-writer-001", "targetId": "prompt-blog-001", "type": "parent_of", "createdAt": "2024-01-15T10:02:00Z" },
+    { "id": "rel-003", "sourceId": "agent-writer-001", "targetId": "test-quality-001", "type": "parent_of", "createdAt": "2024-01-15T10:03:00Z" }
+  ]
+}

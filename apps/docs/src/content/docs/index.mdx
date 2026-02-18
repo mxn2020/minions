@@ -1,0 +1,49 @@
+---
+title: Minions
+description: A universal structured object system for AI agents — queryable, nestable, evolvable, and AI-readable.
+template: splash
+hero:
+  tagline: Your AI agents need somewhere to live. Minions gives them a structured home that's queryable, nestable, evolvable, and AI-readable.
+  actions:
+    - text: Get Started
+      link: /guides/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/mxn2020/minions
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why Minions?
+
+<CardGrid stagger>
+  <Card title="Three Simple Primitives" icon="pencil">
+    Everything is built from **Minions** (instances), **MinionTypes** (schemas), and **Relations** (typed links).
+  </Card>
+  <Card title="Progressive Complexity" icon="add-document">
+    Start with a single flat agent. Grow into nested structures with memory, skills, and teams — no migration needed.
+  </Card>
+  <Card title="Schema-Driven Validation" icon="approve-check">
+    Every field is validated against its type schema. No more guessing what shape your agent data is in.
+  </Card>
+  <Card title="Framework Agnostic" icon="setting">
+    Works with any storage backend, any runtime, any AI framework. Pure TypeScript, zero opinions about infrastructure.
+  </Card>
+</CardGrid>
+
+## Quick Example
+
+```json
+{
+  "title": "Research Assistant",
+  "minionTypeId": "builtin-agent",
+  "fields": {
+    "role": "researcher",
+    "model": "gpt-4",
+    "systemPrompt": "You are a research assistant.",
+    "tools": ["web-search", "summarize"]
+  }
+}
+```
