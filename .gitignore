@@ -4,6 +4,7 @@ dist/
 .astro/
 *.tsbuildinfo
 .env
+.env*
 .env.local
 coverage/
 .DS_Store

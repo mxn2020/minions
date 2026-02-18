@@ -37,8 +37,42 @@ function printSpec(): void {
   console.log(`Minions Specification Version: ${SPEC_VERSION}`);
 }
 
+function loadCustomTypes(registry: TypeRegistry): void {
+  // 1. Check if we are in a minions project (optional context)
+  const configPath = path.resolve('minions.config.json');
+  const hasConfig = fs.existsSync(configPath);
+  
+  // 2. Scan current directory for *.type.json files
+  const cwd = process.cwd();
+  const files = fs.readdirSync(cwd).filter(f => f.endsWith('.type.json'));
+
+  if (files.length > 0) {
+    console.log(`Found ${files.length} custom type definition(s).`);
+  }
+
+  for (const file of files) {
+    try {
+      const filePath = path.join(cwd, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const typeDef = JSON.parse(content);
+
+      // Basic validation that it looks like a MinionType
+      if (!typeDef.id || !typeDef.slug || !typeDef.name) {
+        console.warn(`⚠️ Skipping ${file}: Missing id, slug, or name.`);
+        continue;
+      }
+
+      registry.register(typeDef);
+      console.log(`   Loaded custom type: ${typeDef.slug} (${typeDef.name})`);
+    } catch (e: any) {
+      console.warn(`⚠️ Failed to load ${file}: ${e.message}`);
+    }
+  }
+}
+
 function listTypes(): void {
   const registry = new TypeRegistry();
+  loadCustomTypes(registry);
   const types = registry.list();
   console.log(`\nRegistered Minion Types (${types.length}):\n`);
   console.log('  Slug                 Name                 System   Description');
@@ -74,6 +108,7 @@ function validateFile(filePath: string): void {
     }
 
     const registry = new TypeRegistry();
+    loadCustomTypes(registry);
     const type = registry.getById(minion.minionTypeId) ?? registry.getBySlug(minion.minionTypeId);
 
     if (!type) {

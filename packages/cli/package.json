@@ -15,7 +15,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@minions/core": "0.1.0"
+    "@minions/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.3.3"
