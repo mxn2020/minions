@@ -1,0 +1,17 @@
+{
+  "id": "agent-research-001",
+  "title": "Research Assistant",
+  "minionTypeId": "builtin-agent",
+  "status": "active",
+  "fields": {
+    "role": "researcher",
+    "model": "gpt-4",
+    "systemPrompt": "You are a research assistant. You find, analyze, and summarize academic papers and articles on topics the user requests. Always cite your sources.",
+    "temperature": 0.3,
+    "maxTokens": 4096,
+    "tools": ["web-search", "summarize", "cite"]
+  },
+  "tags": ["research", "ai-assistant"],
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
