@@ -28,6 +28,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-modules scripts/gen-version.js",
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",

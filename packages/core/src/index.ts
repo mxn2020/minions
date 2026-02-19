@@ -75,8 +75,7 @@ export { migrateMinion } from './evolution/index.js';
 export { generateId, now } from './utils.js';
 
 /**
- * Current specification version.
- * This MUST match the `version` field in package.json.
- * Drift is caught by the spec version test in src/__tests__/index.test.ts.
+ * Current specification version — auto-generated from package.json
+ * by `scripts/gen-version.js` during prebuild. Do not edit manually.
  */
-export const SPEC_VERSION: string = '0.1.0';
+export { SPEC_VERSION } from './version.js';
