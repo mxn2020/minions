@@ -8,7 +8,7 @@
 
 > **softDelete**(`minion`, `deletedBy?`): [`Minion`](../interfaces/Minion.md)
 
-Defined in: [lifecycle/index.ts:139](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/lifecycle/index.ts#L139)
+Defined in: [lifecycle/index.ts:143](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L143)
 
 Soft-delete a minion by setting deletedAt/deletedBy.
 

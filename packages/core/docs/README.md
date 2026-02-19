@@ -14,7 +14,6 @@ const agentType = registry.getBySlug('agent')!;
 
 const { minion, validation } = createMinion({
   title: 'Research Assistant',
-  minionTypeId: agentType.id,
   fields: {
     role: 'researcher',
     model: 'gpt-4',
@@ -74,6 +73,7 @@ const { minion, validation } = createMinion({
 - [softDelete](functions/softDelete.md)
 - [hardDelete](functions/hardDelete.md)
 - [restoreMinion](functions/restoreMinion.md)
+- [applyDefaults](functions/applyDefaults.md)
 - [generateId](functions/generateId.md)
 - [now](functions/now.md)
 - [validateField](functions/validateField.md)

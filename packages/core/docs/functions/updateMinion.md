@@ -8,7 +8,7 @@
 
 > **updateMinion**(`minion`, `input`, `type`): `object`
 
-Defined in: [lifecycle/index.ts:105](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/lifecycle/index.ts#L105)
+Defined in: [lifecycle/index.ts:109](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L109)
 
 Update an existing Minion with new values.
 Validates updated fields against the provided MinionType schema.

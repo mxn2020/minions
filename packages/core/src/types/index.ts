@@ -179,7 +179,7 @@ export interface Relation {
 
 // ─── Input Types (for creation) ──────────────────────────────────────────────
 
-/** Input for creating a new Minion (id, timestamps, and minionTypeId are generated). */
+/** Input for creating a new Minion. `id`, `minionTypeId`, and timestamps are generated automatically. */
 export interface CreateMinionInput {
   title: string;
   fields?: Record<string, unknown>;

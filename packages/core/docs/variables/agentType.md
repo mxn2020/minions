@@ -8,6 +8,6 @@
 
 > `const` **agentType**: [`MinionType`](../interfaces/MinionType.md)
 
-Defined in: [schemas/index.ts:71](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/schemas/index.ts#L71)
+Defined in: [schemas/index.ts:71](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/schemas/index.ts#L71)
 
 Definition Layer: Agent — an AI agent definition.
