@@ -44,7 +44,6 @@ const noteType = registry.getBySlug('note')!;
 
 const { minion, validation } = createMinion({
   title: 'Quick Thought',
-  minionTypeId: noteType.id,
   fields: { content: 'This is a note.' },
 }, noteType);
 ```

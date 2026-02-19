@@ -66,7 +66,6 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         // Generate starter template
         const template = {
             title: `New ${type.name}`,
-            minionTypeId: type.id,
             fields: {} as Record<string, any>
         };
 

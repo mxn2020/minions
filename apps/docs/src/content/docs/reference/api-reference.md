@@ -260,6 +260,7 @@ function createMinion(
 
 Creates a new `Minion` instance:
 - Generates `id` (UUID v4) and `createdAt`/`updatedAt` timestamps
+- Derives `minionTypeId` from `type.id`
 - Applies default values from the schema
 - Validates fields against the type schema
 - Computes `searchableText`
@@ -371,7 +372,7 @@ Current specification version (derived from `package.json`).
 
 | Type | Description |
 |------|-------------|
-| `CreateMinionInput` | Input for `createMinion` (id/timestamps auto-generated) |
+| `CreateMinionInput` | Input for `createMinion` (id, timestamps, minionTypeId auto-generated) |
 | `UpdateMinionInput` | Input for `updateMinion` (all fields optional) |
 | `CreateRelationInput` | Input for `RelationGraph.add` |
 

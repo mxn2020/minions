@@ -18,7 +18,6 @@ import { createMinion } from '@minions/core';
 
 const { minion, validation } = createMinion({
   title: 'My Note',
-  minionTypeId: noteType.id,
   fields: { content: 'Hello world' },
 }, noteType);
 

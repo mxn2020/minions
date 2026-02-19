@@ -11,7 +11,6 @@
  *
  * const { minion, validation } = createMinion({
  *   title: 'Research Assistant',
- *   minionTypeId: agentType.id,
  *   fields: {
  *     role: 'researcher',
  *     model: 'gpt-4',
