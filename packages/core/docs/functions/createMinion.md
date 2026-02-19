@@ -8,7 +8,7 @@
 
 > **createMinion**(`input`, `type`): `object`
 
-Defined in: [lifecycle/index.ts:67](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/lifecycle/index.ts#L67)
+Defined in: [lifecycle/index.ts:71](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L71)
 
 Create a new Minion instance from input, generating id and timestamps.
 Validates fields against the provided MinionType schema.

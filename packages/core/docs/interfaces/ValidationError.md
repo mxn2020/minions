@@ -6,7 +6,7 @@
 
 # Interface: ValidationError
 
-Defined in: [types/index.ts:240](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L240)
+Defined in: [types/index.ts:239](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L239)
 
 A single validation error.
 
@@ -16,7 +16,7 @@ A single validation error.
 
 > **field**: `string`
 
-Defined in: [types/index.ts:241](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L241)
+Defined in: [types/index.ts:240](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L240)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/index.ts:241](https://github.com/mxn2020/minions/blob/4da812d
 
 > **message**: `string`
 
-Defined in: [types/index.ts:242](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L242)
+Defined in: [types/index.ts:241](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L241)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [types/index.ts:242](https://github.com/mxn2020/minions/blob/4da812d
 
 > `optional` **value**: `unknown`
 
-Defined in: [types/index.ts:243](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L243)
+Defined in: [types/index.ts:242](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L242)

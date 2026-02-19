@@ -8,7 +8,7 @@
 
 > **validateFields**(`fields`, `schema`): [`ValidationResult`](../interfaces/ValidationResult.md)
 
-Defined in: [validation/index.ts:171](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/validation/index.ts#L171)
+Defined in: [validation/index.ts:180](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/validation/index.ts#L180)
 
 Validate all fields of a minion against a MinionType schema.
 

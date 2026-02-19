@@ -6,7 +6,7 @@
 
 # Interface: CreateRelationInput
 
-Defined in: [types/index.ts:212](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L212)
+Defined in: [types/index.ts:211](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L211)
 
 Input for creating a new Relation.
 
@@ -16,7 +16,7 @@ Input for creating a new Relation.
 
 > **sourceId**: `string`
 
-Defined in: [types/index.ts:213](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L213)
+Defined in: [types/index.ts:212](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L212)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/index.ts:213](https://github.com/mxn2020/minions/blob/4da812d
 
 > **targetId**: `string`
 
-Defined in: [types/index.ts:214](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L214)
+Defined in: [types/index.ts:213](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L213)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [types/index.ts:214](https://github.com/mxn2020/minions/blob/4da812d
 
 > **type**: [`RelationType`](../type-aliases/RelationType.md)
 
-Defined in: [types/index.ts:215](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L215)
+Defined in: [types/index.ts:214](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L214)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types/index.ts:215](https://github.com/mxn2020/minions/blob/4da812d
 
 > `optional` **metadata**: `unknown`
 
-Defined in: [types/index.ts:216](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L216)
+Defined in: [types/index.ts:215](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L215)
 
 ***
 
@@ -48,4 +48,4 @@ Defined in: [types/index.ts:216](https://github.com/mxn2020/minions/blob/4da812d
 
 > `optional` **createdBy**: `string`
 
-Defined in: [types/index.ts:217](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L217)
+Defined in: [types/index.ts:216](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L216)

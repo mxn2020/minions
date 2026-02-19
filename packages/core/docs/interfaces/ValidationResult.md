@@ -6,7 +6,7 @@
 
 # Interface: ValidationResult
 
-Defined in: [types/index.ts:247](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L247)
+Defined in: [types/index.ts:246](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L246)
 
 Result of validating a minion against its type schema.
 
@@ -16,7 +16,7 @@ Result of validating a minion against its type schema.
 
 > **valid**: `boolean`
 
-Defined in: [types/index.ts:248](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L248)
+Defined in: [types/index.ts:247](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L247)
 
 ***
 
@@ -24,4 +24,4 @@ Defined in: [types/index.ts:248](https://github.com/mxn2020/minions/blob/4da812d
 
 > **errors**: [`ValidationError`](ValidationError.md)[]
 
-Defined in: [types/index.ts:249](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L249)
+Defined in: [types/index.ts:248](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L248)

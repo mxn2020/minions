@@ -8,7 +8,7 @@
 
 > **migrateMinion**(`minion`, `oldSchema`, `newSchema`): [`Minion`](../interfaces/Minion.md)
 
-Defined in: [evolution/index.ts:23](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/evolution/index.ts#L23)
+Defined in: [evolution/index.ts:23](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/evolution/index.ts#L23)
 
 Migrate a minion from an old schema to a new schema.
 

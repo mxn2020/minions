@@ -6,7 +6,7 @@
 
 # Interface: Executable
 
-Defined in: [types/index.ts:233](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L233)
+Defined in: [types/index.ts:232](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L232)
 
 Interface that executable minions must satisfy.
 
@@ -16,7 +16,7 @@ Interface that executable minions must satisfy.
 
 > **execute**(`input`): `Promise`\<[`ExecutionResult`](ExecutionResult.md)\>
 
-Defined in: [types/index.ts:234](https://github.com/mxn2020/minions/blob/4da812d85216654326d9a2df90976be93221a56a/packages/core/src/types/index.ts#L234)
+Defined in: [types/index.ts:233](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L233)
 
 #### Parameters
 
