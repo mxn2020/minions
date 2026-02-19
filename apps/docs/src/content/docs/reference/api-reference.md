@@ -1,9 +1,9 @@
 ---
 title: API Reference
-description: Complete API reference for the minions-core library.
+description: Complete API reference for the minions-sdk library.
 ---
 
-All public exports from `minions-core`. The library is framework-agnostic, storage-agnostic, and has zero runtime dependencies.
+All public exports from `minions-sdk`. The library is framework-agnostic, storage-agnostic, and has zero runtime dependencies.
 
 ```typescript
 import {
@@ -37,7 +37,7 @@ import {
 
   // Utilities
   generateId, now, SPEC_VERSION,
-} from 'minions-core';
+} from 'minions-sdk';
 ```
 
 ---

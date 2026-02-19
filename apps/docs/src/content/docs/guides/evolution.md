@@ -18,7 +18,7 @@ Schemas change over time. Minions handles this gracefully by preserving old data
 ## Using migrateMinion
 
 ```typescript
-import { migrateMinion } from 'minions-core';
+import { migrateMinion } from 'minions-sdk';
 
 const oldSchema = [
   { name: 'name', type: 'string' },

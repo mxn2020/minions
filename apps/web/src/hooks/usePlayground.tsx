@@ -6,7 +6,7 @@ import {
     createMinion as createMinionCore,
     generateId,
     RelationType
-} from 'minions-core';
+} from 'minions-sdk';
 import { reducer, initialState, PlaygroundState } from '../lib/playground-state';
 
 // Initialize registry once

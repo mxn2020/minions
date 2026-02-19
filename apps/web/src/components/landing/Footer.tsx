@@ -18,7 +18,7 @@ export default function Footer() {
                             <li><a href="https://github.com/mxn2020/minions#readme" className="hover:text-primary transition-colors">Documentation</a></li>
                             <li><a href="https://github.com/mxn2020/minions/blob/main/spec/v0.1.md" className="hover:text-primary transition-colors">Specification</a></li>
                             <li><a href="https://github.com/mxn2020/minions" className="hover:text-primary transition-colors">GitHub</a></li>
-                            <li><a href="https://www.npmjs.com/package/minions-core" className="hover:text-primary transition-colors">NPM</a></li>
+                            <li><a href="https://www.npmjs.com/package/minions-sdk" className="hover:text-primary transition-colors">NPM</a></li>
                         </ul>
                     </div>
                     <div>

@@ -12,7 +12,7 @@ export default defineConfig({
     },
     base: '/',
     optimizeDeps: {
-        include: ['minions-core'],
+        include: ['minions-sdk'],
     },
     build: {
         commonjsOptions: {

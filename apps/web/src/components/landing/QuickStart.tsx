@@ -30,11 +30,11 @@ export default function QuickStart() {
             label: 'Library',
             content: (
                 <div className="pt-6">
-                    <CommandRow cmd="npm install minions-core" desc="Install the core library" />
+                    <CommandRow cmd="npm install minions-sdk" desc="Install the core library" />
                     <div className="mt-6">
                         <CodeBlock
                             language="typescript"
-                            code={`import { TypeRegistry, createMinion, validateFields } from 'minions-core';
+                            code={`import { TypeRegistry, createMinion, validateFields } from 'minions-sdk';
 
 // 1. Get the built-in agent type
 const registry = new TypeRegistry();
