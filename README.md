@@ -87,11 +87,11 @@ Same system. No migration. Just add minions and relations.
 ## Quick Start
 
 ```bash
-pnpm add minions-core
+pnpm add minions-sdk
 ```
 
 ```typescript
-import { TypeRegistry, createMinion, RelationGraph } from 'minions-core';
+import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
 
 // 1. Get the built-in agent type
 const registry = new TypeRegistry();

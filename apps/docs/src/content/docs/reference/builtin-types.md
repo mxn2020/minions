@@ -32,7 +32,7 @@ Each layer is a conceptual grouping. These types are standard but optional:
 ## All Built-in Types in Code
 
 ```typescript
-import { builtinTypes } from 'minions-core';
+import { builtinTypes } from 'minions-sdk';
 
 // Array of all 10 built-in MinionType objects
 console.log(builtinTypes.map(t => t.slug));

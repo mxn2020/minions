@@ -23,7 +23,7 @@ You will receive a response within **72 hours**. If the issue is confirmed, we a
 
 This security policy covers:
 
-- `minions-core` (npm package)
+- `minions-sdk` (npm package)
 - `minions-cli` (npm package)
 - The Minions web app at `minions.dev`
 - The Minions docs site at `minions.dev`

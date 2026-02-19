@@ -35,7 +35,7 @@ All relations where the deleted minion is source **or** target are removed. Targ
 ## Usage
 
 ```typescript
-import { RelationGraph } from 'minions-core';
+import { RelationGraph } from 'minions-sdk';
 
 const graph = new RelationGraph();
 

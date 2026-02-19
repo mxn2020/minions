@@ -37,7 +37,7 @@ The **Note** type is the simplest built-in minion type — a freeform text note.
 ## Usage
 
 ```typescript
-import { TypeRegistry, createMinion } from 'minions-core';
+import { TypeRegistry, createMinion } from 'minions-sdk';
 
 const registry = new TypeRegistry();
 const noteType = registry.getBySlug('note')!;

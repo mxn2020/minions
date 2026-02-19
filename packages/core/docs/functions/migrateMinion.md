@@ -1,8 +1,8 @@
-[**minions-core v0.1.0**](../README.md)
+[**minions-sdk v0.1.0**](../README.md)
 
 ***
 
-[minions-core](../README.md) / migrateMinion
+[minions-sdk](../README.md) / migrateMinion
 
 # Function: migrateMinion()
 

@@ -9,9 +9,9 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "pnpm --filter minions-core run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-web run build",
-    "test": "pnpm --filter minions-core run test",
-    "lint": "pnpm --filter minions-core run build && pnpm --filter minions-core run lint && pnpm --filter minions-cli run lint"
+    "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-web run build",
+    "test": "pnpm --filter minions-sdk run test",
+    "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint"
   },
   "engines": {
     "node": ">=18"

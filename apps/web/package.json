@@ -14,7 +14,7 @@
     "dependencies": {
         "@codemirror/lang-javascript": "^6.2.4",
         "@codemirror/lang-json": "^6.0.1",
-        "minions-core": "workspace:*",
+        "minions-sdk": "workspace:*",
         "@uiw/react-codemirror": "^4.23.0",
         "framer-motion": "^11.0.0",
         "lucide-react": "^0.400.0",

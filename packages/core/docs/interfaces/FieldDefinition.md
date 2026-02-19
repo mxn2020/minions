@@ -1,8 +1,8 @@
-[**minions-core v0.1.0**](../README.md)
+[**minions-sdk v0.1.0**](../README.md)
 
 ***
 
-[minions-core](../README.md) / FieldDefinition
+[minions-sdk](../README.md) / FieldDefinition
 
 # Interface: FieldDefinition
 
