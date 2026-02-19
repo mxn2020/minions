@@ -28,9 +28,12 @@ export default function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center bg-background">
+                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center bg-background gap-2">
                     <p className="text-xs text-muted">
                         © {new Date().getFullYear()} Minions Contributors. All rights reserved.
+                    </p>
+                    <p className="text-xs text-muted">
+                        Created by <a href="https://the-mehdi.com" target="_blank" rel="noreferrer" className="text-primary hover:underline">Mehdi Nabhani</a>
                     </p>
                 </div>
             </div>

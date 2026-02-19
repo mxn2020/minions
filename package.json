@@ -15,5 +15,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)"
 }
