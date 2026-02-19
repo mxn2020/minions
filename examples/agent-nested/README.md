@@ -2,6 +2,8 @@
 
 An agent with nested children: memory (thought), interface (prompt template), and evaluation (test case), all linked via `parent_of` relations.
 
+> **Note:** `agent.json` is a grouped document containing multiple minions and their relations. It is **not** a standalone minion file — running `minions validate agent.json` will fail because the CLI expects a single flat minion object with a top-level `minionTypeId`. See [`agent-simple/`](../agent-simple/) for a validatable single-minion example.
+
 ## Structure
 
 ```

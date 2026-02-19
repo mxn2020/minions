@@ -2,6 +2,8 @@
 
 A team of agents working together in a content creation pipeline using the Organization Layer.
 
+> **Note:** `team.json` is a grouped document containing the team, its member agents, and their relations. It is **not** a standalone minion file — running `minions validate team.json` will fail because the CLI expects a single flat minion object with a top-level `minionTypeId`. See [`agent-simple/`](../agent-simple/) for a validatable single-minion example.
+
 ## Structure
 
 ```
