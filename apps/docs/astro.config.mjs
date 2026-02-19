@@ -15,6 +15,7 @@ export default defineConfig({
           items: [
             { label: 'Introduction', link: '/' },
             { label: 'Quick Start', link: '/guides/quickstart/' },
+            { label: 'Contributing', link: '/guides/contributing/' },
           ],
         },
         {
@@ -35,10 +36,27 @@ export default defineConfig({
         {
           label: 'Reference',
           items: [
+            { label: 'API Reference', link: '/reference/api-reference/' },
             { label: 'Field Types', link: '/reference/field-types/' },
             { label: 'Relation Types', link: '/reference/relation-types/' },
             { label: 'Built-in Types', link: '/reference/builtin-types/' },
             { label: 'Conformance', link: '/reference/conformance/' },
+          ],
+        },
+        {
+          label: 'Built-in Types',
+          collapsed: true,
+          items: [
+            { label: 'Note', link: '/reference/types/note/' },
+            { label: 'Link', link: '/reference/types/link/' },
+            { label: 'File', link: '/reference/types/file/' },
+            { label: 'Contact', link: '/reference/types/contact/' },
+            { label: 'Agent', link: '/reference/types/agent/' },
+            { label: 'Team', link: '/reference/types/team/' },
+            { label: 'Thought', link: '/reference/types/thought/' },
+            { label: 'Prompt Template', link: '/reference/types/prompt-template/' },
+            { label: 'Test Case', link: '/reference/types/test-case/' },
+            { label: 'Task', link: '/reference/types/task/' },
           ],
         },
       ],

@@ -4,6 +4,8 @@
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Spec: v0.1](https://img.shields.io/badge/Spec-v0.1-green.svg)](spec/v0.1.md)
+[![CI](https://github.com/mxn2020/minions/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/minions/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/Docs-minions.dev-purple.svg)](https://minions.dev)
 
 ---
 
@@ -85,7 +87,7 @@ Same system. No migration. Just add minions and relations.
 ## Quick Start
 
 ```bash
-npm install @minions/core
+pnpm add @minions/core
 ```
 
 ```typescript
@@ -141,16 +143,17 @@ minions/
 
 ## Documentation
 
+- 📘 [Documentation Site](https://minions.dev) — guides, tutorials, and API reference
 - [Specification v0.1](spec/v0.1.md) — the complete specification
 - [Conformance Guide](spec/conformance.md) — what implementations must support
 
 ## CLI
 
 ```bash
-npx @minions/cli spec           # Print spec version
-npx @minions/cli type list      # List all built-in types
-npx @minions/cli validate f.json # Validate a minion file
-npx @minions/cli init           # Scaffold a project
+pnpm exec minions spec           # Print spec version
+pnpm exec minions type list      # List all built-in types
+pnpm exec minions validate f.json # Validate a minion file
+pnpm exec minions init           # Scaffold a project
 ```
 
 ## Contributing
