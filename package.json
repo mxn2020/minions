@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "pnpm --filter @minions/core run build && pnpm --filter @minions/cli run build && pnpm --filter @minions/docs run build && pnpm --filter @minions/web run build",
-    "test": "pnpm -r run test",
+    "test": "pnpm --filter @minions/core run test",
     "lint": "pnpm --filter @minions/core run build && pnpm --filter @minions/core run lint && pnpm --filter @minions/cli run lint"
   },
   "engines": {
