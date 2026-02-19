@@ -1,0 +1,29 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "./src/index.ts"
+    ],
+    "out": "./docs",
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ],
+    "name": "@minions/core",
+    "readme": "none",
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "includeVersion": true,
+    "categorizeByGroup": true,
+    "categoryOrder": [
+        "Types",
+        "Validation",
+        "Schemas",
+        "Registry",
+        "Relations",
+        "Lifecycle",
+        "Evolution",
+        "Utilities"
+    ],
+    "sort": [
+        "source-order"
+    ]
+}

@@ -6,7 +6,7 @@ description: Get up and running with Minions in 5 minutes.
 ## Installation
 
 ```bash
-npm install @minions/core
+pnpm add @minions/core
 ```
 
 ## Create Your First Agent

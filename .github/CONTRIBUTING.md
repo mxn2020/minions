@@ -6,32 +6,34 @@ Thank you for your interest in contributing to Minions!
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/minions.git`
-3. Install dependencies: `npm install`
+3. Install dependencies: `pnpm install`
 4. Create a branch: `git checkout -b feature/my-feature`
 
 ## Development
 
 ```bash
 # Build all packages
-npm run build
+pnpm run build
 
 # Run tests
-npm run test
+pnpm run test
 
 # Type check
-npm run lint
+pnpm run lint
 ```
 
 ## Project Structure
 
 - `packages/core/` — Framework-agnostic core library
 - `packages/cli/` — CLI tool
+- `apps/docs/` — Astro Starlight documentation site
+- `apps/web/` — Marketing / playground web app
 - `spec/` — Specification documents
 - `examples/` — Usage examples
 
 ## Pull Request Process
 
-1. Ensure your code passes `npm run lint` and `npm run test`
+1. Ensure your code passes `pnpm run lint` and `pnpm run test`
 2. Update documentation if your changes affect the public API
 3. Add tests for new functionality
 4. Keep PRs focused — one feature or fix per PR

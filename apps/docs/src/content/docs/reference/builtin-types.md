@@ -1,119 +1,43 @@
 ---
 title: Built-in Types
-description: Standard minion types shipped with every Minions implementation.
+description: Overview of all built-in minion types shipped with every Minions implementation.
 ---
 
-Minions ships with 10 built-in types spanning the four standard types and six layer types.
+Minions ships with **10 built-in types** organized into base types and six conceptual layers.
 
-## Standard Types
+## Base Types
 
-### Note (`note`)
+These four types MUST be supported by all conformant implementations:
 
-A simple text note.
-
-| Field | Type | Required |
-|-------|------|----------|
-| `content` | textarea | ✅ |
-
-### Link (`link`)
-
-A web bookmark.
-
-| Field | Type | Required |
-|-------|------|----------|
-| `url` | url | ✅ |
-| `description` | textarea | |
-
-### File (`file`)
-
-A file attachment reference.
-
-| Field | Type | Required |
-|-------|------|----------|
-| `filename` | string | ✅ |
-| `fileUrl` | url | ✅ |
-| `fileSize` | number | |
-| `mimeType` | string | |
-
-### Contact (`contact`)
-
-A person or entity.
-
-| Field | Type | Required |
-|-------|------|----------|
-| `name` | string | ✅ |
-| `email` | email | |
-| `phone` | string | |
-| `company` | string | |
-| `notes` | textarea | |
+| Type | Slug | Icon | Description |
+|------|------|------|-------------|
+| [Note](/reference/types/note/) | `note` | 📝 | A simple text note |
+| [Link](/reference/types/link/) | `link` | 🔗 | A web bookmark |
+| [File](/reference/types/file/) | `file` | 📎 | A file attachment reference |
+| [Contact](/reference/types/contact/) | `contact` | 👤 | A person or entity |
 
 ## Layer Types
 
-### Agent (`agent`) — Definition Layer
+Each layer is a conceptual grouping. These types are standard but optional:
 
-| Field | Type | Required |
-|-------|------|----------|
-| `role` | string | |
-| `model` | string | |
-| `systemPrompt` | textarea | |
-| `temperature` | number (0–2) | |
-| `maxTokens` | number | |
-| `tools` | tags | |
+| Layer | Type | Slug | Icon | Description |
+|-------|------|------|------|-------------|
+| Definition | [Agent](/reference/types/agent/) | `agent` | 🤖 | An AI agent definition |
+| Organization | [Team](/reference/types/team/) | `team` | 👥 | A group of agents |
+| Memory | [Thought](/reference/types/thought/) | `thought` | 💭 | A recorded thought or observation |
+| Interface | [Prompt Template](/reference/types/prompt-template/) | `prompt-template` | 📋 | A reusable prompt template |
+| Evaluation | [Test Case](/reference/types/test-case/) | `test-case` | 🧪 | A test case for evaluation |
+| Execution | [Task](/reference/types/task/) | `task` | ⚡ | A unit of work |
 
-### Team (`team`) — Organization Layer
-
-| Field | Type | Required |
-|-------|------|----------|
-| `members` | tags | |
-| `strategy` | select (round_robin, parallel, sequential) | |
-| `maxConcurrency` | number | |
-
-### Thought (`thought`) — Memory Layer
-
-| Field | Type | Required |
-|-------|------|----------|
-| `content` | textarea | ✅ |
-| `confidence` | number (0–1) | |
-| `source` | string | |
-
-### Prompt Template (`prompt-template`) — Interface Layer
-
-| Field | Type | Required |
-|-------|------|----------|
-| `template` | textarea | ✅ |
-| `variables` | tags | |
-| `outputFormat` | select (text, json, markdown) | |
-
-### Test Case (`test-case`) — Evaluation Layer
-
-| Field | Type | Required |
-|-------|------|----------|
-| `input` | json | ✅ |
-| `expectedOutput` | json | |
-| `assertions` | json | |
-| `timeout` | number | |
-
-### Task (`task`) — Execution Layer
-
-| Field | Type | Required |
-|-------|------|----------|
-| `input` | json | |
-| `output` | json | |
-| `executionStatus` | select (pending, running, completed, failed, cancelled) | |
-| `startedAt` | date | |
-| `completedAt` | date | |
-| `error` | textarea | |
-
-## Accessing Built-in Types
+## All Built-in Types in Code
 
 ```typescript
-import { TypeRegistry, builtinTypes, agentType, noteType } from '@minions/core';
+import { builtinTypes } from '@minions/core';
 
-// Via registry
-const registry = new TypeRegistry();
-const agent = registry.getBySlug('agent');
-
-// Direct imports
-console.log(agentType.schema);
-console.log(builtinTypes.length); // 10
+// Array of all 10 built-in MinionType objects
+console.log(builtinTypes.map(t => t.slug));
+// ['note', 'link', 'file', 'contact', 'agent', 'team',
+//  'thought', 'prompt-template', 'test-case', 'task']
 ```
+
+See individual type pages for schemas, examples, and usage.

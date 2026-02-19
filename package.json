@@ -9,9 +9,9 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/core && npm run build -w packages/cli && npm run build -w apps/docs && npm run build -w apps/web",
-    "test": "npm run test --workspaces --if-present",
-    "lint": "npm run build -w packages/core && npm run lint -w packages/core && npm run lint -w packages/cli"
+    "build": "pnpm --filter @minions/core run build && pnpm --filter @minions/cli run build && pnpm --filter @minions/docs run build && pnpm --filter @minions/web run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm --filter @minions/core run build && pnpm --filter @minions/core run lint && pnpm --filter @minions/cli run lint"
   },
   "engines": {
     "node": ">=18"
