@@ -1,0 +1,6 @@
+# Docs site (Astro Starlight) — Netlify config
+# Base directory in Netlify dashboard: apps/docs
+
+[build]
+  command = "pnpm run build"
+  publish = "dist"

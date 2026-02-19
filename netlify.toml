@@ -1,18 +1,10 @@
+# Root Netlify config — applies when deploying from repo root.
+# For monorepo deployment each app has its own netlify.toml:
+#   apps/web/netlify.toml   — SPA redirect for Vite/React playground
+#   apps/docs/netlify.toml  — static config for Astro Starlight docs
+
 [build]
   command = "pnpm run build"
-
-# SPA routing for app subdomain (e.g. app.minions.dev)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Subdomain = ["app"]}
-
-# SPA routing for main domain — must come second (Netlify evaluates in order)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 [context.production]
   environment = { NODE_VERSION = "20" }
