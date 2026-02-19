@@ -47,6 +47,15 @@ export default function TreeViewer() {
         );
     }
 
+    if (effectiveRoots.length === 0 && state.minions.length > 0) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center text-muted">
+                <p>Circular structure detected — no root nodes found.</p>
+                <p className="text-xs mt-2">Every minion is a child of another, forming a cycle.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="p-4 h-full overflow-y-auto">
             {effectiveRoots.map(root => renderNode(root))}

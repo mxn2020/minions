@@ -43,15 +43,12 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
                     return;
                 }
 
-                // Try to find type by ID or Slug (builtins usually have predictable IDs)
-                // But user input might just correspond to the selected type
-                // In this playground, we assume the user is trying to create the SELECTED type
-                const selectedType = registry.getBySlug(state.selectedTypeSlug);
+                // Resolve type from JSON's minionTypeId first, fall back to selected tab
+                const typeFromJson = registry.getById(typeId) ?? registry.getBySlug(typeId);
+                const typeToValidate = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
 
-                if (selectedType) {
-                    // We validate against the selected type mostly, unless the JSON explicitly overrides it and we can find it
-                    // But best UX: validate against the type needed.
-                    const result = validateFields(json.fields || {}, selectedType.schema);
+                if (typeToValidate) {
+                    const result = validateFields(json.fields || {}, typeToValidate.schema);
                     dispatch({ type: 'SET_VALIDATION_RESULT', payload: result });
                 }
             } catch (e) {
@@ -100,18 +97,27 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
     const createMinion = useCallback(() => {
         try {
             const json = JSON.parse(state.editorValue);
-            const type = registry.getBySlug(state.selectedTypeSlug);
-            if (!type) return;
 
-            const { minion } = createMinionCore(json, type);
+            // Resolve type from JSON's minionTypeId first, fall back to selected tab
+            const typeFromJson = registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId);
+            const type = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
+            if (!type) {
+                dispatch({ type: 'SET_VALIDATION_RESULT', payload: { valid: false, errors: [{ field: 'type', message: `Unknown minion type: ${json.minionTypeId || state.selectedTypeSlug}` }] } });
+                return;
+            }
+
+            const { minion, validation } = createMinionCore(json, type);
+            if (!validation.valid) {
+                dispatch({ type: 'SET_VALIDATION_RESULT', payload: validation });
+                return;
+            }
             dispatch({ type: 'CREATE_MINION', payload: minion });
 
-            // Reset editor to new template? Or keep it?
-            // Prompt says "resets editor to blank template for current type"
+            // Reset editor to new template for current type
             setType(state.selectedTypeSlug);
 
-        } catch (e) {
-            console.error(e);
+        } catch (e: any) {
+            dispatch({ type: 'SET_VALIDATION_RESULT', payload: { valid: false, errors: [{ field: 'JSON', message: e.message || 'Failed to create minion' }] } });
         }
     }, [state.editorValue, state.selectedTypeSlug, setType]);
 
@@ -150,7 +156,7 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         if (state.editorValue === initialState.editorValue && state.selectedTypeSlug === 'agent') {
             setType('agent');
         }
-    }, []);
+    }, [setType]);
 
     const value = {
         state,
@@ -167,10 +173,10 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <PlaygroundContext.Provider value= { value } >
-        { children }
+        <PlaygroundContext.Provider value={value} >
+            {children}
         </PlaygroundContext.Provider>
-  );
+    );
 }
 
 export function usePlayground() {

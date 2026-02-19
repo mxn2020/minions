@@ -44,7 +44,11 @@ describe('validateField', () => {
   it('should validate date type', () => {
     const field: FieldDefinition = { name: 'date', type: 'date' };
     expect(validateField('2024-01-01T00:00:00Z', field)).toHaveLength(0);
+    expect(validateField('2024-01-01', field)).toHaveLength(0);
+    expect(validateField('2024-06-15T14:30:00+02:00', field)).toHaveLength(0);
     expect(validateField('not-a-date', field)).toHaveLength(1);
+    expect(validateField('2024', field)).toHaveLength(1); // lenient Date.parse would accept this
+    expect(validateField('banana 2024', field)).toHaveLength(1);
   });
 
   it('should validate select type with options', () => {
@@ -63,7 +67,10 @@ describe('validateField', () => {
   it('should validate url type', () => {
     const field: FieldDefinition = { name: 'site', type: 'url' };
     expect(validateField('https://example.com', field)).toHaveLength(0);
+    expect(validateField('http://example.com/path?q=1', field)).toHaveLength(0);
     expect(validateField('not-a-url', field)).toHaveLength(1);
+    expect(validateField('https://', field)).toHaveLength(1); // empty host
+    expect(validateField('ftp://example.com', field)).toHaveLength(1); // wrong protocol
   });
 
   it('should validate email type', () => {
@@ -106,6 +113,17 @@ describe('validateField', () => {
     expect(validateField('abc', field)).toHaveLength(0);
     expect(validateField('a', field)).toHaveLength(1);
     expect(validateField('abcdef', field)).toHaveLength(1);
+  });
+
+  it('should validate string pattern constraint', () => {
+    const field: FieldDefinition = {
+      name: 'code',
+      type: 'string',
+      validation: { pattern: '^[A-Z]{3}-\\d{3}$' },
+    };
+    expect(validateField('ABC-123', field)).toHaveLength(0);
+    expect(validateField('abc-123', field)).toHaveLength(1);
+    expect(validateField('ABCD-1234', field)).toHaveLength(1);
   });
 });
 

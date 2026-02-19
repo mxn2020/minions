@@ -2,7 +2,7 @@
   "name": "@minions/cli",
   "version": "0.1.0",
   "description": "CLI tool for the Minions structured object system",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "minions": "./dist/index.js"

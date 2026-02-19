@@ -14,16 +14,22 @@ interface AnimatedCodeCyclerProps {
 
 export function AnimatedCodeCycler({ examples }: AnimatedCodeCyclerProps) {
     const [index, setIndex] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
+        if (isHovered) return;
         const timer = setInterval(() => {
             setIndex((prev) => (prev + 1) % examples.length);
-        }, 4000); // 4 seconds for better readability
+        }, 4000);
         return () => clearInterval(timer);
-    }, [examples.length]);
+    }, [examples.length, isHovered]);
 
     return (
-        <div className="w-full max-w-3xl">
+        <div
+            className="w-full max-w-3xl"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <div className="flex justify-center space-x-2 mb-4">
                 {examples.map((ex, i) => (
                     <button
@@ -54,3 +60,4 @@ export function AnimatedCodeCycler({ examples }: AnimatedCodeCyclerProps) {
         </div>
     );
 }
+

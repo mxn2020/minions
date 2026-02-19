@@ -3,8 +3,10 @@
 
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
+import { javascript } from '@codemirror/lang-javascript';
 import { Copy, Check } from 'lucide-react';
 import { useClipboard } from '../../hooks/useClipboard';
+import { useMemo } from 'react';
 
 interface CodeBlockProps {
     code: string;
@@ -13,8 +15,21 @@ interface CodeBlockProps {
     className?: string;
 }
 
-export function CodeBlock({ code, title, className = '' }: CodeBlockProps) {
+export function CodeBlock({ code, language = 'json', title, className = '' }: CodeBlockProps) {
     const { copy, copied } = useClipboard();
+
+    const extensions = useMemo(() => {
+        switch (language) {
+            case 'typescript':
+            case 'javascript':
+            case 'ts':
+            case 'js':
+                return [javascript({ typescript: language === 'typescript' || language === 'ts' })];
+            case 'json':
+            default:
+                return [json()];
+        }
+    }, [language]);
 
     return (
         <div className={`relative overflow-hidden rounded-lg border border-border bg-surface ${className}`}>
@@ -33,7 +48,7 @@ export function CodeBlock({ code, title, className = '' }: CodeBlockProps) {
                 </button>
                 <CodeMirror
                     value={code}
-                    extensions={[json()]}
+                    extensions={extensions}
                     editable={false}
                     theme="dark"
                     basicSetup={{
@@ -47,3 +62,4 @@ export function CodeBlock({ code, title, className = '' }: CodeBlockProps) {
         </div>
     );
 }
+

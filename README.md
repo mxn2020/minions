@@ -2,7 +2,7 @@
 
 > A universal structured object system for AI agents — queryable, nestable, evolvable, and AI-readable.
 
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Spec: v0.1](https://img.shields.io/badge/Spec-v0.1-green.svg)](spec/v0.1.md)
 [![CI](https://github.com/mxn2020/minions/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/minions/actions/workflows/ci.yml)
 [![Docs](https://img.shields.io/badge/Docs-minions.dev-purple.svg)](https://minions.dev)
@@ -162,4 +162,4 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
 
 ## License
 
-[AGPL-3.0](LICENSE) — Copyright (C) 2024 Minions Contributors
+[MIT](LICENSE) — Copyright (c) 2026 Minions Contributors. MIT licensed — use it freely in commercial projects.

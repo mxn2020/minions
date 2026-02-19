@@ -44,4 +44,4 @@ const result = validateFields({ content: 'test' }, noteType.schema);
 assert(result.valid === true);
 ```
 
-See the full [Specification v0.1](/spec/v0.1.md) for details.
+See the full [Specification v0.1](https://github.com/mxn2020/minions/blob/main/spec/v0.1.md) for details.

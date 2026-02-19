@@ -52,4 +52,4 @@ assert(result.valid === true);
 
 ---
 
-*Minions Specification v0.1.0 — AGPL-3.0*
+*Minions Specification v0.1.0 — MIT*

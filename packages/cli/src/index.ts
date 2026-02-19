@@ -38,9 +38,21 @@ function printSpec(): void {
 }
 
 function loadCustomTypes(registry: TypeRegistry): void {
-  // Scan current directory for *.type.json files
+  // Try to read minionsDir from config, fall back to cwd
   const cwd = process.cwd();
-  const files = fs.readdirSync(cwd).filter(f => f.endsWith('.type.json'));
+  let typesDir = cwd;
+  const configPath = path.join(cwd, 'minions.config.json');
+  if (fs.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      if (config.typesDir) {
+        typesDir = path.resolve(cwd, config.typesDir);
+      }
+    } catch { /* ignore config parse errors */ }
+  }
+
+  if (!fs.existsSync(typesDir)) return;
+  const files = fs.readdirSync(typesDir).filter(f => f.endsWith('.type.json'));
 
   if (files.length > 0) {
     console.log(`Found ${files.length} custom type definition(s).`);
@@ -48,7 +60,7 @@ function loadCustomTypes(registry: TypeRegistry): void {
 
   for (const file of files) {
     try {
-      const filePath = path.join(cwd, file);
+      const filePath = path.join(typesDir, file);
       const content = fs.readFileSync(filePath, 'utf-8');
       const typeDef = JSON.parse(content);
 
@@ -109,7 +121,11 @@ function validateFile(filePath: string): void {
 
     if (!type) {
       console.error(`Error: Unknown minion type: ${minion.minionTypeId}`);
-      console.error('Available types: ' + registry.list().map(t => t.slug).join(', '));
+      console.error(`  Hint: Use the type ID (e.g. "builtin-agent"), not the slug (e.g. "agent").`);
+      console.error('  Available types:');
+      for (const t of registry.list()) {
+        console.error(`    - ${t.id} (slug: ${t.slug})`);
+      }
       process.exit(1);
     }
 
@@ -145,9 +161,23 @@ function initProject(): void {
 
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n');
   fs.mkdirSync(path.resolve('minions'), { recursive: true });
+
+  // Create an example note minion
+  const exampleMinion = {
+    title: 'My First Note',
+    minionTypeId: 'builtin-note',
+    status: 'active',
+    fields: {
+      content: 'This is an example minion created by `minions init`.',
+    },
+  };
+  const examplePath = path.resolve('minions', 'example-note.json');
+  fs.writeFileSync(examplePath, JSON.stringify(exampleMinion, null, 2) + '\n');
+
   console.log('✅ Initialized minions project.');
   console.log('   Created: minions.config.json');
   console.log('   Created: minions/');
+  console.log('   Created: minions/example-note.json');
 }
 
 async function createType(): Promise<void> {
@@ -168,7 +198,15 @@ async function createType(): Promise<void> {
     description,
     icon: icon || undefined,
     isSystem: false,
-    schema: [],
+    schema: [
+      {
+        "_comment": "Replace this example field with your own. See docs for field types.",
+        "name": "content",
+        "type": "textarea",
+        "required": true,
+        "description": "Main content field"
+      }
+    ],
   };
 
   const filename = `${slug}.type.json`;

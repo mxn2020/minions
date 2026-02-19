@@ -19,7 +19,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center space-x-6">
                     <a href="/docs" className="text-sm font-medium text-muted transition-colors hover:text-primary">Docs</a>
                     <Link to="/playground" className="text-sm font-medium text-muted transition-colors hover:text-primary">Playground</Link>
-                    <a href="https://github.com" target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sm font-medium text-muted transition-colors hover:text-primary">
+                    <a href="https://github.com/mxn2020/minions" target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sm font-medium text-muted transition-colors hover:text-primary">
                         <span>GitHub</span>
                         <span className="ml-1 inline-flex items-center rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold">★ Star</span>
                     </a>
@@ -46,7 +46,7 @@ export default function Navbar() {
                         <div className="flex flex-col space-y-4 p-4">
                             <a href="/docs" className="text-sm font-medium text-muted hover:text-primary">Docs</a>
                             <Link to="/playground" className="text-sm font-medium text-muted hover:text-primary">Playground</Link>
-                            <a href="https://github.com" className="text-sm font-medium text-muted hover:text-primary">GitHub</a>
+                            <a href="https://github.com/mxn2020/minions" className="text-sm font-medium text-muted hover:text-primary">GitHub</a>
                             <Link to="/playground">
                                 <Button className="w-full">Open Playground</Button>
                             </Link>

@@ -31,6 +31,10 @@ const SEARCHABLE_FIELD_TYPES = new Set([
 function computeSearchableText(minion: Minion, type: MinionType): string {
   const parts: string[] = [minion.title];
 
+  if (minion.description) {
+    parts.push(minion.description);
+  }
+
   for (const fieldDef of type.schema) {
     if (!SEARCHABLE_FIELD_TYPES.has(fieldDef.type)) continue;
     const value = minion.fields[fieldDef.name];
@@ -177,7 +181,7 @@ export function restoreMinion(minion: Minion): Minion {
 /**
  * Apply default values from the schema to a fields object.
  */
-function applyDefaults(
+export function applyDefaults(
   fields: Record<string, unknown>,
   type: MinionType,
 ): Record<string, unknown> {
