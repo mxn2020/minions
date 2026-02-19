@@ -1,5 +1,5 @@
 
-import { useReducer, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useReducer, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
 import {
     TypeRegistry,
     validateFields,
@@ -151,9 +151,13 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         setTimeout(() => setType('agent'), 0);
     }, [setType]);
 
-    // Initial setup if empty
+    // Guard against double-initialization in React strict mode
+    const initializedRef = useRef(false);
+
+    // Initial setup — run only once
     useEffect(() => {
-        if (state.editorValue === initialState.editorValue && state.selectedTypeSlug === 'agent') {
+        if (!initializedRef.current && state.editorValue === initialState.editorValue && state.selectedTypeSlug === 'agent') {
+            initializedRef.current = true;
             setType('agent');
         }
     }, [setType]);
