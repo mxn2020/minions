@@ -16,7 +16,7 @@ export default function TreeViewer() {
     const effectiveRoots = roots.length > 0 ? roots : (parentOfRelations.length === 0 ? state.minions : []);
 
     const renderNode = (minion: Minion, depth: number = 0) => {
-        const type = registry.getById(minion.minionTypeId) || registry.getBySlug('agent'); // fallback
+        const type = registry.getById(minion.minionTypeId);
         const childrenRels = parentOfRelations.filter(r => r.sourceId === minion.id);
         const children = childrenRels.map(r => state.minions.find(m => m.id === r.targetId)).filter(Boolean) as Minion[];
 
@@ -29,7 +29,7 @@ export default function TreeViewer() {
                     <span className="mr-2 text-lg">{type?.icon || '📦'}</span>
                     <span className="font-medium text-sm mr-2">{minion.title}</span>
                     <span className="text-xs text-muted font-mono px-1.5 py-0.5 rounded bg-white/5">
-                        {type?.name}
+                        {type?.name || 'Unknown'}
                     </span>
                 </div>
                 <div>
