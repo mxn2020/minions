@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "description": "Framework-agnostic core library for the Minions structured object system",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxn2020/minions"
+  },
+  "homepage": "https://github.com/mxn2020/minions",
+  "keywords": [
+    "ai",
+    "agents",
+    "structured-objects",
+    "schema",
+    "minions"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

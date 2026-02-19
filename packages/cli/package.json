@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "description": "CLI tool for the Minions structured object system",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxn2020/minions"
+  },
+  "homepage": "https://github.com/mxn2020/minions",
+  "keywords": [
+    "ai",
+    "agents",
+    "cli",
+    "structured-objects",
+    "minions"
+  ],
   "type": "module",
   "bin": {
     "minions": "./dist/index.js"
@@ -10,6 +22,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "tsc --noEmit"
