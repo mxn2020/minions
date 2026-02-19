@@ -259,8 +259,7 @@ function createMinion(
 ```
 
 Creates a new `Minion` instance:
-- Generates `id` (UUID v4) and `createdAt`/`updatedAt` timestamps
-- Derives `minionTypeId` from `type.id`
+- Generates `id` (UUID v4), `createdAt`/`updatedAt` timestamps, and `minionTypeId` (from `type.id`)
 - Applies default values from the schema
 - Validates fields against the type schema
 - Computes `searchableText`
@@ -295,7 +294,14 @@ Sets `deletedAt` and `deletedBy`. Relations are preserved.
 function hardDelete(minion: Minion, graph: RelationGraph): void
 ```
 
-Removes all relations involving this minion from the graph. **The caller** is responsible for removing the minion object from storage.
+Removes all relations involving this minion from the graph.
+
+> **Note:** `hardDelete` handles **relation cleanup only** (this is intentional — Minions is storage-agnostic). After calling it, **you must also remove the minion object from your storage layer** (array, database, etc.).
+
+```typescript
+hardDelete(myMinion, graph);        // clean up relations
+myMinionStore.delete(myMinion.id);  // then remove from your storage
+```
 
 ### `restoreMinion(minion)`
 
@@ -372,7 +378,7 @@ Current specification version (derived from `package.json`).
 
 | Type | Description |
 |------|-------------|
-| `CreateMinionInput` | Input for `createMinion` (id, timestamps, minionTypeId auto-generated) |
+| `CreateMinionInput` | Input for `createMinion` (`id` and timestamps are generated; pass the `MinionType` as the second argument) |
 | `UpdateMinionInput` | Input for `updateMinion` (all fields optional) |
 | `CreateRelationInput` | Input for `RelationGraph.add` |
 
