@@ -1,5 +1,5 @@
 {
-  "name": "@minions/cli",
+  "name": "minions-cli",
   "version": "0.1.0",
   "description": "CLI tool for the Minions structured object system",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@minions/core": "workspace:*"
+    "minions-core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

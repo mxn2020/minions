@@ -1,5 +1,5 @@
 {
-  "name": "@minions/core",
+  "name": "minions-core",
   "version": "0.1.0",
   "description": "Framework-agnostic core library for the Minions structured object system",
   "license": "MIT",

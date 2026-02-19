@@ -31,10 +31,10 @@ An implementation is conformant with the Minions Specification v0.1 if it meets 
 
 ## Testing
 
-Use `@minions/core` to verify your implementation:
+Use `minions-core` to verify your implementation:
 
 ```typescript
-import { TypeRegistry, validateFields, createMinion } from '@minions/core';
+import { TypeRegistry, validateFields, createMinion } from 'minions-core';
 
 const registry = new TypeRegistry();
 assert(registry.list().length >= 4);

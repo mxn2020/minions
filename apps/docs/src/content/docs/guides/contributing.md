@@ -57,7 +57,7 @@ pnpm run lint
 - **TypeScript strict mode** for all packages
 - **ESM modules** (`"type": "module"`)
 - **JSDoc** on all public exports
-- **No runtime dependencies** in `@minions/core`
+- **No runtime dependencies** in `minions-core`
 
 ## Spec Changes
 

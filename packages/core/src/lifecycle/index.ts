@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/lifecycle
+ * @module minions-core/lifecycle
  * Minion lifecycle utilities — create, update, soft delete, hard delete, restore.
  */
 

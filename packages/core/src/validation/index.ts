@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/validation
+ * @module minions-core/validation
  * Field validation engine for the Minions system.
  * Validates minion field values against their MinionType schema.
  */

@@ -10,7 +10,7 @@ This tutorial walks you through building an AI agent with Minions, starting simp
 The simplest possible agent is a single minion:
 
 ```typescript
-import { TypeRegistry, createMinion } from '@minions/core';
+import { TypeRegistry, createMinion } from 'minions-core';
 
 const registry = new TypeRegistry();
 const agentType = registry.getBySlug('agent')!;
@@ -68,7 +68,7 @@ const { minion: template } = createMinion({
 Use relations to build the tree:
 
 ```typescript
-import { RelationGraph } from '@minions/core';
+import { RelationGraph } from 'minions-core';
 
 const graph = new RelationGraph();
 

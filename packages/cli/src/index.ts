@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * @module @minions/cli
+ * @module minions-cli
  * CLI tool for the Minions structured object system.
  */
 
-import { SPEC_VERSION, TypeRegistry, validateFields } from '@minions/core';
+import { SPEC_VERSION, TypeRegistry, validateFields } from 'minions-core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as readline from 'node:readline';

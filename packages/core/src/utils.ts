@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/utils
+ * @module minions-core/utils
  * Internal utility functions.
  */
 

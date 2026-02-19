@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/schemas
+ * @module minions-core/schemas
  * Standard built-in MinionType schemas shipped with every Minions implementation.
  */
 

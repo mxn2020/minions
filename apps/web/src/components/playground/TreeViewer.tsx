@@ -1,6 +1,6 @@
 
 import { usePlayground } from '../../hooks/usePlayground';
-import { Minion } from '@minions/core';
+import { Minion } from 'minions-core';
 
 export default function TreeViewer() {
     const { state, registry } = usePlayground();

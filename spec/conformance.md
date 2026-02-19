@@ -34,10 +34,10 @@ Implementations MAY support:
 
 ## Testing Conformance
 
-Use the `@minions/core` library's validation engine to verify your implementation:
+Use the `minions-core` library's validation engine to verify your implementation:
 
 ```typescript
-import { TypeRegistry, validateFields, createMinion } from '@minions/core';
+import { TypeRegistry, validateFields, createMinion } from 'minions-core';
 
 // Verify all built-in types are available
 const registry = new TypeRegistry();

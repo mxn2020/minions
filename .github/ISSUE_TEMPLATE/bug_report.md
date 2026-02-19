@@ -16,5 +16,5 @@ What you expected to happen.
 
 **Environment**
 - Node.js version:
-- @minions/core version:
+- minions-core version:
 - OS:

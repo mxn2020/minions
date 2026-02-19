@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/relations
+ * @module minions-core/relations
  * Relation graph utilities — manage typed links between minions.
  */
 

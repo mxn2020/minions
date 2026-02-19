@@ -1,13 +1,13 @@
-**@minions/core v0.1.0**
+**minions-core v0.1.0**
 
 ***
 
-# @minions/core v0.1.0
+# minions-core v0.1.0
 
 ## Example
 
 ```typescript
-import { TypeRegistry, createMinion, RelationGraph } from '@minions/core';
+import { TypeRegistry, createMinion, RelationGraph } from 'minions-core';
 
 const registry = new TypeRegistry();
 const agentType = registry.getBySlug('agent')!;

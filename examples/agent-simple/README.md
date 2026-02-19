@@ -9,7 +9,7 @@ A single flat minion representing an AI research assistant.
 ## Usage
 
 ```bash
-npx @minions/cli validate agent.json
+npx minions-cli validate agent.json
 ```
 
 This is the simplest way to define an agent in Minions. No relations, no nesting — just a single structured object with validated fields.

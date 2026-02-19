@@ -1,8 +1,8 @@
-[**@minions/core v0.1.0**](../README.md)
+[**minions-core v0.1.0**](../README.md)
 
 ***
 
-[@minions/core](../README.md) / MinionPriority
+[minions-core](../README.md) / MinionPriority
 
 # Type Alias: MinionPriority
 

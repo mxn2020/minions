@@ -1,8 +1,8 @@
-[**@minions/core v0.1.0**](../README.md)
+[**minions-core v0.1.0**](../README.md)
 
 ***
 
-[@minions/core](../README.md) / promptTemplateType
+[minions-core](../README.md) / promptTemplateType
 
 # Variable: promptTemplateType
 

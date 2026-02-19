@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/evolution
+ * @module minions-core/evolution
  * Schema evolution utilities — migrate minions when their type schema changes.
  */
 

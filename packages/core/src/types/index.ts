@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/types
+ * @module minions-core/types
  * Core type definitions for the Minions structured object system.
  */
 
