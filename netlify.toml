@@ -1,12 +1,18 @@
 [build]
   command = "pnpm run build"
 
+# SPA routing for app subdomain (e.g. app.minions.dev)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   conditions = {Subdomain = ["app"]}
 
+# SPA routing for main domain — must come second (Netlify evaluates in order)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 [context.production]
   environment = { NODE_VERSION = "20" }
-  
