@@ -32,7 +32,7 @@ export default function Hero() {
                     <Link to="/playground">
                         <Button size="lg">Open Playground →</Button>
                     </Link>
-                    <a href="https://github.com" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/mxn2020/minions" target="_blank" rel="noreferrer">
                         <Button size="lg" variant="ghost">View on GitHub</Button>
                     </a>
                 </motion.div>
