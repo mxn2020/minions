@@ -7,12 +7,14 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/Users/mehdinabhani/Projects/antigravity/minions/dist"
-publishOrigin = "config"
+publish = "/Users/mehdinabhani/Projects/antigravity/minions/apps/docs/apps/docs/dist"
+publishOrigin = "ui"
 commandOrigin = "config"
+base = "/Users/mehdinabhani/Projects/antigravity/minions/apps/docs"
 command = "pnpm run build"
 
 [build.environment]
+NODE_VERSION = "20"
 
 [build.processing]
 
