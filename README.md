@@ -201,4 +201,4 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 Minions Contributors. MIT licensed — use it freely in commercial projects.
+[MIT](LICENSE) — Copyright (c) 2024 Mehdi Nabhani. MIT licensed — use it freely in commercial projects.
