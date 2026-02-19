@@ -88,14 +88,11 @@ describe('createMinion', () => {
 });
 
 describe('updateMinion', () => {
-  it('should update fields', async () => {
+  it('should update fields', () => {
     const { minion } = createMinion({
       title: 'Agent',
       fields: { role: 'researcher' },
     }, agentType);
-
-    // Small delay to ensure timestamp differs
-    await new Promise((r) => setTimeout(r, 10));
 
     const { minion: updated } = updateMinion(minion, {
       fields: { role: 'analyst' },
@@ -103,6 +100,8 @@ describe('updateMinion', () => {
 
     expect(updated.fields.role).toBe('analyst');
     expect(updated.updatedAt).toBeDefined();
+    // updatedAt must be >= createdAt (same or later — may be equal on fast machines)
+    expect(updated.updatedAt >= minion.updatedAt).toBe(true);
   });
 
   it('should update title', () => {

@@ -48,7 +48,9 @@ function loadCustomTypes(registry: TypeRegistry): void {
       if (config.typesDir) {
         typesDir = path.resolve(cwd, config.typesDir);
       }
-    } catch { /* ignore config parse errors */ }
+    } catch (e: any) {
+      console.warn(`⚠️ Could not parse minions.config.json: ${e.message}`);
+    }
   }
 
   if (!fs.existsSync(typesDir)) return;
