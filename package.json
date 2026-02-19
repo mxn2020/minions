@@ -1,7 +1,7 @@
 {
   "name": "minions",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A universal structured object system for AI agents & systems",
   "license": "MIT",
   "workspaces": [

@@ -3,6 +3,9 @@ title: "Task"
 description: "Execution Layer: a unit of work to be executed."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **Task** type belongs to the **Execution Layer** — it defines what a thing does.
 
 :::note
@@ -44,3 +47,35 @@ The Execution Layer is defined as an **interface only** in v0.1. No runtime impl
   }
 }
 ```
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('task')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Summarize Paper',
+    fields: { input: { paperUrl: 'https://arxiv.org/...'  } },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("task")
+
+  minion, validation = create_minion(
+      {"title": "Summarize Paper", "fields": {"input": {"paperUrl": "https://arxiv.org/..."}}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

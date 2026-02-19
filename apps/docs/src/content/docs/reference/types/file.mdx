@@ -3,6 +3,9 @@ title: "File"
 description: "Built-in type: a file attachment reference."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **File** type represents a reference to a file attachment.
 
 ## Schema
@@ -38,3 +41,35 @@ The **File** type represents a reference to a file attachment.
   }
 }
 ```
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('file')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Training Dataset',
+    fields: { filename: 'data.csv', fileUrl: 'https://example.com/data.csv' },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("file")
+
+  minion, validation = create_minion(
+      {"title": "Training Dataset", "fields": {"filename": "data.csv", "fileUrl": "https://example.com/data.csv"}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

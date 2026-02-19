@@ -1,0 +1,71 @@
+---
+title: "Link"
+description: "Built-in type: a web bookmark or link."
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
+The **Link** type represents a web bookmark or URL reference.
+
+## Schema
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | `url` | ✅ yes | The target URL (http/https) |
+| `description` | `textarea` | no | Description of the link |
+
+## Metadata
+
+| Property | Value |
+|----------|-------|
+| **Slug** | `link` |
+| **ID** | `builtin-link` |
+| **Icon** | 🔗 |
+| **System** | Yes |
+| **Layer** | — (base type) |
+
+## Example
+
+```json
+{
+  "title": "OpenAI API Docs",
+  "minionTypeId": "builtin-link",
+  "fields": {
+    "url": "https://platform.openai.com/docs",
+    "description": "Official OpenAI API documentation."
+  }
+}
+```
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('link')!;
+
+  const { minion, validation } = createMinion({
+    title: 'OpenAI Docs',
+    fields: { url: 'https://platform.openai.com/docs', description: 'API docs.' },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("link")
+
+  minion, validation = create_minion(
+      {"title": "OpenAI Docs", "fields": {"url": "https://platform.openai.com/docs", "description": "API docs."}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

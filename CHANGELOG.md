@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-02-19
+
+### Added
+- **Python SDK** (`minions-sdk` on PyPI): Complete Python port mirroring the TypeScript core — zero dependencies, Python 3.11+
+  - All 8 modules: types, validation, schemas, registry, relations, lifecycle, evolution
+  - 150 pytest tests covering all functionality plus JSON serialization round-trips
+  - Cross-SDK interop via `to_dict()` / `from_dict()` (camelCase ↔ snake_case)
+  - CI runs Python 3.11, 3.12, 3.13
+- **Dual-SDK documentation**: All doc pages updated with TypeScript/Python tabs
+  - Quickstart, primitives, lifecycle, evolution, API reference, tutorial — full tab treatment
+  - Conformance, contributing — partial tabs
+  - All 10 built-in type pages — usage example tabs
+  - API reference includes "Key Differences" table between SDKs
+- **Copy to Markdown** button on docs site (fetches raw source from GitHub)
+- PyPI publishing in GitHub Actions `publish.yml`
+
+### Changed
+- Documentation files migrated from `.md` to `.mdx` (required for Starlight Tabs component)
+- CHANGELOG updated with 0.2.0 release
+
 ## [0.1.0] - 2026-02-19
 
 ### Added

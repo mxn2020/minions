@@ -3,6 +3,8 @@ title: Conformance
 description: What implementations must support to be Minions-compliant.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 An implementation is conformant with the Minions Specification v0.1 if it meets the following requirements.
 
 ## Required (Level 1)
@@ -33,15 +35,31 @@ An implementation is conformant with the Minions Specification v0.1 if it meets 
 
 Use `minions-sdk` to verify your implementation:
 
-```typescript
-import { TypeRegistry, validateFields, createMinion } from 'minions-sdk';
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, validateFields, createMinion } from 'minions-sdk';
 
-const registry = new TypeRegistry();
-assert(registry.list().length >= 4);
+  const registry = new TypeRegistry();
+  assert(registry.list().length >= 4);
 
-const noteType = registry.getBySlug('note')!;
-const result = validateFields({ content: 'test' }, noteType.schema);
-assert(result.valid === true);
-```
+  const noteType = registry.getBySlug('note')!;
+  const result = validateFields({ content: 'test' }, noteType.schema);
+  assert(result.valid === true);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, validate_fields
+
+  registry = TypeRegistry()
+  assert len(registry.list()) >= 4
+
+  note_type = registry.get_by_slug("note")
+  result = validate_fields({"content": "test"}, note_type.schema)
+  assert result.valid is True
+  ```
+  </TabItem>
+</Tabs>
 
 See the full [Specification v0.1](https://github.com/mxn2020/minions/blob/main/spec/v0.1.md) for details.
