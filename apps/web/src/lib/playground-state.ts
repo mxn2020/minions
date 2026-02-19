@@ -1,5 +1,5 @@
 
-import { Minion, Relation, ValidationResult } from '@minions/core';
+import { Minion, Relation, ValidationResult } from 'minions-core';
 
 export interface PlaygroundState {
     selectedTypeSlug: string;

@@ -6,13 +6,13 @@ description: Get up and running with Minions in 5 minutes.
 ## Installation
 
 ```bash
-pnpm add @minions/core
+pnpm add minions-core
 ```
 
 ## Create Your First Agent
 
 ```typescript
-import { TypeRegistry, createMinion } from '@minions/core';
+import { TypeRegistry, createMinion } from 'minions-core';
 
 // 1. Initialize the type registry (comes with built-in types)
 const registry = new TypeRegistry();
@@ -38,7 +38,7 @@ console.log(minion.id);        // generated UUID
 ## Link Minions Together
 
 ```typescript
-import { RelationGraph } from '@minions/core';
+import { RelationGraph } from 'minions-core';
 
 const graph = new RelationGraph();
 
@@ -57,7 +57,7 @@ const tree = graph.getTree(agent.id);
 ## Validate a Minion File
 
 ```bash
-npx @minions/cli validate my-agent.json
+npx minions-cli validate my-agent.json
 ```
 
 ## Next Steps

@@ -1,10 +1,10 @@
 /**
- * @module @minions/core
+ * @module minions-core
  * Framework-agnostic core library for the Minions structured object system.
  *
  * @example
  * ```typescript
- * import { TypeRegistry, createMinion, RelationGraph } from '@minions/core';
+ * import { TypeRegistry, createMinion, RelationGraph } from 'minions-core';
  *
  * const registry = new TypeRegistry();
  * const agentType = registry.getBySlug('agent')!;

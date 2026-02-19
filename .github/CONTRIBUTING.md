@@ -43,7 +43,7 @@ pnpm run lint
 - TypeScript strict mode
 - ESM modules
 - JSDoc on all public exports
-- No runtime dependencies in `@minions/core` (except validation)
+- No runtime dependencies in `minions-core` (except validation)
 
 ## Spec Changes
 

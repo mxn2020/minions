@@ -1,5 +1,5 @@
 /**
- * @module @minions/core/registry
+ * @module minions-core/registry
  * MinionType registry — register, retrieve, and validate types.
  */
 

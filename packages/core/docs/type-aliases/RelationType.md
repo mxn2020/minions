@@ -1,8 +1,8 @@
-[**@minions/core v0.1.0**](../README.md)
+[**minions-core v0.1.0**](../README.md)
 
 ***
 
-[@minions/core](../README.md) / RelationType
+[minions-core](../README.md) / RelationType
 
 # Type Alias: RelationType
 

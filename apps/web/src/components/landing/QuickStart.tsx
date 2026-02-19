@@ -30,11 +30,11 @@ export default function QuickStart() {
             label: 'Library',
             content: (
                 <div className="pt-6">
-                    <CommandRow cmd="npm install @minions/core" desc="Install the core library" />
+                    <CommandRow cmd="npm install minions-core" desc="Install the core library" />
                     <div className="mt-6">
                         <CodeBlock
                             language="typescript"
-                            code={`import { TypeRegistry, createMinion, validateFields } from '@minions/core';
+                            code={`import { TypeRegistry, createMinion, validateFields } from 'minions-core';
 
 // 1. Get the built-in agent type
 const registry = new TypeRegistry();
@@ -61,9 +61,9 @@ console.log(minion.id);        // UUID`}
             label: 'CLI',
             content: (
                 <div className="pt-6">
-                    <CommandRow cmd="npx @minions/cli init" desc="Scaffold a new minions project with config file" />
-                    <CommandRow cmd="npx @minions/cli type list" desc="List all available minion types" />
-                    <CommandRow cmd="npx @minions/cli validate my-agent.json" desc="Validate a local minion file against schema" />
+                    <CommandRow cmd="npx minions-cli init" desc="Scaffold a new minions project with config file" />
+                    <CommandRow cmd="npx minions-cli type list" desc="List all available minion types" />
+                    <CommandRow cmd="npx minions-cli validate my-agent.json" desc="Validate a local minion file against schema" />
                 </div>
             )
         }

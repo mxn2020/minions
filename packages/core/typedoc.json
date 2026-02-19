@@ -7,7 +7,7 @@
     "plugin": [
         "typedoc-plugin-markdown"
     ],
-    "name": "@minions/core",
+    "name": "minions-core",
     "readme": "none",
     "excludePrivate": true,
     "excludeInternal": true,

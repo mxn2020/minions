@@ -4,7 +4,7 @@ import { usePlayground } from '../../hooks/usePlayground';
 import { Button } from '../shared/Button';
 import { Badge } from '../shared/Badge';
 import { ArrowRight, Trash2, Plus } from 'lucide-react';
-import { RelationType } from '@minions/core';
+import { RelationType } from 'minions-core';
 
 const relationTypes: RelationType[] = [
     'parent_of', 'depends_on', 'implements', 'relates_to',
