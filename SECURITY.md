@@ -10,7 +10,7 @@
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
-Instead, email **security@minions.dev** with:
+Instead, email **security@minions.wtf** with:
 
 - A description of the vulnerability
 - Steps to reproduce
@@ -25,8 +25,8 @@ This security policy covers:
 
 - `minions-sdk` (npm package)
 - `minions-cli` (npm package)
-- The Minions web app at `minions.dev`
-- The Minions docs site at `minions.dev`
+- The Minions web app at `minions.wtf`
+- The Minions docs site at `minions.wtf`
 
 ## Out of Scope
 
