@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Spec: v0.1](https://img.shields.io/badge/Spec-v0.1-green.svg)](spec/v0.1.md)
 [![CI](https://github.com/mxn2020/minions/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/minions/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/badge/Docs-minions.dev-purple.svg)](https://minions.dev)
+[![Docs](https://img.shields.io/badge/Docs-minions.wtf-purple.svg)](https://minions.wtf)
 
 ---
 
@@ -145,7 +145,7 @@ minions/
 
 ## Documentation
 
-- 📘 [Documentation Site](https://minions.dev) — guides, tutorials, and API reference
+- 📘 [Documentation Site](https://minions.wtf) — guides, tutorials, and API reference
 - [Specification v0.1](spec/v0.1.md) — the complete specification
 - [Conformance Guide](spec/conformance.md) — what implementations must support
 
