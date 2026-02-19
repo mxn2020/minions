@@ -23,7 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stricter date validation (ISO 8601 regex, rejects `Date.parse` leniency)
 - Stricter URL validation (`new URL()` constructor, rejects empty hosts and non-http protocols)
 - `computeSearchableText` now includes `description` field
-- Playground validates against `json.minionTypeId`, not the selected tab type
 - `createMinion` errors surfaced in UI (was silent `console.error`)
 - All GitHub/npm placeholder links replaced with real URLs
-- Conformance page dead link to spec fixed
+- CLI `tsconfig.json` now uses `module`/`moduleResolution: Node16` (was inheriting `bundler` from root)
+- Astro 5 content config moved to `src/content.config.ts` (was at old `src/content/config.ts` location)
+- Root `pnpm test` now filters to `@minions/core` only (avoids failures from packages without test scripts)
+- Spec date validation wording updated to match ISO 8601 implementation
+
+### Changed
+- Playground type resolution now always uses the selected type tab (removed `minionTypeId` fallback from editor JSON)
+- Removed redundant `tailwind.config.ts` (Tailwind v4 `@theme` in CSS is canonical)
+- Added `vitest.config.ts` to `packages/core` with explicit include pattern
+- Added npm metadata (`repository`, `homepage`, `keywords`) to `@minions/core` and `@minions/cli`
+- Added `engines: { node: ">=18" }` to `@minions/cli` and `@minions/web`
+- Added 404 page to `@minions/web`
