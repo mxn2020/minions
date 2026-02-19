@@ -26,7 +26,7 @@ export function AnimatedCodeCycler({ examples }: AnimatedCodeCyclerProps) {
 
     return (
         <div
-            className="w-full max-w-3xl"
+            className="w-full text-left"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

@@ -56,7 +56,7 @@ export function CodeBlock({ code, language = 'json', title, className = '' }: Co
                         foldGutter: false,
                         highlightActiveLine: false,
                     }}
-                    className="text-sm font-mono [&_.cm-editor]:bg-transparent [&_.cm-gutters]:bg-transparent"
+                    className="text-sm font-mono text-left [&_.cm-editor]:bg-transparent [&_.cm-gutters]:bg-transparent"
                 />
             </div>
         </div>
