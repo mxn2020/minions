@@ -37,19 +37,18 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         const timer = setTimeout(() => {
             try {
                 const json = JSON.parse(state.editorValue);
-                const typeId = json.minionTypeId;
-                if (!typeId) {
-                    dispatch({ type: 'SET_VALIDATION_RESULT', payload: null });
-                    return;
-                }
 
-                // Resolve type from JSON's minionTypeId first, fall back to selected tab
-                const typeFromJson = registry.getById(typeId) ?? registry.getBySlug(typeId);
+                // Use the selected type tab as primary; allow minionTypeId override from pasted Minion JSON
+                const typeFromJson = json.minionTypeId
+                    ? (registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId))
+                    : undefined;
                 const typeToValidate = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
 
                 if (typeToValidate) {
                     const result = validateFields(json.fields || {}, typeToValidate.schema);
                     dispatch({ type: 'SET_VALIDATION_RESULT', payload: result });
+                } else {
+                    dispatch({ type: 'SET_VALIDATION_RESULT', payload: null });
                 }
             } catch (e) {
                 // invalid json
@@ -97,8 +96,10 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         try {
             const json = JSON.parse(state.editorValue);
 
-            // Resolve type from JSON's minionTypeId first, fall back to selected tab
-            const typeFromJson = registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId);
+            // Use selected type tab as primary; allow minionTypeId override from pasted Minion JSON
+            const typeFromJson = json.minionTypeId
+                ? (registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId))
+                : undefined;
             const type = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
             if (!type) {
                 dispatch({ type: 'SET_VALIDATION_RESULT', payload: { valid: false, errors: [{ field: 'type', message: `Unknown minion type: ${json.minionTypeId || state.selectedTypeSlug}` }] } });
