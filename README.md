@@ -134,6 +134,9 @@ minions/
 ├── packages/
 │   ├── core/       # Framework-agnostic TypeScript library
 │   └── cli/        # CLI tool
+├── apps/
+│   ├── web/        # Interactive playground app
+│   └── docs/       # Documentation site
 ├── spec/           # Specification documents
 │   ├── v0.1.md
 │   └── conformance.md
