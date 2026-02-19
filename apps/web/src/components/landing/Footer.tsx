@@ -15,8 +15,8 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-semibold text-primary mb-4">Project</h3>
                         <ul className="space-y-2 text-sm text-muted">
-                            <li><a href="/docs" className="hover:text-primary transition-colors">Documentation</a></li>
-                            <li><a href="/spec" className="hover:text-primary transition-colors">Specification</a></li>
+                            <li><a href="https://github.com/mxn2020/minions#readme" className="hover:text-primary transition-colors">Documentation</a></li>
+                            <li><a href="https://github.com/mxn2020/minions/blob/main/spec/v0.1.md" className="hover:text-primary transition-colors">Specification</a></li>
                             <li><a href="https://github.com/mxn2020/minions" className="hover:text-primary transition-colors">GitHub</a></li>
                             <li><a href="https://www.npmjs.com/package/@minions/core" className="hover:text-primary transition-colors">NPM</a></li>
                         </ul>
@@ -24,8 +24,7 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-semibold text-primary mb-4">Legal</h3>
                         <ul className="space-y-2 text-sm text-muted">
-                            <li><a href="/license" className="hover:text-primary transition-colors">License (MIT)</a></li>
-                            <li><a href="/privacy" className="hover:text-primary transition-colors">Privacy</a></li>
+                            <li><a href="https://github.com/mxn2020/minions/blob/main/LICENSE" className="hover:text-primary transition-colors">License (MIT)</a></li>
                         </ul>
                     </div>
                 </div>
