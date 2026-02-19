@@ -9,6 +9,7 @@ dist/
 .env.implementation
 .env.projects
 .env.roadmap
+.prompts/
 coverage/
 .DS_Store
 *.log

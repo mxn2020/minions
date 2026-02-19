@@ -16,7 +16,7 @@ export default defineConfig({
     },
     build: {
         commonjsOptions: {
-            include: [/@minions\/core/, /node_modules/],
+            include: [/minions-sdk/, /node_modules/],
         },
     },
 });
