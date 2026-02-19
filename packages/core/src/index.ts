@@ -22,6 +22,8 @@
  * ```
  */
 
+import { createRequire } from 'node:module';
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   FieldType,
@@ -67,7 +69,7 @@ export { TypeRegistry } from './registry/index.js';
 export { RelationGraph } from './relations/index.js';
 
 // ─── Lifecycle ───────────────────────────────────────────────────────────────
-export { createMinion, updateMinion, softDelete, restoreMinion } from './lifecycle/index.js';
+export { createMinion, updateMinion, softDelete, hardDelete, restoreMinion } from './lifecycle/index.js';
 
 // ─── Evolution ───────────────────────────────────────────────────────────────
 export { migrateMinion } from './evolution/index.js';
@@ -75,5 +77,7 @@ export { migrateMinion } from './evolution/index.js';
 // ─── Utilities ───────────────────────────────────────────────────────────────
 export { generateId, now } from './utils.js';
 
-/** Current specification version. */
-export const SPEC_VERSION = '0.1.0';
+/** Current specification version — derived from package.json at runtime. */
+const _require = createRequire(import.meta.url);
+const _pkg = _require('../package.json') as { version: string };
+export const SPEC_VERSION: string = _pkg.version;

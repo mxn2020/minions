@@ -10,6 +10,8 @@ import TreeViewer from './TreeViewer';
 import OutputPanel from './OutputPanel';
 import { TabGroup } from '../shared/TabGroup';
 
+import MinionList from './MinionList';
+
 export default function PlaygroundLayout() {
     const { reset } = usePlayground();
 
@@ -36,12 +38,13 @@ export default function PlaygroundLayout() {
             {/* Main Content */}
             <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
 
-                {/* Left Panel: Editor */}
+                {/* Left Panel: Editor + Minion List */}
                 <div className="flex-1 flex flex-col p-4 border-r border-border overflow-y-auto min-w-[300px]">
                     <TypeSelector />
                     <div className="flex-1 min-h-[400px]">
                         <MinionEditor />
                     </div>
+                    <MinionList />
                 </div>
 
                 {/* Right Panel: Tools */}

@@ -38,11 +38,7 @@ function printSpec(): void {
 }
 
 function loadCustomTypes(registry: TypeRegistry): void {
-  // 1. Check if we are in a minions project (optional context)
-  const configPath = path.resolve('minions.config.json');
-  const hasConfig = fs.existsSync(configPath);
-  
-  // 2. Scan current directory for *.type.json files
+  // Scan current directory for *.type.json files
   const cwd = process.cwd();
   const files = fs.readdirSync(cwd).filter(f => f.endsWith('.type.json'));
 

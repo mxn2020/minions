@@ -6,9 +6,10 @@ import { Button } from '../shared/Button';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function MinionEditor() {
-    const { state, setEditorValue, createMinion } = usePlayground();
+    const { state, setEditorValue, createMinion, registry } = usePlayground();
     const isValid = state.validationResult?.valid;
     const hasResult = state.validationResult !== null;
+    const selectedType = registry.getBySlug(state.selectedTypeSlug);
 
     return (
         <div className="flex flex-col h-full border border-border rounded-lg bg-surface relative overflow-hidden">
@@ -24,6 +25,17 @@ export default function MinionEditor() {
                     )}
                 </div>
             </div>
+
+            {/* Validation Type Indicator */}
+            {selectedType && (
+                <div className="flex items-center px-4 py-1.5 text-xs text-muted border-b border-border bg-white/[0.02]">
+                    <span>Validating as:&nbsp;</span>
+                    <span className="font-medium text-primary">
+                        {selectedType.icon && <span className="mr-1">{selectedType.icon}</span>}
+                        {selectedType.name}
+                    </span>
+                </div>
+            )}
 
             {/* CodeMirror */}
             <div className="flex-1 relative overflow-auto">
