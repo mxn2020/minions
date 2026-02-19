@@ -4,8 +4,11 @@ dist/
 .astro/
 *.tsbuildinfo
 .env
-.env*
 .env.local
+.env.conversation
+.env.implementation
+.env.projects
+.env.roadmap
 coverage/
 .DS_Store
 *.log
@@ -31,6 +34,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
 # Project specific
 minions.config.json
-minions/
+/minions/
