@@ -3,6 +3,9 @@ title: "Agent"
 description: "Definition Layer: an AI agent definition."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **Agent** type belongs to the **Definition Layer** — it defines what a thing *is*.
 
 ## Schema
@@ -52,3 +55,35 @@ The **Agent** type belongs to the **Definition Layer** — it defines what a thi
 | `parent_of` | Thought, Prompt Template, Test Case | Agent owns sub-minions |
 | `implements` | API Contract | Agent satisfies an interface |
 | `depends_on` | Another Agent | Agent requires another agent |
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('agent')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Research Assistant',
+    fields: { role: 'researcher', model: 'gpt-4', tools: ['web-search'] },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("agent")
+
+  minion, validation = create_minion(
+      {"title": "Research Assistant", "fields": {"role": "researcher", "model": "gpt-4", "tools": ["web-search"]}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

@@ -3,6 +3,9 @@ title: "Thought"
 description: "Memory Layer: a recorded thought or observation."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **Thought** type belongs to the **Memory/Observation Layer** — it records what a thing knows or has experienced.
 
 ## Schema
@@ -42,3 +45,35 @@ The **Thought** type belongs to the **Memory/Observation Layer** — it records 
 - Agent internal state (opinions, decisions, tree-of-thought)
 - Episodic memory entries
 - Observation logs from agent runs
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('thought')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Style Guide',
+    fields: { content: 'Use active voice.', confidence: 0.9 },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("thought")
+
+  minion, validation = create_minion(
+      {"title": "Style Guide", "fields": {"content": "Use active voice.", "confidence": 0.9}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

@@ -1,0 +1,361 @@
+---
+title: API Reference
+description: Complete API reference for the minions-sdk library.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+All public exports from `minions-sdk`. The library is framework-agnostic, storage-agnostic, and has zero runtime dependencies.
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import {
+    // Types
+    type FieldType, type FieldValidation, type FieldDefinition,
+    type RelationType, type MinionStatus, type MinionPriority,
+    type Minion, type MinionType, type Relation,
+    type CreateMinionInput, type UpdateMinionInput, type CreateRelationInput,
+    type ExecutionResult, type Executable,
+    type ValidationError, type ValidationResult,
+
+    // Validation
+    validateField, validateFields,
+
+    // Schemas
+    noteType, linkType, fileType, contactType,
+    agentType, teamType, thoughtType, promptTemplateType, testCaseType, taskType,
+    builtinTypes,
+
+    // Registry
+    TypeRegistry,
+
+    // Relations
+    RelationGraph,
+
+    // Lifecycle
+    createMinion, updateMinion, softDelete, hardDelete, restoreMinion,
+
+    // Evolution
+    migrateMinion,
+
+    // Utilities
+    generateId, now, SPEC_VERSION,
+  } from 'minions-sdk';
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import (
+      # Types (also available from minions.types)
+      Minion, MinionType, Relation, FieldDefinition, FieldValidation,
+      CreateMinionInput, UpdateMinionInput, CreateRelationInput,
+      ExecutionResult, Executable,
+      # Validation
+      ValidationError, ValidationResult, validate_field, validate_fields,
+      # Schemas
+      note_type, link_type, file_type, contact_type,
+      agent_type, team_type, thought_type, prompt_template_type,
+      test_case_type, task_type, builtin_types,
+      # Registry
+      TypeRegistry,
+      # Relations
+      RelationGraph,
+      # Lifecycle
+      create_minion, update_minion, soft_delete, hard_delete, restore_minion,
+      # Evolution
+      migrate_minion,
+      # Utilities
+      generate_id, now, SPEC_VERSION,
+  )
+  ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Validation
+
+### `validateField` / `validate_field`
+
+Validate a single field value against its `FieldDefinition`.
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  function validateField(value: unknown, field: FieldDefinition): ValidationError[]
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  def validate_field(value: Any, field_def: FieldDefinition) -> list[ValidationError]
+  ```
+  </TabItem>
+</Tabs>
+
+Returns a list of `ValidationError` objects. Empty list means valid.
+
+**Rules:**
+- If `required` is true and the value is `undefined | null | ""`, validation fails immediately.
+- If the value is absent and not required, no further checks are performed.
+- Otherwise, type-specific validation is applied (see [Field Types](/reference/field-types/)).
+
+### `validateFields` / `validate_fields`
+
+Validate all fields of a minion against a `MinionType` schema.
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  function validateFields(
+    fields: Record<string, unknown>,
+    schema: FieldDefinition[]
+  ): ValidationResult
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  def validate_fields(
+      fields: dict[str, Any],
+      schema: list[FieldDefinition],
+  ) -> ValidationResult
+  ```
+  </TabItem>
+</Tabs>
+
+Returns `{ valid: boolean, errors: ValidationError[] }` (TS) or a `ValidationResult` object (Python).
+
+---
+
+## Schemas
+
+### Built-in Type Constants
+
+Pre-defined `MinionType` objects for all built-in types:
+
+| TypeScript | Python | Slug | Layer |
+|------------|--------|------|-------|
+| `noteType` | `note_type` | `note` | — |
+| `linkType` | `link_type` | `link` | — |
+| `fileType` | `file_type` | `file` | — |
+| `contactType` | `contact_type` | `contact` | — |
+| `agentType` | `agent_type` | `agent` | Definition |
+| `teamType` | `team_type` | `team` | Organization |
+| `thoughtType` | `thought_type` | `thought` | Memory |
+| `promptTemplateType` | `prompt_template_type` | `prompt-template` | Interface |
+| `testCaseType` | `test_case_type` | `test-case` | Evaluation |
+| `taskType` | `task_type` | `task` | Execution |
+
+### `builtinTypes` / `builtin_types`
+
+Array/list containing all 10 built-in types.
+
+---
+
+## TypeRegistry
+
+An in-memory registry for `MinionType` objects. Pre-loaded with all built-in types by default.
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  const registry = new TypeRegistry(loadBuiltins?: boolean);
+
+  registry.register(type: MinionType): void;       // throws on duplicate
+  registry.getById(id: string): MinionType | undefined;
+  registry.getBySlug(slug: string): MinionType | undefined;
+  registry.list(): MinionType[];
+  registry.has(id: string): boolean;
+  registry.remove(id: string): boolean;
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  registry = TypeRegistry(load_builtins: bool = True)
+
+  registry.register(type: MinionType) -> None       # raises ValueError on duplicate
+  registry.get_by_id(id: str) -> MinionType | None
+  registry.get_by_slug(slug: str) -> MinionType | None
+  registry.list() -> list[MinionType]
+  registry.has(id: str) -> bool
+  registry.remove(id: str) -> bool
+  ```
+  </TabItem>
+</Tabs>
+
+---
+
+## RelationGraph
+
+In-memory relation graph manager. Provides utilities to add, remove, query, and traverse typed relations between minions.
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  const graph = new RelationGraph();
+
+  graph.add(input: CreateRelationInput): Relation;
+  graph.remove(id: string): boolean;
+  graph.removeByMinionId(minionId: string): number;
+  graph.get(id: string): Relation | undefined;
+  graph.list(): Relation[];
+  graph.getFromSource(sourceId: string, type?: RelationType): Relation[];
+  graph.getToTarget(targetId: string, type?: RelationType): Relation[];
+  graph.getChildren(parentId: string): string[];
+  graph.getParents(childId: string): string[];
+  graph.getTree(rootId: string): string[];      // depth-first, handles cycles
+  graph.getNetwork(minionId: string): string[];
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  graph = RelationGraph()
+
+  graph.add(input: dict) -> Relation
+  graph.remove(id: str) -> bool
+  graph.remove_by_minion_id(minion_id: str) -> int
+  graph.get(id: str) -> Relation | None
+  graph.list() -> list[Relation]
+  graph.get_from_source(source_id: str, type: str | None = None) -> list[Relation]
+  graph.get_to_target(target_id: str, type: str | None = None) -> list[Relation]
+  graph.get_children(parent_id: str) -> list[str]
+  graph.get_parents(child_id: str) -> list[str]
+  graph.get_tree(root_id: str) -> list[str]     # depth-first, handles cycles
+  graph.get_network(minion_id: str) -> list[str]
+  ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Lifecycle
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  // Create — generates id, timestamps, validates, applies defaults
+  const { minion, validation } = createMinion(input, type);
+
+  // Update — merges fields, re-validates, strips undefined
+  const { minion: updated } = updateMinion(minion, input, type);
+
+  // Soft delete — sets deletedAt/deletedBy
+  const deleted = softDelete(minion, 'user-123');
+
+  // Hard delete — removes all relations from the graph
+  hardDelete(minion, graph);
+
+  // Restore — clears deletedAt/deletedBy
+  const restored = restoreMinion(deleted);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  # Create — generates id, timestamps, validates, applies defaults
+  minion, validation = create_minion(input_dict, type)
+
+  # Update — merges fields, re-validates, strips None
+  updated, validation = update_minion(minion, input_dict, type)
+
+  # Soft delete — sets deleted_at/deleted_by
+  deleted = soft_delete(minion, "user-123")
+
+  # Hard delete — removes all relations from the graph
+  hard_delete(minion, graph)
+
+  # Restore — clears deleted_at/deleted_by
+  restored = restore_minion(deleted)
+  ```
+  </TabItem>
+</Tabs>
+
+> **Note:** `hardDelete` / `hard_delete` handles **relation cleanup only** (this is intentional — Minions is storage-agnostic). After calling it, **you must also remove the minion object from your storage layer** (array, database, etc.).
+
+---
+
+## Evolution
+
+### `migrateMinion` / `migrate_minion`
+
+Migrates a minion when its type schema changes:
+
+| Change | Behavior |
+|--------|----------|
+| Field removed | Value moves to `_legacy` |
+| Field type changed (incompatible) | Value moves to `_legacy` |
+| Field added | Gets default value or remains absent |
+| `updatedAt` | Always updated |
+
+---
+
+## Key Differences Between SDKs
+
+| Concept | TypeScript | Python |
+|---------|-----------|--------|
+| Field names | `camelCase` | `snake_case` |
+| Return style | `{ minion, validation }` | `(minion, validation)` tuple |
+| Relation input keys | `sourceId`, `targetId` | `source_id`, `target_id` |
+| Method names | `getBySlug()` | `get_by_slug()` |
+| Cross-SDK JSON | Native object | `minion.to_dict()` → camelCase |
+| Error on duplicate | Throws `Error` | Raises `ValueError` |
+
+---
+
+## Utilities
+
+### `generateId` / `generate_id`
+
+Returns a new UUID v4 string.
+
+### `now`
+
+Returns the current time as an ISO 8601 string.
+
+### `SPEC_VERSION`
+
+Current specification version (`"0.1.0"`).
+
+---
+
+## Types
+
+### Core Primitives
+
+| Type | Description |
+|------|-------------|
+| `Minion` | A structured object instance |
+| `MinionType` | Schema/definition of a kind of minion |
+| `Relation` | Typed directional link between two minions |
+
+### Input Types
+
+| Type | Description |
+|------|-------------|
+| `CreateMinionInput` | Input for `createMinion` / `create_minion` |
+| `UpdateMinionInput` | Input for `updateMinion` / `update_minion` (all fields optional) |
+| `CreateRelationInput` | Input for `RelationGraph.add` |
+
+### Enums
+
+| Type | Values |
+|------|--------|
+| `FieldType` | `string`, `number`, `boolean`, `date`, `select`, `multi-select`, `url`, `email`, `textarea`, `tags`, `json`, `array` |
+| `RelationType` | `parent_of`, `depends_on`, `implements`, `relates_to`, `inspired_by`, `triggers`, `references`, `blocks`, `alternative_to`, `part_of`, `follows`, `integration_link` |
+| `MinionStatus` | `active`, `todo`, `in_progress`, `completed`, `cancelled` |
+| `MinionPriority` | `low`, `medium`, `high`, `urgent` |
+
+### Execution Contract
+
+| Type | Description |
+|------|-------------|
+| `Executable` | Interface / Protocol with `execute(input) → ExecutionResult` |
+| `ExecutionResult` | `{ output, status, startedAt, completedAt, error?, metadata? }` |
+
+### Validation
+
+| Type | Description |
+|------|-------------|
+| `ValidationError` | `{ field: string, message: string, value?: unknown }` |
+| `ValidationResult` | `{ valid: boolean, errors: ValidationError[] }` |
+| `FieldValidation` | `{ minLength?, maxLength?, min?, max?, pattern? }` |
+| `FieldDefinition` | `{ name, type, label?, description?, required?, defaultValue?, options?, validation? }` |

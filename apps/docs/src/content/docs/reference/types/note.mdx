@@ -1,0 +1,68 @@
+---
+title: "Note"
+description: "Built-in type: a simple text note."
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The **Note** type is the simplest built-in minion type — a freeform text note.
+
+## Schema
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `content` | `textarea` | ✅ yes | The note content |
+
+## Metadata
+
+| Property | Value |
+|----------|-------|
+| **Slug** | `note` |
+| **ID** | `builtin-note` |
+| **Icon** | 📝 |
+| **System** | Yes |
+| **Layer** | — (base type) |
+
+## Example
+
+```json
+{
+  "title": "Meeting Notes",
+  "minionTypeId": "builtin-note",
+  "fields": {
+    "content": "Discussed Q2 roadmap priorities. Key takeaway: focus on developer experience."
+  },
+  "tags": ["meetings", "q2"]
+}
+```
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const noteType = registry.getBySlug('note')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Quick Thought',
+    fields: { content: 'This is a note.' },
+  }, noteType);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  note_type = registry.get_by_slug("note")
+
+  minion, validation = create_minion(
+      {"title": "Quick Thought", "fields": {"content": "This is a note."}},
+      note_type,
+  )
+  ```
+  </TabItem>
+</Tabs>

@@ -7,6 +7,9 @@ export default defineConfig({
     starlight({
       title: 'Minions',
       description: 'A universal structured object system for AI agents',
+      components: {
+        Head: './src/components/CopyMarkdownButton.astro',
+      },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions' },
         { icon: 'external', label: 'Playground', href: 'https://app.minions.wtf/playground' },

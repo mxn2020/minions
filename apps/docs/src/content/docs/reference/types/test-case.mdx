@@ -3,6 +3,9 @@ title: "Test Case"
 description: "Evaluation Layer: a test case for evaluating agent behavior."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **Test Case** type belongs to the **Evaluation Layer** — it defines how a thing is measured.
 
 ## Schema
@@ -41,3 +44,35 @@ The **Test Case** type belongs to the **Evaluation Layer** — it defines how a 
   }
 }
 ```
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('test-case')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Quality Check',
+    fields: { input: { topic: 'AI' }, assertions: { minWords: 100 } },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("test-case")
+
+  minion, validation = create_minion(
+      {"title": "Quality Check", "fields": {"input": {"topic": "AI"}, "assertions": {"minWords": 100}}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

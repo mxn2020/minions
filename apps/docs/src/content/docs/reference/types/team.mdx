@@ -3,6 +3,9 @@ title: "Team"
 description: "Organization Layer: a group of agents working together."
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
 The **Team** type belongs to the **Organization Layer** — it defines how things group and relate.
 
 ## Schema
@@ -44,3 +47,35 @@ The **Team** type belongs to the **Organization Layer** — it defines how thing
 |----------|--------|---------|
 | `parent_of` | Agent | Team contains agents |
 | `follows` | Agent → Agent | Defines execution order within team |
+
+
+## Usage
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const type = registry.getBySlug('team')!;
+
+  const { minion, validation } = createMinion({
+    title: 'Content Team',
+    fields: { members: ['agent-001'], strategy: 'sequential' },
+  }, type);
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion
+
+  registry = TypeRegistry()
+  type_ = registry.get_by_slug("team")
+
+  minion, validation = create_minion(
+      {"title": "Content Team", "fields": {"members": ["agent-001"], "strategy": "sequential"}},
+      type_,
+  )
+  ```
+  </TabItem>
+</Tabs>

@@ -3,6 +3,8 @@ title: Contributing
 description: How to contribute to the Minions project.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Thank you for your interest in contributing to Minions!
 
 ## Getting Started
@@ -23,22 +25,40 @@ Thank you for your interest in contributing to Minions!
 
 ## Development Commands
 
-```bash
-# Build all packages
-pnpm run build
+<Tabs>
+  <TabItem label="TypeScript">
+  ```bash
+  # Build all packages
+  pnpm run build
 
-# Run tests
-pnpm run test
+  # Run tests
+  pnpm run test
 
-# Type check / lint
-pnpm run lint
-```
+  # Type check / lint
+  pnpm run lint
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```bash
+  # Install the Python SDK in development mode
+  cd packages/python
+  pip install -e ".[test]"
+
+  # Run Python tests
+  pytest -v
+
+  # Run a single test file
+  pytest tests/test_validation.py -v
+  ```
+  </TabItem>
+</Tabs>
 
 ## Project Structure
 
 | Directory | Description |
 |-----------|-------------|
-| `packages/core/` | Framework-agnostic core library |
+| `packages/core/` | TypeScript SDK (`minions-sdk` on npm) |
+| `packages/python/` | Python SDK (`minions-sdk` on PyPI) |
 | `packages/cli/` | CLI tool |
 | `apps/docs/` | Astro Starlight documentation site |
 | `apps/web/` | Marketing / playground web app |
@@ -48,16 +68,18 @@ pnpm run lint
 ## Pull Request Process
 
 1. Ensure your code passes `pnpm run lint` and `pnpm run test`
-2. Update documentation if your changes affect the public API
-3. Add tests for new functionality
-4. Keep PRs focused — one feature or fix per PR
+2. For Python changes, ensure `pytest -v` passes in `packages/python/`
+3. Update documentation if your changes affect the public API
+4. Add tests for new functionality
+5. Keep PRs focused — one feature or fix per PR
 
 ## Code Style
 
-- **TypeScript strict mode** for all packages
+- **TypeScript strict mode** for all TS packages
+- **Python 3.11+** with type annotations for the Python SDK
 - **ESM modules** (`"type": "module"`)
-- **JSDoc** on all public exports
-- **No runtime dependencies** in `minions-sdk`
+- **JSDoc/docstrings** on all public exports
+- **No runtime dependencies** in either SDK
 
 ## Spec Changes
 

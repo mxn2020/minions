@@ -3,6 +3,8 @@ title: Core Primitives
 description: The three building blocks of the Minions system.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Everything in Minions is built from three primitives:
 
 ## Minion
@@ -24,6 +26,37 @@ A **Minion** is a structured object instance — the fundamental unit of the sys
 }
 ```
 
+### Type Definition
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  interface Minion {
+    id: string;
+    title: string;
+    minionTypeId: string;
+    fields: Record<string, unknown>;
+    status?: MinionStatus;
+    createdAt: string;
+    updatedAt: string;
+  }
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  @dataclass
+  class Minion:
+      id: str
+      title: str
+      minion_type_id: str
+      fields: dict[str, Any]
+      status: MinionStatus | None = "active"
+      created_at: str = ""
+      updated_at: str = ""
+  ```
+  </TabItem>
+</Tabs>
+
 ### Required Fields
 
 | Field | Description |
@@ -43,18 +76,31 @@ Status (`active`, `todo`, `in_progress`, `completed`, `cancelled`), priority (`l
 
 A **MinionType** defines the schema for a kind of minion. It specifies what fields are available, their types, and validation rules.
 
-```typescript
-const agentType = {
-  id: 'builtin-agent',
-  name: 'Agent',
-  slug: 'agent',
-  schema: [
-    { name: 'role', type: 'string', label: 'Role' },
-    { name: 'model', type: 'string', label: 'Model' },
-    { name: 'tools', type: 'tags', label: 'Tools' },
-  ],
-};
-```
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  const agentType = {
+    id: 'builtin-agent',
+    name: 'Agent',
+    slug: 'agent',
+    schema: [
+      { name: 'role', type: 'string', label: 'Role' },
+      { name: 'model', type: 'string', label: 'Model' },
+      { name: 'tools', type: 'tags', label: 'Tools' },
+    ],
+  };
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions.schemas import agent_type
+
+  # agent_type.id       == "builtin-agent"
+  # agent_type.slug     == "agent"
+  # agent_type.schema   == [FieldDefinition(...), ...]
+  ```
+  </TabItem>
+</Tabs>
 
 Built-in types include: `note`, `link`, `file`, `contact`, `agent`, `team`, `thought`, `prompt-template`, `test-case`, `task`.
 
@@ -62,12 +108,25 @@ Built-in types include: `note`, `link`, `file`, `contact`, `agent`, `team`, `tho
 
 A **Relation** is a typed, directional link between two minions. Relations create structure — hierarchies, dependencies, sequences.
 
-```typescript
-{
-  sourceId: 'agent-001',
-  targetId: 'skill-001',
-  type: 'parent_of',
-}
-```
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  graph.add({
+    sourceId: 'agent-001',
+    targetId: 'skill-001',
+    type: 'parent_of',
+  });
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  graph.add({
+      "source_id": "agent-001",
+      "target_id": "skill-001",
+      "type": "parent_of",
+  })
+  ```
+  </TabItem>
+</Tabs>
 
 Supported types: `parent_of`, `depends_on`, `implements`, `relates_to`, `inspired_by`, `triggers`, `references`, `blocks`, `alternative_to`, `part_of`, `follows`, `integration_link`.

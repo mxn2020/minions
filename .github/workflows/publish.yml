@@ -1,4 +1,4 @@
-name: Publish to npm
+name: Publish Packages
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  publish:
+  publish-npm:
     runs-on: ubuntu-latest
 
     steps:
@@ -49,3 +49,33 @@ jobs:
         run: pnpm --filter minions-cli publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-python:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build tools
+        run: pip install hatch
+
+      - name: Run tests
+        working-directory: packages/python
+        run: |
+          pip install -e ".[test]"
+          pytest -v
+
+      - name: Build package
+        working-directory: packages/python
+        run: hatch build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/python/dist/
+          password: ${{ secrets.PYPI_TOKEN }}

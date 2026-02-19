@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Spec: v0.1](https://img.shields.io/badge/Spec-v0.1-green.svg)](spec/v0.1.md)
 [![CI](https://github.com/mxn2020/minions/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/minions/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/minions-sdk.svg)](https://www.npmjs.com/package/minions-sdk)
+[![PyPI](https://img.shields.io/pypi/v/minions-sdk.svg)](https://pypi.org/project/minions-sdk/)
 [![Docs](https://img.shields.io/badge/Docs-minions.wtf-purple.svg)](https://minions.wtf)
 
 ---
@@ -86,6 +88,8 @@ Same system. No migration. Just add minions and relations.
 
 ## Quick Start
 
+### TypeScript
+
 ```bash
 pnpm add minions-sdk
 ```
@@ -93,11 +97,9 @@ pnpm add minions-sdk
 ```typescript
 import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
 
-// 1. Get the built-in agent type
 const registry = new TypeRegistry();
 const agentType = registry.getBySlug('agent')!;
 
-// 2. Create an agent
 const { minion: agent, validation } = createMinion({
   title: 'Research Assistant',
   fields: {
@@ -108,13 +110,47 @@ const { minion: agent, validation } = createMinion({
   },
 }, agentType);
 
-// 3. Link minions together
 const graph = new RelationGraph();
-graph.add({
-  sourceId: agent.id,
-  targetId: 'skill-001',
-  type: 'parent_of',
-});
+graph.add({ sourceId: agent.id, targetId: 'skill-001', type: 'parent_of' });
+```
+
+### Python
+
+```bash
+pip install minions-sdk
+```
+
+```python
+from minions import TypeRegistry, create_minion, RelationGraph
+
+registry = TypeRegistry()
+agent_type = registry.get_by_slug("agent")
+
+agent, validation = create_minion(
+    {
+        "title": "Research Assistant",
+        "fields": {
+            "role": "researcher",
+            "model": "gpt-4",
+            "systemPrompt": "You are a research assistant.",
+            "tools": ["web-search", "summarize"],
+        },
+    },
+    agent_type,
+)
+
+graph = RelationGraph()
+graph.add({"source_id": agent.id, "target_id": "skill-001", "type": "parent_of"})
+```
+
+### Cross-SDK Interop
+
+Minions created in either SDK serialize to the same JSON format:
+
+```python
+import json
+data = agent.to_dict()        # Python → camelCase dict
+json_str = json.dumps(data)   # → compatible with TypeScript SDK
 ```
 
 ## Why Minions?
@@ -132,7 +168,8 @@ Current AI agent frameworks give you execution but no **structure**. Your agent'
 ```
 minions/
 ├── packages/
-│   ├── core/       # Framework-agnostic TypeScript library
+│   ├── core/       # TypeScript SDK (minions-sdk on npm)
+│   ├── python/     # Python SDK (minions-sdk on PyPI)
 │   └── cli/        # CLI tool
 ├── apps/
 │   ├── web/        # Interactive playground app
