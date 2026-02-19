@@ -23,7 +23,7 @@ export type Action =
 
 export const initialState: PlaygroundState = {
     selectedTypeSlug: 'agent', // Default to agent
-    editorValue: JSON.stringify({ title: "My Agent", minionTypeId: "builtin-agent", fields: {} }, null, 2),
+    editorValue: JSON.stringify({ title: "My Agent", fields: {} }, null, 2),
     minions: [],
     relations: [],
     validationResult: null,

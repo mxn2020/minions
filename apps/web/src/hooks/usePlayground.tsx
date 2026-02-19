@@ -37,15 +37,10 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
         const timer = setTimeout(() => {
             try {
                 const json = JSON.parse(state.editorValue);
+                const type = registry.getBySlug(state.selectedTypeSlug);
 
-                // Use the selected type tab as primary; allow minionTypeId override from pasted Minion JSON
-                const typeFromJson = json.minionTypeId
-                    ? (registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId))
-                    : undefined;
-                const typeToValidate = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
-
-                if (typeToValidate) {
-                    const result = validateFields(json.fields || {}, typeToValidate.schema);
+                if (type) {
+                    const result = validateFields(json.fields || {}, type.schema);
                     dispatch({ type: 'SET_VALIDATION_RESULT', payload: result });
                 } else {
                     dispatch({ type: 'SET_VALIDATION_RESULT', payload: null });
@@ -95,14 +90,9 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
     const createMinion = useCallback(() => {
         try {
             const json = JSON.parse(state.editorValue);
-
-            // Use selected type tab as primary; allow minionTypeId override from pasted Minion JSON
-            const typeFromJson = json.minionTypeId
-                ? (registry.getById(json.minionTypeId) ?? registry.getBySlug(json.minionTypeId))
-                : undefined;
-            const type = typeFromJson ?? registry.getBySlug(state.selectedTypeSlug);
+            const type = registry.getBySlug(state.selectedTypeSlug);
             if (!type) {
-                dispatch({ type: 'SET_VALIDATION_RESULT', payload: { valid: false, errors: [{ field: 'type', message: `Unknown minion type: ${json.minionTypeId || state.selectedTypeSlug}` }] } });
+                dispatch({ type: 'SET_VALIDATION_RESULT', payload: { valid: false, errors: [{ field: 'type', message: `Unknown minion type: ${state.selectedTypeSlug}` }] } });
                 return;
             }
 
