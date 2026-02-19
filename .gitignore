@@ -44,3 +44,5 @@ __pycache__/
 # Project specific
 minions.config.json
 /minions/
+PROMPT.md
+PROMPTS.md
