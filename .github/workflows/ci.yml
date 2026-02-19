@@ -41,3 +41,25 @@ jobs:
 
       - name: Test
         run: pnpm run test
+
+  python-sdk:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python SDK
+        working-directory: packages/python
+        run: pip install -e ".[test]"
+
+      - name: Run Python tests
+        working-directory: packages/python
+        run: pytest -v
