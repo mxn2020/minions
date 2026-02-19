@@ -8,7 +8,7 @@
 
 > **applyDefaults**(`fields`, `type`): `Record`\<`string`, `unknown`\>
 
-Defined in: [lifecycle/index.ts:184](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L184)
+Defined in: [lifecycle/index.ts:184](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/lifecycle/index.ts#L184)
 
 Apply default values from the schema to a fields object.
 

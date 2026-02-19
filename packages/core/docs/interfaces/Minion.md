@@ -6,7 +6,7 @@
 
 # Interface: Minion
 
-Defined in: [types/index.ts:83](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L83)
+Defined in: [types/index.ts:83](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L83)
 
 A Minion is a structured object instance — the fundamental unit of the system.
 Every minion is an instance of a MinionType and stores its dynamic data in `fields`.
@@ -17,7 +17,7 @@ Every minion is an instance of a MinionType and stores its dynamic data in `fiel
 
 > **id**: `string`
 
-Defined in: [types/index.ts:85](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L85)
+Defined in: [types/index.ts:85](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L85)
 
 Unique identifier (UUID v4).
 
@@ -27,7 +27,7 @@ Unique identifier (UUID v4).
 
 > **title**: `string`
 
-Defined in: [types/index.ts:87](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L87)
+Defined in: [types/index.ts:87](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L87)
 
 Human-readable title.
 
@@ -37,7 +37,7 @@ Human-readable title.
 
 > **minionTypeId**: `string`
 
-Defined in: [types/index.ts:89](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L89)
+Defined in: [types/index.ts:89](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L89)
 
 Reference to the MinionType that defines this minion's schema.
 
@@ -47,7 +47,7 @@ Reference to the MinionType that defines this minion's schema.
 
 > **fields**: `Record`\<`string`, `unknown`\>
 
-Defined in: [types/index.ts:91](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L91)
+Defined in: [types/index.ts:91](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L91)
 
 Dynamic field values as defined by the MinionType schema.
 
@@ -57,7 +57,7 @@ Dynamic field values as defined by the MinionType schema.
 
 > **createdAt**: `string`
 
-Defined in: [types/index.ts:93](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L93)
+Defined in: [types/index.ts:93](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L93)
 
 ISO 8601 creation timestamp.
 
@@ -67,7 +67,7 @@ ISO 8601 creation timestamp.
 
 > **updatedAt**: `string`
 
-Defined in: [types/index.ts:95](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L95)
+Defined in: [types/index.ts:95](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L95)
 
 ISO 8601 last-update timestamp.
 
@@ -77,7 +77,7 @@ ISO 8601 last-update timestamp.
 
 > `optional` **tags**: `string`[]
 
-Defined in: [types/index.ts:97](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L97)
+Defined in: [types/index.ts:97](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L97)
 
 Freeform tags for categorization.
 
@@ -87,7 +87,7 @@ Freeform tags for categorization.
 
 > `optional` **status**: [`MinionStatus`](../type-aliases/MinionStatus.md)
 
-Defined in: [types/index.ts:99](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L99)
+Defined in: [types/index.ts:99](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L99)
 
 Current lifecycle status.
 
@@ -97,7 +97,7 @@ Current lifecycle status.
 
 > `optional` **priority**: [`MinionPriority`](../type-aliases/MinionPriority.md)
 
-Defined in: [types/index.ts:101](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L101)
+Defined in: [types/index.ts:101](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L101)
 
 Priority level.
 
@@ -107,7 +107,7 @@ Priority level.
 
 > `optional` **description**: `string`
 
-Defined in: [types/index.ts:103](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L103)
+Defined in: [types/index.ts:103](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L103)
 
 Longer description of this minion.
 
@@ -117,7 +117,7 @@ Longer description of this minion.
 
 > `optional` **dueDate**: `string`
 
-Defined in: [types/index.ts:105](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L105)
+Defined in: [types/index.ts:105](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L105)
 
 ISO 8601 due date.
 
@@ -127,7 +127,7 @@ ISO 8601 due date.
 
 > `optional` **categoryId**: `string`
 
-Defined in: [types/index.ts:107](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L107)
+Defined in: [types/index.ts:107](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L107)
 
 Reference to a category minion.
 
@@ -137,7 +137,7 @@ Reference to a category minion.
 
 > `optional` **folderId**: `string`
 
-Defined in: [types/index.ts:109](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L109)
+Defined in: [types/index.ts:109](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L109)
 
 Reference to a folder/container minion.
 
@@ -147,7 +147,7 @@ Reference to a folder/container minion.
 
 > `optional` **createdBy**: `string`
 
-Defined in: [types/index.ts:111](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L111)
+Defined in: [types/index.ts:111](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L111)
 
 User or system that created this minion.
 
@@ -157,7 +157,7 @@ User or system that created this minion.
 
 > `optional` **updatedBy**: `string`
 
-Defined in: [types/index.ts:113](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L113)
+Defined in: [types/index.ts:113](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L113)
 
 User or system that last updated this minion.
 
@@ -167,7 +167,7 @@ User or system that last updated this minion.
 
 > `optional` **deletedAt**: `string` \| `null`
 
-Defined in: [types/index.ts:115](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L115)
+Defined in: [types/index.ts:115](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L115)
 
 ISO 8601 soft-delete timestamp. Null/undefined if not deleted.
 
@@ -177,7 +177,7 @@ ISO 8601 soft-delete timestamp. Null/undefined if not deleted.
 
 > `optional` **deletedBy**: `string` \| `null`
 
-Defined in: [types/index.ts:117](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L117)
+Defined in: [types/index.ts:117](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L117)
 
 User or system that deleted this minion.
 
@@ -187,7 +187,7 @@ User or system that deleted this minion.
 
 > `optional` **searchableText**: `string`
 
-Defined in: [types/index.ts:119](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L119)
+Defined in: [types/index.ts:119](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L119)
 
 Computed full-text search field.
 
@@ -197,6 +197,6 @@ Computed full-text search field.
 
 > `optional` **\_legacy**: `Record`\<`string`, `unknown`\>
 
-Defined in: [types/index.ts:121](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L121)
+Defined in: [types/index.ts:121](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L121)
 
 Legacy field values preserved after schema evolution.

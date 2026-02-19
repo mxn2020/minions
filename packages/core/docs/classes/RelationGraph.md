@@ -6,7 +6,7 @@
 
 # Class: RelationGraph
 
-Defined in: [relations/index.ts:13](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L13)
+Defined in: [relations/index.ts:13](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L13)
 
 In-memory relation graph manager.
 Provides utilities to add, remove, query, and traverse relations.
@@ -27,7 +27,7 @@ Provides utilities to add, remove, query, and traverse relations.
 
 > **add**(`input`): [`Relation`](../interfaces/Relation.md)
 
-Defined in: [relations/index.ts:20](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L20)
+Defined in: [relations/index.ts:20](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L20)
 
 Add a relation to the graph.
 
@@ -49,7 +49,7 @@ The created Relation.
 
 > **remove**(`id`): `boolean`
 
-Defined in: [relations/index.ts:38](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L38)
+Defined in: [relations/index.ts:38](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L38)
 
 Remove a relation by ID.
 
@@ -71,7 +71,7 @@ true if the relation was removed.
 
 > **removeByMinionId**(`minionId`): `number`
 
-Defined in: [relations/index.ts:46](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L46)
+Defined in: [relations/index.ts:46](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L46)
 
 Remove all relations involving a given minion (as source or target).
 
@@ -93,7 +93,7 @@ Number of relations removed.
 
 > **get**(`id`): [`Relation`](../interfaces/Relation.md) \| `undefined`
 
-Defined in: [relations/index.ts:60](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L60)
+Defined in: [relations/index.ts:60](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L60)
 
 Get a relation by ID.
 
@@ -113,7 +113,7 @@ Get a relation by ID.
 
 > **list**(): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [relations/index.ts:67](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L67)
+Defined in: [relations/index.ts:67](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L67)
 
 Get all relations.
 
@@ -127,7 +127,7 @@ Get all relations.
 
 > **getFromSource**(`sourceId`, `type?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [relations/index.ts:74](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L74)
+Defined in: [relations/index.ts:74](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L74)
 
 Get all relations where the given minion is the source.
 
@@ -151,7 +151,7 @@ Get all relations where the given minion is the source.
 
 > **getToTarget**(`targetId`, `type?`): [`Relation`](../interfaces/Relation.md)[]
 
-Defined in: [relations/index.ts:83](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L83)
+Defined in: [relations/index.ts:83](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L83)
 
 Get all relations where the given minion is the target.
 
@@ -175,7 +175,7 @@ Get all relations where the given minion is the target.
 
 > **getChildren**(`parentId`): `string`[]
 
-Defined in: [relations/index.ts:92](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L92)
+Defined in: [relations/index.ts:92](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L92)
 
 Get children of a minion (targets of parent_of relations from this minion).
 
@@ -195,7 +195,7 @@ Get children of a minion (targets of parent_of relations from this minion).
 
 > **getParents**(`childId`): `string`[]
 
-Defined in: [relations/index.ts:99](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L99)
+Defined in: [relations/index.ts:99](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L99)
 
 Get parents of a minion (sources of parent_of relations to this minion).
 
@@ -215,7 +215,7 @@ Get parents of a minion (sources of parent_of relations to this minion).
 
 > **getTree**(`rootId`): `string`[]
 
-Defined in: [relations/index.ts:107](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L107)
+Defined in: [relations/index.ts:107](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L107)
 
 Get the full tree of descendants from a root minion using parent_of relations.
 Returns a flat array of all descendant IDs (depth-first).
@@ -236,7 +236,7 @@ Returns a flat array of all descendant IDs (depth-first).
 
 > **getNetwork**(`minionId`): `string`[]
 
-Defined in: [relations/index.ts:128](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/relations/index.ts#L128)
+Defined in: [relations/index.ts:128](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/relations/index.ts#L128)
 
 Get all minions connected to the given minion (regardless of direction or type).
 Returns a flat array of connected minion IDs.
