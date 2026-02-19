@@ -9,3 +9,28 @@ dist/
 coverage/
 .DS_Store
 *.log
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea
+*.suo
+*.ntvs
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+Thumbs.db
+
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Project specific
+minions.config.json
+minions/
