@@ -200,16 +200,29 @@ async function createType(): Promise<void> {
     isSystem: false,
     schema: [
       {
-        "_comment": "Replace this example field with your own. See docs for field types.",
-        "name": "content",
-        "type": "textarea",
-        "required": true,
-        "description": "Main content field"
+        name: 'content',
+        type: 'textarea',
+        required: true,
+        description: 'Main content field — replace with your own fields (see: minions type list)',
       }
     ],
   };
 
-  const filename = `${slug}.type.json`;
+  // Resolve output directory: use typesDir from config if present, else cwd
+  const cwd = process.cwd();
+  let typesDir = cwd;
+  const configPath = path.join(cwd, 'minions.config.json');
+  if (fs.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      if (config.typesDir) {
+        typesDir = path.resolve(cwd, config.typesDir);
+        fs.mkdirSync(typesDir, { recursive: true });
+      }
+    } catch { /* ignore config parse errors */ }
+  }
+
+  const filename = path.join(typesDir, `${slug}.type.json`);
   fs.writeFileSync(filename, JSON.stringify(type, null, 2) + '\n');
   console.log(`\n✅ Created type definition: ${filename}`);
   rl.close();

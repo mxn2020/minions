@@ -137,20 +137,17 @@ export function PlaygroundProvider({ children }: { children: ReactNode }) {
 
     const reset = useCallback(() => {
         dispatch({ type: 'RESET' });
-        // Initialize with default type
-        setTimeout(() => setType('agent'), 0);
-    }, [setType]);
+        // setType will be called by the effect below when selectedTypeSlug resets to 'agent'
+    }, []);
 
-    // Guard against double-initialization in React strict mode
-    const initializedRef = useRef(false);
-
-    // Initial setup — run only once
+    // Initialize editor template whenever the selected type changes (covers init, type switch, and reset)
+    const prevTypeSlugRef = useRef<string | null>(null);
     useEffect(() => {
-        if (!initializedRef.current && state.editorValue === initialState.editorValue && state.selectedTypeSlug === 'agent') {
-            initializedRef.current = true;
-            setType('agent');
+        if (prevTypeSlugRef.current !== state.selectedTypeSlug) {
+            prevTypeSlugRef.current = state.selectedTypeSlug;
+            setType(state.selectedTypeSlug);
         }
-    }, [setType]);
+    }, [state.selectedTypeSlug, setType]);
 
     const value = {
         state,
