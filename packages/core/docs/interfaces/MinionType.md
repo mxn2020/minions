@@ -6,7 +6,7 @@
 
 # Interface: MinionType
 
-Defined in: [types/index.ts:127](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L127)
+Defined in: [types/index.ts:127](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L127)
 
 A MinionType defines the schema and behavior of a kind of minion.
 
@@ -16,7 +16,7 @@ A MinionType defines the schema and behavior of a kind of minion.
 
 > **id**: `string`
 
-Defined in: [types/index.ts:129](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L129)
+Defined in: [types/index.ts:129](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L129)
 
 Unique identifier (UUID v4).
 
@@ -26,7 +26,7 @@ Unique identifier (UUID v4).
 
 > **name**: `string`
 
-Defined in: [types/index.ts:131](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L131)
+Defined in: [types/index.ts:131](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L131)
 
 Human-readable name.
 
@@ -36,7 +36,7 @@ Human-readable name.
 
 > **slug**: `string`
 
-Defined in: [types/index.ts:133](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L133)
+Defined in: [types/index.ts:133](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L133)
 
 URL-safe kebab-case slug, unique within the system.
 
@@ -46,7 +46,7 @@ URL-safe kebab-case slug, unique within the system.
 
 > **schema**: [`FieldDefinition`](FieldDefinition.md)[]
 
-Defined in: [types/index.ts:135](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L135)
+Defined in: [types/index.ts:135](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L135)
 
 JSON Schema-style field definitions.
 
@@ -56,7 +56,7 @@ JSON Schema-style field definitions.
 
 > `optional` **description**: `string`
 
-Defined in: [types/index.ts:137](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L137)
+Defined in: [types/index.ts:137](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L137)
 
 Description of this type's purpose.
 
@@ -66,7 +66,7 @@ Description of this type's purpose.
 
 > `optional` **icon**: `string`
 
-Defined in: [types/index.ts:139](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L139)
+Defined in: [types/index.ts:139](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L139)
 
 Emoji or icon identifier.
 
@@ -76,7 +76,7 @@ Emoji or icon identifier.
 
 > `optional` **color**: `string`
 
-Defined in: [types/index.ts:141](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L141)
+Defined in: [types/index.ts:141](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L141)
 
 Hex color code.
 
@@ -86,7 +86,7 @@ Hex color code.
 
 > `optional` **isSystem**: `boolean`
 
-Defined in: [types/index.ts:143](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L143)
+Defined in: [types/index.ts:143](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L143)
 
 Whether this is a built-in system type.
 
@@ -96,7 +96,7 @@ Whether this is a built-in system type.
 
 > `optional` **isOrganizational**: `boolean`
 
-Defined in: [types/index.ts:145](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L145)
+Defined in: [types/index.ts:145](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L145)
 
 Whether this type represents an organizational container.
 
@@ -106,7 +106,7 @@ Whether this type represents an organizational container.
 
 > `optional` **allowedChildTypes**: `string`[]
 
-Defined in: [types/index.ts:147](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L147)
+Defined in: [types/index.ts:147](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L147)
 
 Type IDs that are allowed as children via parent_of relations.
 
@@ -116,7 +116,7 @@ Type IDs that are allowed as children via parent_of relations.
 
 > `optional` **behaviors**: `string`[]
 
-Defined in: [types/index.ts:149](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L149)
+Defined in: [types/index.ts:149](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L149)
 
 Named behavior flags (e.g. "executable", "cacheable").
 
@@ -126,7 +126,7 @@ Named behavior flags (e.g. "executable", "cacheable").
 
 > `optional` **defaultView**: `string`
 
-Defined in: [types/index.ts:151](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L151)
+Defined in: [types/index.ts:151](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L151)
 
 Default view mode.
 
@@ -136,7 +136,7 @@ Default view mode.
 
 > `optional` **availableViews**: `string`[]
 
-Defined in: [types/index.ts:153](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L153)
+Defined in: [types/index.ts:153](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L153)
 
 All available view modes.
 
@@ -146,7 +146,7 @@ All available view modes.
 
 > `optional` **createdAt**: `string`
 
-Defined in: [types/index.ts:155](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L155)
+Defined in: [types/index.ts:155](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L155)
 
 ISO 8601 creation timestamp.
 
@@ -156,6 +156,6 @@ ISO 8601 creation timestamp.
 
 > `optional` **updatedAt**: `string`
 
-Defined in: [types/index.ts:157](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L157)
+Defined in: [types/index.ts:157](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L157)
 
 ISO 8601 last-update timestamp.

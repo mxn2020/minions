@@ -6,7 +6,7 @@
 
 # Interface: ExecutionResult
 
-Defined in: [types/index.ts:222](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L222)
+Defined in: [types/index.ts:222](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L222)
 
 Result of executing a minion.
 
@@ -16,7 +16,7 @@ Result of executing a minion.
 
 > **output**: `unknown`
 
-Defined in: [types/index.ts:223](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L223)
+Defined in: [types/index.ts:223](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L223)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/index.ts:223](https://github.com/mxn2020/minions/blob/bcb753e
 
 > **status**: `"completed"` \| `"cancelled"` \| `"failed"`
 
-Defined in: [types/index.ts:224](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L224)
+Defined in: [types/index.ts:224](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L224)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [types/index.ts:224](https://github.com/mxn2020/minions/blob/bcb753e
 
 > **startedAt**: `string`
 
-Defined in: [types/index.ts:225](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L225)
+Defined in: [types/index.ts:225](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L225)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types/index.ts:225](https://github.com/mxn2020/minions/blob/bcb753e
 
 > **completedAt**: `string`
 
-Defined in: [types/index.ts:226](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L226)
+Defined in: [types/index.ts:226](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L226)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [types/index.ts:226](https://github.com/mxn2020/minions/blob/bcb753e
 
 > `optional` **error**: `string`
 
-Defined in: [types/index.ts:227](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L227)
+Defined in: [types/index.ts:227](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L227)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [types/index.ts:227](https://github.com/mxn2020/minions/blob/bcb753e
 
 > `optional` **metadata**: `Record`\<`string`, `unknown`\>
 
-Defined in: [types/index.ts:228](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/types/index.ts#L228)
+Defined in: [types/index.ts:228](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/types/index.ts#L228)

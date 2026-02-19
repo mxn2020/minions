@@ -8,7 +8,7 @@
 
 > **restoreMinion**(`minion`): [`Minion`](../interfaces/Minion.md)
 
-Defined in: [lifecycle/index.ts:172](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L172)
+Defined in: [lifecycle/index.ts:172](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/lifecycle/index.ts#L172)
 
 Restore a soft-deleted minion.
 

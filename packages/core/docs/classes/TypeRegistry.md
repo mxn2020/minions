@@ -6,7 +6,7 @@
 
 # Class: TypeRegistry
 
-Defined in: [registry/index.ts:13](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L13)
+Defined in: [registry/index.ts:13](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L13)
 
 An in-memory registry for MinionTypes.
 Pre-loaded with all built-in system types.
@@ -17,7 +17,7 @@ Pre-loaded with all built-in system types.
 
 > **new TypeRegistry**(`loadBuiltins?`): `TypeRegistry`
 
-Defined in: [registry/index.ts:17](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L17)
+Defined in: [registry/index.ts:17](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L17)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [registry/index.ts:17](https://github.com/mxn2020/minions/blob/bcb75
 
 > **register**(`type`): `void`
 
-Defined in: [registry/index.ts:29](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L29)
+Defined in: [registry/index.ts:29](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L29)
 
 Register a MinionType in the registry.
 
@@ -59,7 +59,7 @@ Error if a type with the same id or slug already exists.
 
 > **getById**(`id`): [`MinionType`](../interfaces/MinionType.md) \| `undefined`
 
-Defined in: [registry/index.ts:44](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L44)
+Defined in: [registry/index.ts:44](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L44)
 
 Get a type by its ID.
 
@@ -81,7 +81,7 @@ The MinionType or undefined if not found.
 
 > **getBySlug**(`slug`): [`MinionType`](../interfaces/MinionType.md) \| `undefined`
 
-Defined in: [registry/index.ts:52](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L52)
+Defined in: [registry/index.ts:52](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L52)
 
 Get a type by its slug.
 
@@ -103,7 +103,7 @@ The MinionType or undefined if not found.
 
 > **list**(): [`MinionType`](../interfaces/MinionType.md)[]
 
-Defined in: [registry/index.ts:60](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L60)
+Defined in: [registry/index.ts:60](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L60)
 
 List all registered types.
 
@@ -117,7 +117,7 @@ List all registered types.
 
 > **has**(`id`): `boolean`
 
-Defined in: [registry/index.ts:67](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L67)
+Defined in: [registry/index.ts:67](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L67)
 
 Check if a type exists by ID.
 
@@ -137,7 +137,7 @@ Check if a type exists by ID.
 
 > **remove**(`id`): `boolean`
 
-Defined in: [registry/index.ts:75](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/registry/index.ts#L75)
+Defined in: [registry/index.ts:75](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/registry/index.ts#L75)
 
 Remove a type from the registry.
 

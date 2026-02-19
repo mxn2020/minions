@@ -8,7 +8,7 @@
 
 > **hardDelete**(`minion`, `graph`): `void`
 
-Defined in: [lifecycle/index.ts:163](https://github.com/mxn2020/minions/blob/bcb753ef3e7bd81eeb88732a5f9b118c055a4278/packages/core/src/lifecycle/index.ts#L163)
+Defined in: [lifecycle/index.ts:163](https://github.com/mxn2020/minions/blob/52978fbc1436796e6df75d6f5ad5823d4d3faa8f/packages/core/src/lifecycle/index.ts#L163)
 
 Hard-delete a minion by removing all of its relations from the graph.
 
