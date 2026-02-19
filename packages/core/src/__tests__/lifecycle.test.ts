@@ -7,7 +7,6 @@ describe('createMinion', () => {
   it('should create a valid minion', () => {
     const { minion, validation } = createMinion({
       title: 'Test Note',
-      minionTypeId: noteType.id,
       fields: { content: 'Hello world' },
     }, noteType);
 
@@ -23,7 +22,6 @@ describe('createMinion', () => {
   it('should report validation errors', () => {
     const { validation } = createMinion({
       title: 'Bad Note',
-      minionTypeId: noteType.id,
       fields: {},
     }, noteType);
 
@@ -42,7 +40,6 @@ describe('createMinion', () => {
     };
     const { minion } = createMinion({
       title: 'Test',
-      minionTypeId: typeWithDefaults.id,
       fields: {},
     }, typeWithDefaults);
 
@@ -52,7 +49,6 @@ describe('createMinion', () => {
   it('should set searchableText on creation', () => {
     const { minion } = createMinion({
       title: 'My Research Note',
-      minionTypeId: noteType.id,
       fields: { content: 'Some important CONTENT here' },
     }, noteType);
 
@@ -73,7 +69,6 @@ describe('createMinion', () => {
     };
     const { minion } = createMinion({
       title: 'Tagged',
-      minionTypeId: typeWithTags.id,
       fields: { content: 'body', labels: ['alpha', 'beta'] },
     }, typeWithTags);
 
@@ -83,7 +78,6 @@ describe('createMinion', () => {
   it('should include description in searchableText', () => {
     const { minion } = createMinion({
       title: 'Note Title',
-      minionTypeId: noteType.id,
       description: 'An important research finding',
       fields: { content: 'body text' },
     }, noteType);
@@ -97,7 +91,6 @@ describe('updateMinion', () => {
   it('should update fields', async () => {
     const { minion } = createMinion({
       title: 'Agent',
-      minionTypeId: agentType.id,
       fields: { role: 'researcher' },
     }, agentType);
 
@@ -115,7 +108,6 @@ describe('updateMinion', () => {
   it('should update title', () => {
     const { minion } = createMinion({
       title: 'Old Title',
-      minionTypeId: noteType.id,
       fields: { content: 'test' },
     }, noteType);
 
@@ -126,7 +118,6 @@ describe('updateMinion', () => {
   it('should strip undefined field values after merge', () => {
     const { minion } = createMinion({
       title: 'Note',
-      minionTypeId: noteType.id,
       fields: { content: 'hello' },
     }, noteType);
 
@@ -151,7 +142,6 @@ describe('updateMinion', () => {
     };
     const { minion } = createMinion({
       title: 'Test',
-      minionTypeId: typeWithMultiFields.id,
       fields: { a: 'keep', b: 'also keep' },
     }, typeWithMultiFields);
 
@@ -166,7 +156,6 @@ describe('updateMinion', () => {
   it('should update searchableText on update', () => {
     const { minion } = createMinion({
       title: 'Original',
-      minionTypeId: noteType.id,
       fields: { content: 'first version' },
     }, noteType);
 
@@ -187,7 +176,6 @@ describe('softDelete', () => {
   it('should set deletedAt', () => {
     const { minion } = createMinion({
       title: 'Note',
-      minionTypeId: noteType.id,
       fields: { content: 'test' },
     }, noteType);
 
@@ -199,7 +187,6 @@ describe('softDelete', () => {
   it('should use the same timestamp for deletedAt and updatedAt', () => {
     const { minion } = createMinion({
       title: 'Note',
-      minionTypeId: noteType.id,
       fields: { content: 'test' },
     }, noteType);
 
@@ -212,13 +199,11 @@ describe('hardDelete', () => {
   it('should remove all relations involving the minion', () => {
     const { minion: m1 } = createMinion({
       title: 'Source',
-      minionTypeId: noteType.id,
       fields: { content: 'a' },
     }, noteType);
 
     const { minion: m2 } = createMinion({
       title: 'Target',
-      minionTypeId: noteType.id,
       fields: { content: 'b' },
     }, noteType);
 
@@ -239,7 +224,6 @@ describe('hardDelete', () => {
   it('should not throw when there are no relations', () => {
     const { minion } = createMinion({
       title: 'Lonely',
-      minionTypeId: noteType.id,
       fields: { content: 'alone' },
     }, noteType);
 
@@ -252,19 +236,16 @@ describe('hardDelete', () => {
   it('should only remove relations for the target minion, not others', () => {
     const { minion: m1 } = createMinion({
       title: 'A',
-      minionTypeId: noteType.id,
       fields: { content: 'a' },
     }, noteType);
 
     const { minion: m2 } = createMinion({
       title: 'B',
-      minionTypeId: noteType.id,
       fields: { content: 'b' },
     }, noteType);
 
     const { minion: m3 } = createMinion({
       title: 'C',
-      minionTypeId: noteType.id,
       fields: { content: 'c' },
     }, noteType);
 
@@ -284,7 +265,6 @@ describe('restoreMinion', () => {
   it('should clear deletedAt', () => {
     const { minion } = createMinion({
       title: 'Note',
-      minionTypeId: noteType.id,
       fields: { content: 'test' },
     }, noteType);
 

@@ -79,7 +79,7 @@ export function createMinion(
   const minion: Minion = {
     id: generateId(),
     title: input.title,
-    minionTypeId: input.minionTypeId,
+    minionTypeId: type.id,
     fields,
     createdAt: timestamp,
     updatedAt: timestamp,

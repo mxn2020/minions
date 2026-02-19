@@ -17,7 +17,6 @@ const agentType = registry.getBySlug('agent')!;
 
 const { minion: agent } = createMinion({
   title: 'Research Assistant',
-  minionTypeId: agentType.id,
   fields: {
     role: 'researcher',
     model: 'gpt-4',
@@ -39,7 +38,6 @@ const thoughtType = registry.getBySlug('thought')!;
 
 const { minion: styleGuide } = createMinion({
   title: 'Research Style Guide',
-  minionTypeId: thoughtType.id,
   fields: {
     content: 'Always cite sources. Prefer peer-reviewed papers. Summarize in 3 paragraphs.',
     confidence: 0.95,
@@ -57,7 +55,6 @@ const promptType = registry.getBySlug('prompt-template')!;
 
 const { minion: template } = createMinion({
   title: 'Research Summary Template',
-  minionTypeId: promptType.id,
   fields: {
     template: 'Research topic: {{topic}}\n\nSummarize the top {{count}} papers. For each: title, authors, key findings, and relevance score.',
     variables: ['topic', 'count'],
@@ -96,7 +93,6 @@ const testType = registry.getBySlug('test-case')!;
 
 const { minion: test } = createMinion({
   title: 'Research Quality Test',
-  minionTypeId: testType.id,
   fields: {
     input: { topic: 'transformer architectures', count: 3 },
     assertions: {

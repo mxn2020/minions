@@ -43,7 +43,6 @@ const agentType = registry.getBySlug('agent')!;
 // 2. Create an agent
 const { minion, validation } = createMinion({
   title: 'My First Agent',
-  minionTypeId: agentType.id,
   fields: {
     role: 'assistant',
     model: 'gpt-4'
