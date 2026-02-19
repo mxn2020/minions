@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  site: 'https://minions.dev',
+  site: 'https://minions.wtf',
   integrations: [
     starlight({
       title: 'Minions',

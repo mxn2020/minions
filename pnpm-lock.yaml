@@ -19,6 +19,10 @@ importers:
       sharp:
         specifier: ^0.33.0
         version: 0.33.5
+    devDependencies:
+      pagefind:
+        specifier: ^1.3.0
+        version: 1.4.0
 
   apps/web:
     dependencies:
