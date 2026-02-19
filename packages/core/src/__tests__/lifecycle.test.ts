@@ -79,6 +79,18 @@ describe('createMinion', () => {
 
     expect(minion.searchableText).toContain('alpha beta');
   });
+
+  it('should include description in searchableText', () => {
+    const { minion } = createMinion({
+      title: 'Note Title',
+      minionTypeId: noteType.id,
+      description: 'An important research finding',
+      fields: { content: 'body text' },
+    }, noteType);
+
+    expect(minion.searchableText).toContain('an important research finding');
+    expect(minion.searchableText).toContain('note title');
+  });
 });
 
 describe('updateMinion', () => {

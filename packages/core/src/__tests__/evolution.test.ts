@@ -64,4 +64,19 @@ describe('migrateMinion', () => {
     const migrated = migrateMinion(baseMinion, oldSchema, newSchema);
     expect(migrated._legacy).toBeUndefined();
   });
+
+  it('should accumulate _legacy values from previous migrations', () => {
+    const minionWithLegacy: Minion = {
+      ...baseMinion,
+      fields: { name: 'Alice', age: 30 },
+      _legacy: { oldField: 'preserved' },
+    };
+    const newSchema: FieldDefinition[] = [
+      { name: 'name', type: 'string' },
+      // age removed — should join existing _legacy
+    ];
+    const migrated = migrateMinion(minionWithLegacy, oldSchema, newSchema);
+    expect(migrated._legacy?.oldField).toBe('preserved');
+    expect(migrated._legacy?.age).toBe(30);
+  });
 });

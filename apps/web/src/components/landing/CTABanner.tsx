@@ -13,7 +13,7 @@ export default function CTABanner() {
                     <Link to="/playground">
                         <Button size="lg" className="min-w-[200px]">Open Playground →</Button>
                     </Link>
-                    <a href="https://github.com" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/mxn2020/minions" target="_blank" rel="noreferrer">
                         <Button size="lg" variant="secondary" className="min-w-[200px]">View on GitHub</Button>
                     </a>
                 </div>

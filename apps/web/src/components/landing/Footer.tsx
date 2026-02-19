@@ -17,14 +17,14 @@ export default function Footer() {
                         <ul className="space-y-2 text-sm text-muted">
                             <li><a href="/docs" className="hover:text-primary transition-colors">Documentation</a></li>
                             <li><a href="/spec" className="hover:text-primary transition-colors">Specification</a></li>
-                            <li><a href="https://github.com" className="hover:text-primary transition-colors">GitHub</a></li>
-                            <li><a href="https://npmjs.com" className="hover:text-primary transition-colors">NPM</a></li>
+                            <li><a href="https://github.com/mxn2020/minions" className="hover:text-primary transition-colors">GitHub</a></li>
+                            <li><a href="https://www.npmjs.com/package/@minions/core" className="hover:text-primary transition-colors">NPM</a></li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="text-sm font-semibold text-primary mb-4">Legal</h3>
                         <ul className="space-y-2 text-sm text-muted">
-                            <li><a href="/license" className="hover:text-primary transition-colors">License (AGPL-3.0)</a></li>
+                            <li><a href="/license" className="hover:text-primary transition-colors">License (MIT)</a></li>
                             <li><a href="/privacy" className="hover:text-primary transition-colors">Privacy</a></li>
                         </ul>
                     </div>

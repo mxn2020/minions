@@ -83,4 +83,18 @@ describe('RelationGraph', () => {
     expect(graph.getFromSource('a', 'parent_of')).toHaveLength(1);
     expect(graph.getFromSource('a')).toHaveLength(2);
   });
+
+  it('should handle circular parent_of without infinite loop', () => {
+    const graph = new RelationGraph();
+    graph.add({ sourceId: 'a', targetId: 'b', type: 'parent_of' });
+    graph.add({ sourceId: 'b', targetId: 'c', type: 'parent_of' });
+    graph.add({ sourceId: 'c', targetId: 'a', type: 'parent_of' }); // cycle: c → a
+
+    const tree = graph.getTree('a');
+    // Should terminate and include all nodes exactly once
+    expect(tree).toHaveLength(3); // b, c, a (a via cycle)
+    expect(tree).toContain('b');
+    expect(tree).toContain('c');
+    expect(tree).toContain('a');
+  });
 });

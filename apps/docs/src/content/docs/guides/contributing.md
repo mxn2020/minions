@@ -65,4 +65,4 @@ Changes to the specification (`spec/`) require discussion in a GitHub issue firs
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the [AGPL-3.0 License](https://www.gnu.org/licenses/agpl-3.0.en.html).
+By contributing, you agree that your contributions will be licensed under the [MIT License](https://opensource.org/licenses/MIT).

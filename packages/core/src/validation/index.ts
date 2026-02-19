@@ -7,7 +7,7 @@
 import type { FieldDefinition, FieldType, ValidationError, ValidationResult } from '../types/index.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const URL_RE = /^https?:\/\/.+/;
+const ISO8601_RE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))?$/;
 
 /**
  * Validate a single field value against its definition.
@@ -75,7 +75,7 @@ function validateFieldType(value: unknown, field: FieldDefinition): ValidationEr
       }
     },
     date: () => {
-      if (typeof value !== 'string' || Number.isNaN(Date.parse(value))) {
+      if (typeof value !== 'string' || !ISO8601_RE.test(value)) {
         errors.push({ field: name, message: `Expected valid ISO 8601 date string`, value });
       }
     },
@@ -102,7 +102,16 @@ function validateFieldType(value: unknown, field: FieldDefinition): ValidationEr
       }
     },
     url: () => {
-      if (typeof value !== 'string' || !URL_RE.test(value)) {
+      if (typeof value !== 'string') {
+        errors.push({ field: name, message: `Expected valid URL (http/https)`, value });
+        return;
+      }
+      try {
+        const parsed = new URL(value);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          errors.push({ field: name, message: `Expected valid URL (http/https)`, value });
+        }
+      } catch {
         errors.push({ field: name, message: `Expected valid URL (http/https)`, value });
       }
     },
