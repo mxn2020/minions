@@ -46,3 +46,4 @@ json_str = json.dumps(data)      # → valid JSON, TS-compatible
 ## License
 
 [MIT](../../LICENSE)
+

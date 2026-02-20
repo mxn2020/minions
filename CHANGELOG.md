@@ -62,3 +62,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added npm metadata (`repository`, `homepage`, `keywords`) to `minions-sdk` and `minions-cli`
 - Added `engines: { node: ">=18" }` to `minions-cli` and `minions-web`
 - Added 404 page to `minions-web`
+
