@@ -1,0 +1,2 @@
+# Map requests the browser makes to /docs/_astro/* back to the root when accessing the standalone domain
+/docs/*  /:splat  200

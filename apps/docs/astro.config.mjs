@@ -7,6 +7,7 @@ const siteUrl = isProd ? 'https://www.minions.wtf' : (isDev ? 'https://dev--mini
 
 export default defineConfig({
   site: siteUrl,
+  base: '/docs',
   integrations: [
     starlight({
       title: 'Minions',
