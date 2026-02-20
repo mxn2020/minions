@@ -123,7 +123,7 @@ class JsonFileStorageAdapter(StorageAdapter):
                         data = json.loads(raw)
                         minion = Minion.from_dict(data)
                         self._index[minion.id] = minion
-                    except Exception:
+                    except (json.JSONDecodeError, IOError, ValueError, KeyError):
                         # Silently skip unreadable / corrupt files
                         pass
 

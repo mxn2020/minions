@@ -150,8 +150,12 @@ export class JsonFileStorageAdapter implements StorageAdapter {
             const raw = await readFile(join(l2Path, file), 'utf8');
             const minion = JSON.parse(raw) as Minion;
             this.index.set(minion.id, minion);
-          } catch {
-            // Silently skip unreadable / corrupt files
+          } catch (err) {
+            // Skip unreadable / corrupt files; rethrow unexpected system errors
+            if (err instanceof SyntaxError) continue;
+            const code = (err as NodeJS.ErrnoException).code;
+            if (code === 'ENOENT' || code === 'EACCES' || code === 'EISDIR') continue;
+            throw err;
           }
         }
       }
