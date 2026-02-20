@@ -17,7 +17,7 @@ export default function Navbar() {
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center space-x-6">
-                    <a href="https://minions.wtf" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted transition-colors hover:text-primary">Docs</a>
+                    <a href="/docs" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted transition-colors hover:text-primary">Docs</a>
                     <Link to="/playground" className="text-sm font-medium text-muted transition-colors hover:text-primary">Playground</Link>
                     <a href="https://github.com/mxn2020/minions" target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sm font-medium text-muted transition-colors hover:text-primary">
                         <span>GitHub</span>
@@ -44,7 +44,7 @@ export default function Navbar() {
                         className="md:hidden border-b border-border bg-surface"
                     >
                         <div className="flex flex-col space-y-4 p-4">
-                            <a href="https://minions.wtf" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted hover:text-primary">Docs</a>
+                            <a href="/docs" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted hover:text-primary">Docs</a>
                             <Link to="/playground" className="text-sm font-medium text-muted hover:text-primary">Playground</Link>
                             <a href="https://github.com/mxn2020/minions" className="text-sm font-medium text-muted hover:text-primary">GitHub</a>
                             <Link to="/playground">
