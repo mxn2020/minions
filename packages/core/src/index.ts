@@ -77,6 +77,10 @@ export { generateId, now } from './utils.js';
 // ─── Client ──────────────────────────────────────────────────────────────────
 export { Minions, MinionWrapper, type MinionsConfig, type MinionPlugin } from './client/index.js';
 
+// ─── Storage ─────────────────────────────────────────────────────────────────
+export type { StorageAdapter, StorageFilter } from './storage/index.js';
+export { MemoryStorageAdapter, JsonFileStorageAdapter } from './storage/index.js';
+
 /**
  * Current specification version — auto-generated from package.json
  * by `scripts/gen-version.js` during prebuild. Do not edit manually.

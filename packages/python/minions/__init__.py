@@ -94,6 +94,10 @@ from .evolution import migrate_minion
 
 from .client import Minions, MinionWrapper, MinionPlugin
 
+# ─── Storage ──────────────────────────────────────────────────────────────────
+
+from .storage import StorageAdapter, StorageFilter, MemoryStorageAdapter, JsonFileStorageAdapter
+
 # ─── Public API ───────────────────────────────────────────────────────────────
 
 __all__ = [
@@ -150,4 +154,9 @@ __all__ = [
     "Minions",
     "MinionWrapper",
     "MinionPlugin",
+    # Storage
+    "StorageAdapter",
+    "StorageFilter",
+    "MemoryStorageAdapter",
+    "JsonFileStorageAdapter",
 ]
