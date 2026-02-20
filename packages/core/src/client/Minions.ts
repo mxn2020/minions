@@ -2,10 +2,13 @@ import { TypeRegistry } from '../registry/index.js';
 import { RelationGraph } from '../relations/index.js';
 import { createMinion, updateMinion, softDelete, hardDelete, restoreMinion } from '../lifecycle/index.js';
 import type { Minion, MinionType, CreateMinionInput, UpdateMinionInput, RelationType } from '../types/index.js';
+import type { StorageAdapter, StorageFilter } from '../storage/index.js';
 import type { MinionPlugin } from './Plugin.js';
 
 export interface MinionsConfig {
     plugins?: MinionPlugin[];
+    /** Optional storage adapter for persisting minions. */
+    storage?: StorageAdapter;
 }
 
 /**
@@ -30,10 +33,20 @@ export class MinionWrapper {
 /**
  * Central Client facade for the Minions ecosystem.
  * Orchestrates TypeRegistry and RelationGraph directly, and supports plugin mounting.
+ *
+ * Pass a `storage` adapter in the config to enable minion persistence:
+ *
+ * ```typescript
+ * const storage = await JsonFileStorageAdapter.create('./data/minions');
+ * const minions = new Minions({ storage });
+ * const wrapper = minions.create('note', { title: 'Hello', fields: { content: 'World' } });
+ * await minions.save(wrapper.data);
+ * ```
  */
 export class Minions {
     public registry: TypeRegistry;
     public graph: RelationGraph;
+    public storage?: StorageAdapter;
 
     // We allow plugin namespaces to be attached dynamically
     [key: string]: any;
@@ -41,6 +54,7 @@ export class Minions {
     constructor(config?: MinionsConfig) {
         this.registry = new TypeRegistry();
         this.graph = new RelationGraph();
+        this.storage = config?.storage;
 
         if (config?.plugins) {
             for (const plugin of config.plugins) {
@@ -107,5 +121,65 @@ export class Minions {
      */
     restore(minion: Minion): MinionWrapper {
         return new MinionWrapper(restoreMinion(minion), this);
+    }
+
+    // ── Storage helpers ────────────────────────────────────────────────────
+
+    /**
+     * Persist a minion to the configured storage adapter.
+     * Throws if no storage adapter has been configured.
+     */
+    async save(minion: Minion): Promise<void> {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        await this.storage.set(minion);
+    }
+
+    /**
+     * Load a minion from the configured storage adapter by ID.
+     * Returns `undefined` if the minion does not exist.
+     * Throws if no storage adapter has been configured.
+     */
+    async load(id: string): Promise<Minion | undefined> {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        return this.storage.get(id);
+    }
+
+    /**
+     * Remove a minion from the configured storage adapter.
+     * Also removes all of its relations from the in-memory graph.
+     * Throws if no storage adapter has been configured.
+     */
+    async remove(minion: Minion): Promise<void> {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        hardDelete(minion, this.graph);
+        await this.storage.delete(minion.id);
+    }
+
+    /**
+     * List persisted minions from the configured storage adapter.
+     * Throws if no storage adapter has been configured.
+     */
+    async listMinions(filter?: StorageFilter): Promise<Minion[]> {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        return this.storage.list(filter);
+    }
+
+    /**
+     * Full-text search across persisted minions.
+     * Throws if no storage adapter has been configured.
+     */
+    async searchMinions(query: string): Promise<Minion[]> {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        return this.storage.search(query);
     }
 }
