@@ -3,7 +3,7 @@
 
 [build]
   command = "pnpm run build"
-  publish = "dist"
+  publish = "apps/web/dist"
 
 # SPA fallback — all routes → index.html
 [[redirects]]
