@@ -21,7 +21,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 }).format(post.data.date);
 ---
 
-<article class="flex flex-col gap-4 p-6 rounded-xl border border-border bg-surface hover:border-accent/50 transition-colors group">
+<article class="relative flex flex-col gap-4 p-6 rounded-xl border border-border bg-surface hover:border-accent/50 transition-colors group">
   {post.data.coverImage && (
     <div class="w-full h-48 rounded-lg overflow-hidden bg-background mb-2">
       <img 
