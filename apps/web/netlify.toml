@@ -3,5 +3,5 @@
 
 [build]
   command = "pnpm run build"
-  publish = "apps/web/dist"
+  publish = "dist"
 
