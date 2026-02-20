@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/postcss';
+import react from '@astrojs/react';
 
 // https://astro.build/config
 const isProd = process.env.BRANCH === 'main';
@@ -11,6 +12,7 @@ const siteUrl = isProd ? 'https://minions.blog' : (isDev ? 'https://dev--minions
 export default defineConfig({
     site: siteUrl,
     integrations: [
+        react(),
         mdx(),
         sitemap()
     ],
