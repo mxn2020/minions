@@ -17,7 +17,7 @@
     "deploy": "pnpm run deploy:docs && pnpm run deploy:web"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)"
 }
