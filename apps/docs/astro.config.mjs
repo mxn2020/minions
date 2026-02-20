@@ -1,8 +1,11 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+const isProd = process.env.BRANCH === 'main' || process.env.BRANCH === 'master';
+const siteUrl = isProd ? 'https://www.minions.wtf' : (process.env.URL || 'http://localhost:4321');
+
 export default defineConfig({
-  site: 'https://www.minions.wtf',
+  site: siteUrl,
   integrations: [
     starlight({
       title: 'Minions',
