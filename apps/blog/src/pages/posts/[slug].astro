@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import CodeBlock from '../../components/mdx/CodeBlock.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+  });
+
+  // Sort by date to get prev/next
+  const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+  return sortedPosts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prevPost: index < sortedPosts.length - 1 ? sortedPosts[index + 1] : undefined,
+      nextPost: index > 0 ? sortedPosts[index - 1] : undefined,
+    },
+  }));
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content, headings } = await render(post);
+
+const components = {
+  Callout,
+  pre: CodeBlock
+};
+---
+
+<PostLayout post={post} headings={headings} prevPost={prevPost} nextPost={nextPost}>
+  <Content components={components} />
+</PostLayout>

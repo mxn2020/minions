@@ -1,0 +1,93 @@
+---
+title: "Python SDK Release: Crossing the Language Barrier"
+description: "With the release of the Minions Python SDK, you can now seamlessly interoperate between TypeScript frontends and Python AI backends."
+date: 2026-02-22
+author: "Mehdi Nabhani"
+tags: ["release", "python", "interop"]
+draft: false
+---
+
+# Bringing Minions to Python
+
+For the past few months, the Minions ecosystem has been heavily centered around TypeScript. It makes sense—modern full-stack applications heavily leverage Node.js and edge runtimes. But when it comes to actual AI models, data science, and heavy compute, Python is the undisputed king.
+
+Today, we are thrilled to announce the official **Minions Python SDK** (`packages/python/`). 
+
+<Callout type="info">
+The Python SDK is designed with parity in mind. It mirrors the core architecture of the TypeScript SDK while remaining idiomatic to Python developers.
+</Callout>
+
+## Why Language Interop Matters
+
+In a distributed AI system, you might have a Next.js or Astro frontend handling the user experience, while a Python cluster is handling vector embeddings, fine-tuning, or executing slow predictive models. 
+
+By using Minions across both ends, you share a unified mental model. A `Record` or `Relation` serialized from TypeScript is natively deserialized and validated by Pydantic in Python.
+
+## Quick Look at the Python SDK
+
+Let's see how similar the API logic feels. 
+
+```python
+from minions import create_minion, Relation
+from pydantic import BaseModel
+
+class ResearcherState(BaseModel):
+    current_topic: str
+    sources_analyzed: int = 0
+
+# Creating a minion in Python
+researcher = create_minion(
+    id="res_01",
+    role="researcher",
+    state_model=ResearcherState,
+    initial_state={
+        "current_topic": "Quantum Computing AI"
+    }
+)
+
+print(f"Researcher {researcher.id} assigned topic: {researcher.state.current_topic}")
+```
+
+Notice the use of Pydantic for state validation. It provides the exact same robust guarantee as `zod` does in the TypeScript ecosystem.
+
+## Cross-SDK Serialization
+
+Transporting state between a Node.js worker and a FastAPI Python backend is completely seamless.
+
+**TypeScript Side (Sender):**
+```typescript
+const recordJson = JSON.stringify(myMinion.toJSON());
+await fetch('https://api.my-cluster.com/process', {
+  method: 'POST',
+  body: recordJson
+});
+```
+
+**Python Side (Receiver):**
+```python
+from fastapi import FastAPI, Request
+from minions.serialization import MinionDeserializer
+
+app = FastAPI()
+
+@app.post("/process")
+async def process_minion(request: Request):
+    payload = await request.json()
+    
+    # Safely reconstruct the Minion object graph
+    minion = MinionDeserializer.parse(payload)
+    
+    # Work on the strictly typed minion object
+    result = execute_heavy_model(minion.state)
+    return {"status": "success"}
+```
+
+<Callout type="warning">
+When passing structured objects across network boundaries, ensure that both your TypeScript `zod` schemas and Python `Pydantic` models remain synchronized. We recommend generating them from a single source of truth using tools like TypeSpec or OpenAPI.
+</Callout>
+
+## Get It Now
+
+The Python SDK is available starting today in the main Minions monorepo under `packages/python/`. You can install it directly or pull the package into your own poetry environments.
+
+We can't wait to see the multi-language, multi-agent systems you build.

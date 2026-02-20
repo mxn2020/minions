@@ -8,6 +8,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+    const getDocsUrl = () => {
+        if (typeof window === 'undefined') return 'https://www.minions.help';
+        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-docs.netlify.app' : 'https://www.minions.help';
+    };
+
+    const getBlogUrl = () => {
+        if (typeof window === 'undefined') return 'https://www.minions.blog';
+        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-blog.netlify.app' : 'https://www.minions.blog';
+    };
+
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
             <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
@@ -17,7 +27,8 @@ export default function Navbar() {
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center space-x-6">
-                    <a href="/docs" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted transition-colors hover:text-primary">Docs</a>
+                    <a href={getDocsUrl()} target="_blank" rel="noreferrer" className="text-sm font-medium text-muted transition-colors hover:text-primary">Docs</a>
+                    <a href={getBlogUrl()} target="_blank" rel="noreferrer" className="text-sm font-medium text-muted transition-colors hover:text-primary">Blog</a>
                     <Link to="/playground" className="text-sm font-medium text-muted transition-colors hover:text-primary">Playground</Link>
                     <a href="https://github.com/mxn2020/minions" target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sm font-medium text-muted transition-colors hover:text-primary">
                         <span>GitHub</span>
@@ -44,7 +55,8 @@ export default function Navbar() {
                         className="md:hidden border-b border-border bg-surface"
                     >
                         <div className="flex flex-col space-y-4 p-4">
-                            <a href="/docs" target="_blank" rel="noreferrer" className="text-sm font-medium text-muted hover:text-primary">Docs</a>
+                            <a href={getDocsUrl()} target="_blank" rel="noreferrer" className="text-sm font-medium text-muted hover:text-primary">Docs</a>
+                            <a href={getBlogUrl()} target="_blank" rel="noreferrer" className="text-sm font-medium text-muted hover:text-primary">Blog</a>
                             <Link to="/playground" className="text-sm font-medium text-muted hover:text-primary">Playground</Link>
                             <a href="https://github.com/mxn2020/minions" className="text-sm font-medium text-muted hover:text-primary">GitHub</a>
                             <Link to="/playground">

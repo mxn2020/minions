@@ -1,0 +1,108 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import TagBadge from '../components/blog/TagBadge.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import GiscusComments from '../components/blog/GiscusComments.astro';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings: MarkdownHeading[];
+  prevPost?: CollectionEntry<'posts'>;
+  nextPost?: CollectionEntry<'posts'>;
+}
+
+const { post, headings, prevPost, nextPost } = Astro.props;
+const { title, description, date, author, tags, coverImage } = post.data;
+
+// Estimate read time
+const wordCount = post.body?.split(/\s+/g).length || 500;
+const readTime = Math.ceil(wordCount / 200);
+
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric'
+}).format(date);
+---
+
+<BaseLayout title={`${title} | Minions Blog`} description={description} image={coverImage}>
+  <article class="container mx-auto px-4 md:px-6 py-12">
+    <div class="mb-8">
+      <a href="/" class="inline-flex items-center text-sm font-medium text-muted hover:text-accent transition-colors">
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to all posts
+      </a>
+    </div>
+
+    <!-- Header Section -->
+    <header class="mb-12 max-w-4xl mx-auto text-center">
+      <div class="flex items-center justify-center gap-2 text-sm text-muted mb-6">
+        <time datetime={date.toISOString()}>{dateFmt}</time>
+        <span>•</span>
+        <span>{readTime} min read</span>
+        <span>•</span>
+        <span>{author}</span>
+      </div>
+      
+      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-6 tracking-tight leading-tight">
+        {title}
+      </h1>
+      
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+          {tags.map((tag: string) => <TagBadge tag={tag} />)}
+        </div>
+      )}
+
+      {coverImage && (
+        <div class="w-full aspect-video rounded-xl overflow-hidden bg-surface border border-border mt-8">
+          <img 
+            src={coverImage} 
+            alt={`Cover image for ${title}`} 
+            class="w-full h-full object-cover" 
+          />
+        </div>
+      )}
+    </header>
+
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12">
+      <!-- Main Content Container -->
+      <div class="w-full lg:w-3/4 max-w-3xl lg:border-r border-border lg:pr-12 prose prose-invert prose-brand prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-border prose-img:rounded-xl mx-auto lg:mx-0">
+        <slot />
+        
+        <GiscusComments />
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:block w-1/4">
+        <TableOfContents headings={headings} />
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <nav class="max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4 mt-16 pt-8 border-t border-border mx-auto">
+      {prevPost ? (
+        <a href={`/posts/${prevPost.id}`} class="w-full sm:w-1/2 flex flex-col group p-4 rounded-xl hover:bg-surface border border-transparent hover:border-border transition-all">
+          <span class="text-xs text-muted mb-2 flex items-center">
+            <ArrowLeft className="w-3 h-3 mr-1" />
+            Previous
+          </span>
+          <span class="text-primary font-medium group-hover:text-accent line-clamp-1">{prevPost.data.title}</span>
+        </a>
+      ) : <div class="w-full sm:w-1/2"></div>}
+      
+      {nextPost ? (
+        <a href={`/posts/${nextPost.id}`} class="w-full sm:w-1/2 flex flex-col items-end text-right group p-4 rounded-xl hover:bg-surface border border-transparent hover:border-border transition-all">
+          <span class="text-xs text-muted mb-2 flex items-center">
+            Next
+            <ArrowRight className="w-3 h-3 ml-1" />
+          </span>
+          <span class="text-primary font-medium group-hover:text-accent line-clamp-1">{nextPost.data.title}</span>
+        </a>
+      ) : <div class="w-full sm:w-1/2"></div>}
+    </nav>
+  </article>
+</BaseLayout>

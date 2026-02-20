@@ -1,0 +1,30 @@
+---
+const repo = import.meta.env.PUBLIC_GISCUS_REPO;
+const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const category = import.meta.env.PUBLIC_GISCUS_CATEGORY;
+const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+
+const isConfigured = repo && repoId && category && categoryId;
+---
+
+{isConfigured && (
+  <div class="mt-16 pt-8 border-t border-border">
+    <h3 class="text-xl font-bold text-primary mb-8">Comments</h3>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo={repo}
+      data-repo-id={repoId}
+      data-category={category}
+      data-category-id={categoryId}
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="dark"
+      data-lang="en"
+      crossorigin="anonymous"
+      async
+    />
+  </div>
+)}

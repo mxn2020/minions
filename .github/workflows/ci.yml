@@ -37,7 +37,7 @@ jobs:
         run: pnpm run lint
 
       - name: Build core packages
-        run: pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build
+        run: pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-blog run build
 
       - name: Test
         run: pnpm run test

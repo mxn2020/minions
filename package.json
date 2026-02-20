@@ -9,7 +9,9 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-web run build",
+    "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-blog run build && pnpm --filter minions-web run build",
+    "deploy:blog": "pnpm --filter minions-blog run build && netlify deploy --dir apps/blog/dist --prod",
+    "deploy": "pnpm run deploy:blog",
     "test": "pnpm --filter minions-sdk run test",
     "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint"
   },

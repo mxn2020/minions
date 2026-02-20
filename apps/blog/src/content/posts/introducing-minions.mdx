@@ -1,0 +1,64 @@
+---
+title: "Introducing Minions: A Universal Structured Object System"
+description: "Why we built Minions, what the three core primitives are, and how they help you build better AI agents."
+date: 2026-02-20
+author: "Mehdi Nabhani"
+tags: ["announcement", "architecture", "agents"]
+draft: false
+---
+
+# A New Way to Build AI Agents
+
+Building AI agents today feels like stitching together a patchwork quilt of prompt chains, messy JSON objects, and fragile state management. As applications scale in complexity, managing the lifecycle and relationships between different entities becomes a monumental task. 
+
+Enter **Minions** — a universal structured object system designed specifically for AI agents and systems.
+
+<Callout type="info">
+Minions is an open-source project aimed at fundamentally changing how developers architect complex, multi-modal, and multi-agent AI applications.
+</Callout>
+
+## The Problem with Current Solutions
+
+Most current agent frameworks try to solve the *execution* problem: how do we chain LLM calls together? But the real challenge in production is the *state* problem: how do we manage the persistent, structured representations of real-world or digital concepts that these agents interact with?
+
+When you have a user, an agent, a goal, and a workspace, representing these cleanly requires profound boilerplates. 
+
+## The Three Primitives of Minions
+
+Minions abstracts away the complexity by introducing three fundamental primitives:
+
+### 1. Records
+The atomic unit of data. A `Record` is a validated, typed object that represents anything from a user profile to a configuration block. In Minions, records are strongly typed and validated at runtime.
+
+### 2. Relations
+Data rarely exists in isolation. `Relations` define directed, typed edges between Records. This allows you to build complex graphs of dependencies, like a "User" node connected to multiple "Agent" nodes with a "owns" relationship.
+
+### 3. Agents
+The active entities that operate on Records and Relations. `Agents` (or "minions") observe the state of the graph, make decisions, and mutate the graph over time.
+
+<Callout type="tip">
+By separating the data graph (Records/Relations) from the execution logic (Agents), your application becomes much easier to test, trace, and debug.
+</Callout>
+
+## Why Build This?
+
+We built Minions because we were tired of rewriting the same orchestration and database integration layers for every new AI project. 
+
+```typescript
+import { createMinion } from 'minions-sdk';
+
+// A simple example of creating a minion
+const helper = createMinion({
+  id: 'helper_1',
+  role: 'assistant',
+  state: { status: 'idle' }
+});
+
+console.log(`Agent ${helper.id} is ready to work!`);
+```
+
+## What's Next?
+
+This is just the beginning. The `minions-sdk` is available on NPM, and we are actively developing the Python SDK to enable seamless language interoperability. Over the coming weeks, we will be releasing extensive tutorials, API documentation, and sample applications.
+
+We invite you to join us on GitHub, read the specifications, and start building!

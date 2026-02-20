@@ -1,0 +1,111 @@
+---
+title: "Building with the Minions SDK: A Technical Tutorial"
+description: "Learn how to create agents, link them with relations, and validate fields using the new minors-sdk in TypeScript."
+date: 2026-02-21
+author: "Mehdi Nabhani"
+tags: ["tutorial", "typescript", "sdk"]
+draft: false
+---
+
+# Getting Started with the Minions SDK
+
+In our previous post, we introduced the theoretical concepts behind Minions. Today, we're diving into the code. The `minions-sdk` is a robust, type-safe library for Node.js and the browser that brings the Minions specification to life.
+
+## Installation
+
+First, install the SDK using your preferred package manager.
+
+```bash
+pnpm add minions-sdk
+```
+
+<Callout type="warning">
+Make sure you are using TypeScript >= 5.0 and `strict: true` in your `tsconfig.json` to get the most out of the SDK's type inference.
+</Callout>
+
+## Creating Your First Minion
+
+A minion in our system isn't just a wrapper around an LLM—it's a structured entity with validated state. Let's define one.
+
+```typescript
+import { createMinion, z } from 'minions-sdk';
+
+// 1. Define the custom state schema
+const DeveloperState = z.object({
+  currentTask: z.string(),
+  linesOfCodeWritten: z.number().default(0)
+});
+
+// 2. Create the minion instance
+const devMinion = createMinion({
+  id: 'dev_01',
+  role: 'developer',
+  stateSchema: DeveloperState,
+  initialState: {
+    currentTask: 'Setup project repository',
+  }
+});
+
+console.log(devMinion.state.currentTask);
+```
+
+Notice how `createMinion` enforces the types of your `initialState` based on the `zod` schema you provide. If you pass an invalid state, you'll get a runtime error immediately, not deep within your application logic later on.
+
+## Linking Agents with Relations
+
+The real power of Minions comes from linking entities together. Let's create a "Manager" minion and link it to our "Developer".
+
+```typescript
+import { createMinion, createRelation } from 'minions-sdk';
+
+const managerMinion = createMinion({
+  id: 'mgr_01',
+  role: 'manager'
+});
+
+// Create a relation directed from manager to developer
+const managesRelation = createRelation({
+  source: managerMinion.id,
+  target: devMinion.id,
+  type: 'MANAGES',
+  metadata: {
+    assignedAt: new Date().toISOString()
+  }
+});
+```
+
+### Querying the Graph
+
+Once you have established relationships, you can query your object graph to understand the current state of your system. 
+
+```typescript
+// Example conceptual query
+const team = getOutboundRelations(managerMinion.id, 'MANAGES');
+console.log(`Manager oversees ${team.length} minions.`);
+```
+
+<Callout type="tip">
+When designing your system graph, it is a best practice to keep relations unidirectional. If you need bidirectional flow, create two separate relations.
+</Callout>
+
+## Field Validation and Updates
+
+When mutating the state of a minion, the SDK automatically re-validates the fields to ensure integrity.
+
+```typescript
+// Valid update
+devMinion.updateState({ linesOfCodeWritten: 120 });
+
+// Invalid update - will throw an SDK ValidationError
+try {
+  devMinion.updateState({ linesOfCodeWritten: -10 }); 
+} catch (e) {
+  console.error("Caught invalid state transition!");
+}
+```
+
+## Conclusion
+
+We've only scratched the surface of what you can build with the Minions SDK. The structured nature of Records, combined with strictly typed Relations, creates a bullet-proof foundation for the most complex AI applications. 
+
+Check out the [Docs](https://minions.wtf/docs) for deeper dives into workspace management and distributed tracing!
