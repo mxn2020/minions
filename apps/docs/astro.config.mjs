@@ -3,7 +3,6 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://www.minions.wtf',
-  base: '/docs',
   integrations: [
     starlight({
       title: 'Minions',
