@@ -25,12 +25,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs>
   <TabItem label="TypeScript">
   ```typescript
-  import { TypeRegistry, createMinion } from 'minions-sdk';
+  import { Minions } from 'minions-sdk';
 
-  const registry = new TypeRegistry();
-  const agentType = registry.getBySlug('agent')!;
+  const minions = new Minions();
 
-  const { minion, validation } = createMinion({
+  const agent = minions.create('agent', {
     title: 'Research Assistant',
     fields: {
       role: 'researcher',
@@ -38,34 +37,28 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
       systemPrompt: 'You are a research assistant.',
       tools: ['web-search', 'summarize'],
     },
-  }, agentType);
+  });
 
-  console.log(validation.valid); // true
-  console.log(minion.id);        // generated UUID
+  console.log(agent.data.id);        // generated UUID
   ```
   </TabItem>
   <TabItem label="Python">
   ```python
-  from minions import TypeRegistry, create_minion
+  from minions import Minions
 
-  registry = TypeRegistry()
-  agent_type = registry.get_by_slug("agent")
+  minions = Minions()
 
-  minion, validation = create_minion(
-      {
-          "title": "Research Assistant",
-          "fields": {
-              "role": "researcher",
-              "model": "gpt-4",
-              "systemPrompt": "You are a research assistant.",
-              "tools": ["web-search", "summarize"],
-          },
+  agent = minions.create("agent", {
+      "title": "Research Assistant",
+      "fields": {
+          "role": "researcher",
+          "model": "gpt-4",
+          "systemPrompt": "You are a research assistant.",
+          "tools": ["web-search", "summarize"],
       },
-      agent_type,
-  )
+  })
 
-  print(validation.valid)  # True
-  print(minion.id)         # generated UUID
+  print(agent.data.id)         # generated UUID
   ```
   </TabItem>
 </Tabs>
@@ -75,34 +68,69 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs>
   <TabItem label="TypeScript">
   ```typescript
-  import { RelationGraph } from 'minions-sdk';
+  import { Minions } from 'minions-sdk';
 
-  const graph = new RelationGraph();
+  const minions = new Minions();
+  
+  // Create an agent and a skill
+  const agent = minions.create('agent', { title: 'Agent' });
+  const skill = minions.create('note', { title: 'Skill' });
 
-  graph.add({
-    sourceId: agent.id,
-    targetId: skillMinion.id,
-    type: 'parent_of',
-  });
+  // Link them
+  agent.linkTo(skill.data.id, 'parent_of');
 
-  const children = graph.getChildren(agent.id);
-  const tree = graph.getTree(agent.id);
+  const children = minions.graph.getChildren(agent.data.id);
+  const tree = minions.graph.getTree(agent.data.id);
   ```
   </TabItem>
   <TabItem label="Python">
   ```python
-  from minions import RelationGraph
+  from minions import Minions
+
+  minions = Minions()
+
+  # Create an agent and a skill
+  agent = minions.create("agent", {"title": "Agent"})
+  skill = minions.create("note", {"title": "Skill"})
+
+  # Link them
+  agent.link_to(skill.data.id, "parent_of")
+
+  children = minions.graph.get_children(agent.data.id)
+  tree = minions.graph.get_tree(agent.data.id)
+  ```
+  </TabItem>
+</Tabs>
+
+## Advanced Modular Usage
+
+If you need finer-grained control and tree-shaking, you can bypass the central client and use the underlying standalone functions:
+
+<Tabs>
+  <TabItem label="TypeScript">
+  ```typescript
+  import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
+
+  const registry = new TypeRegistry();
+  const agentType = registry.getBySlug('agent')!;
+
+  const { minion: agent } = createMinion({ title: 'Agent' }, agentType);
+
+  const graph = new RelationGraph();
+  graph.add({ sourceId: agent.id, targetId: 'skillId', type: 'parent_of' });
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import TypeRegistry, create_minion, RelationGraph
+
+  registry = TypeRegistry()
+  agent_type = registry.get_by_slug("agent")
+
+  agent, _ = create_minion({"title": "Agent"}, agent_type)
 
   graph = RelationGraph()
-
-  graph.add({
-      "source_id": agent.id,
-      "target_id": skill_minion.id,
-      "type": "parent_of",
-  })
-
-  children = graph.get_children(agent.id)
-  tree = graph.get_tree(agent.id)
+  graph.add({"source_id": agent.id, "target_id": "skill_id", "type": "parent_of"})
   ```
   </TabItem>
 </Tabs>

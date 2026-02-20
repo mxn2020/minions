@@ -74,6 +74,9 @@ export { migrateMinion } from './evolution/index.js';
 // ─── Utilities ───────────────────────────────────────────────────────────────
 export { generateId, now } from './utils.js';
 
+// ─── Client ──────────────────────────────────────────────────────────────────
+export { Minions, MinionWrapper, type MinionsConfig, type MinionPlugin } from './client/index.js';
+
 /**
  * Current specification version — auto-generated from package.json
  * by `scripts/gen-version.js` during prebuild. Do not edit manually.

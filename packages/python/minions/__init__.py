@@ -90,6 +90,10 @@ from .lifecycle import (
 
 from .evolution import migrate_minion
 
+# ─── Client ───────────────────────────────────────────────────────────────────
+
+from .client import Minions, MinionWrapper, MinionPlugin
+
 # ─── Public API ───────────────────────────────────────────────────────────────
 
 __all__ = [
@@ -142,4 +146,8 @@ __all__ = [
     "now",
     # Evolution
     "migrate_minion",
+    # Client
+    "Minions",
+    "MinionWrapper",
+    "MinionPlugin",
 ]

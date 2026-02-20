@@ -86,7 +86,9 @@ Writer Agent (agent)
 
 Same system. No migration. Just add minions and relations.
 
-## Quick Start
+## Quick Start (Unified Client)
+
+The easiest way to interact with Minions is through the central `Minions` client instance.
 
 ### TypeScript
 
@@ -95,23 +97,26 @@ pnpm add minions-sdk
 ```
 
 ```typescript
-import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
+import { Minions } from 'minions-sdk';
 
-const registry = new TypeRegistry();
-const agentType = registry.getBySlug('agent')!;
+const minions = new Minions();
 
-const { minion: agent, validation } = createMinion({
+// Create an Agent minion
+const agent = minions.create('agent', {
   title: 'Research Assistant',
   fields: {
     role: 'researcher',
     model: 'gpt-4',
-    systemPrompt: 'You are a research assistant.',
-    tools: ['web-search', 'summarize'],
+    systemPrompt: 'You find and summarize papers.',
   },
-}, agentType);
+});
 
-const graph = new RelationGraph();
-graph.add({ sourceId: agent.id, targetId: 'skill-001', type: 'parent_of' });
+// Create a Skill minion and link it
+const skill = minions.create('note', { title: 'Web Search Skill' });
+agent.linkTo(skill.data.id, 'parent_of');
+
+// Traverse relations
+const children = minions.graph.getChildren(agent.data.id);
 ```
 
 ### Python
@@ -121,26 +126,41 @@ pip install minions-sdk
 ```
 
 ```python
-from minions import TypeRegistry, create_minion, RelationGraph
+from minions import Minions
 
-registry = TypeRegistry()
-agent_type = registry.get_by_slug("agent")
+minions = Minions()
 
-agent, validation = create_minion(
-    {
-        "title": "Research Assistant",
-        "fields": {
-            "role": "researcher",
-            "model": "gpt-4",
-            "systemPrompt": "You are a research assistant.",
-            "tools": ["web-search", "summarize"],
-        },
+# Create an Agent minion
+agent = minions.create("agent", {
+    "title": "Research Assistant",
+    "fields": {
+        "role": "researcher",
+        "model": "gpt-4",
     },
-    agent_type,
-)
+})
 
-graph = RelationGraph()
-graph.add({"source_id": agent.id, "target_id": "skill-001", "type": "parent_of"})
+# Create a Skill minion and link it
+skill = minions.create("note", {"title": "Web Search Skill"})
+agent.link_to(skill.data.id, "parent_of")
+
+# Traverse relations
+children = minions.graph.get_children(agent.data.id)
+```
+
+## Advanced Modular Usage
+
+If you prefer finer-grained control, you can bypass the central client and use the underlying standalone functions:
+
+```typescript
+import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
+
+const registry = new TypeRegistry();
+const agentType = registry.getBySlug('agent')!;
+
+const { minion: agent } = createMinion({ title: 'Research Assistant' }, agentType);
+
+const graph = new RelationGraph();
+graph.add({ sourceId: agent.id, targetId: 'skill-001', type: 'parent_of' });
 ```
 
 ### Cross-SDK Interop
