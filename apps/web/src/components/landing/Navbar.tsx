@@ -10,12 +10,12 @@ export default function Navbar() {
 
     const getDocsUrl = () => {
         if (typeof window === 'undefined') return 'https://www.minions.help';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-docs.netlify.app' : 'https://www.minions.help';
+        return window.location.hostname.startsWith('dev--') ? 'https://www.minions.help' : 'https://www.minions.help';
     };
 
     const getBlogUrl = () => {
         if (typeof window === 'undefined') return 'https://www.minions.blog';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-blog.netlify.app' : 'https://www.minions.blog';
+        return window.location.hostname.startsWith('dev--') ? 'https://www.minions.blog' : 'https://www.minions.blog';
     };
 
     return (

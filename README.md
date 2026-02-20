@@ -7,7 +7,7 @@
 [![CI](https://github.com/mxn2020/minions/actions/workflows/ci.yml/badge.svg)](https://github.com/mxn2020/minions/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/minions-sdk.svg)](https://www.npmjs.com/package/minions-sdk)
 [![PyPI](https://img.shields.io/pypi/v/minions-sdk.svg)](https://pypi.org/project/minions-sdk/)
-[![Docs](https://img.shields.io/badge/Docs-minions.wtf-purple.svg)](https://minions.wtf)
+[![Docs](https://img.shields.io/badge/Docs-minions.help-purple.svg)](https://minions.help)
 
 ---
 
@@ -202,7 +202,7 @@ minions/
 
 ## Documentation
 
-- 📘 [Documentation Site](https://minions.wtf) — guides, tutorials, and API reference
+- 📘 [Documentation Site](https://minions.help) — guides, tutorials, and API reference
 - [Specification v0.1](spec/v0.1.md) — the complete specification
 - [Conformance Guide](spec/conformance.md) — what implementations must support
 

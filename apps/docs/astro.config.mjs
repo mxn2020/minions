@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 
 const isProd = process.env.BRANCH === 'main';
 const isDev = process.env.BRANCH === 'dev';
-const siteUrl = isProd ? 'https://minions.help' : (isDev ? 'https://dev--minions-docs.netlify.app' : 'http://localhost:4321');
+const siteUrl = isProd ? 'https://minions.help' : (isDev ? 'https://minions.help' : 'http://localhost:4321');
 
 export default defineConfig({
   site: siteUrl,
@@ -16,7 +16,7 @@ export default defineConfig({
       },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions' },
-        { icon: 'external', label: 'Playground', href: 'https://app.minions.wtf/playground' },
+        { icon: 'external', label: 'Playground', href: 'https://app.minions.wtf' },
       ],
       sidebar: [
         {

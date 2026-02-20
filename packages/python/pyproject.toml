@@ -29,7 +29,7 @@ test = ["pytest>=7.0"]
 
 [project.urls]
 Homepage = "https://github.com/mxn2020/minions"
-Documentation = "https://minions.wtf"
+Documentation = "https://minions.help"
 Repository = "https://github.com/mxn2020/minions"
 
 [tool.hatch.build.targets.wheel]

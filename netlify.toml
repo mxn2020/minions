@@ -1,6 +1,9 @@
 [build]
   command = "pnpm run build"
-  publish = "dist"
+  publish = "apps/blog/dist"
 
-[context.production]
-  environment = { NODE_VERSION = "20" }
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  condition = { Role = ["admin"] } # dummy to show toml config, Netlify handles static nicely 

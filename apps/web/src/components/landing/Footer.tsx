@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 export default function Footer() {
     const getDocsUrl = () => {
         if (typeof window === 'undefined') return 'https://www.minions.help';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-docs.netlify.app' : 'https://www.minions.help';
+        return window.location.hostname.startsWith('dev--') ? 'https://www.minions.help' : 'https://www.minions.help';
     };
 
     const getBlogUrl = () => {
         if (typeof window === 'undefined') return 'https://www.minions.blog';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--minions-blog.netlify.app' : 'https://www.minions.blog';
+        return window.location.hostname.startsWith('dev--') ? 'https://www.minions.blog' : 'https://www.minions.blog';
     };
     return (
         <footer className="border-t border-border bg-background py-12">

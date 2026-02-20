@@ -40,7 +40,7 @@ json_str = json.dumps(data)      # → valid JSON, TS-compatible
 
 ## Documentation
 
-- 📘 [Docs](https://minions.wtf)
+- 📘 [Docs](https://minions.help)
 - 📄 [Specification v0.1](https://github.com/mxn2020/minions/blob/main/spec/v0.1.md)
 
 ## License

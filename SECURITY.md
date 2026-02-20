@@ -25,8 +25,8 @@ This security policy covers:
 
 - `minions-sdk` (npm package)
 - `minions-cli` (npm package)
-- The Minions web app at `minions.wtf`
-- The Minions docs site at `minions.wtf`
+- The Minions web app at `app.minions.wtf`
+- The Minions docs site at `minions.help`
 
 ## Out of Scope
 
