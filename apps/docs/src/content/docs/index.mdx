@@ -14,7 +14,7 @@ hero:
       icon: external
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Why Minions?
 
@@ -35,15 +35,109 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Quick Example
 
-```json
-{
-  "title": "Research Assistant",
-  "minionTypeId": "builtin-agent",
-  "fields": {
-    "role": "researcher",
-    "model": "gpt-4",
-    "systemPrompt": "You are a research assistant.",
-    "tools": ["web-search", "summarize"]
-  }
-}
+Choose between the unified `Minions` client for seamless access or the modular functions for absolute control.
+
+<Tabs>
+<TabItem label="TypeScript">
+
+### Unified Client
+```typescript
+import { Minions, InMemoryStorage } from 'minions-sdk';
+
+const storage = new InMemoryStorage();
+const minions = new Minions({ storage });
+
+// 1. Create an agent
+const assistant = await minions.create(
+  {
+    title: 'Research Assistant',
+    fields: {
+      role: 'researcher',
+      model: 'gpt-4',
+      systemPrompt: 'You are a research assistant.',
+      tools: ['web-search', 'summarize']
+    }
+  },
+  'builtin-agent'
+);
+
+// 2. Query it
+const result = await minions.get(assistant.id);
 ```
+
+**OR Modular Imports**
+```typescript
+import { createMinion, InMemoryStorage } from 'minions-sdk';
+
+const storage = new InMemoryStorage();
+
+// 1. Create an agent
+const { minion: assistant } = createMinion(
+  {
+    title: 'Research Assistant',
+    fields: {
+      role: 'researcher',
+      model: 'gpt-4',
+      systemPrompt: 'You are a research assistant.',
+      tools: ['web-search', 'summarize']
+    }
+  },
+  'builtin-agent'
+);
+
+// 2. Save it
+await storage.saveMinion(assistant);
+```
+</TabItem>
+<TabItem label="Python">
+
+### Unified Client
+```python
+from minions import Minions, InMemoryStorage
+
+storage = InMemoryStorage()
+minions = Minions(storage=storage)
+
+# 1. Create an agent
+assistant = minions.create(
+    {
+        "title": "Research Assistant",
+        "fields": {
+            "role": "researcher",
+            "model": "gpt-4",
+            "systemPrompt": "You are a research assistant.",
+            "tools": ["web-search", "summarize"]
+        }
+    },
+    "builtin-agent"
+)
+
+# 2. Query it
+result = minions.get(assistant.id)
+```
+
+**OR Modular Imports**
+```python
+from minions import create_minion, InMemoryStorage
+
+storage = InMemoryStorage()
+
+# 1. Create an agent
+assistant, _ = create_minion(
+    {
+        "title": "Research Assistant",
+        "fields": {
+            "role": "researcher",
+            "model": "gpt-4",
+            "systemPrompt": "You are a research assistant.",
+            "tools": ["web-search", "summarize"]
+        }
+    },
+    "builtin-agent"
+)
+
+# 2. Save it
+storage.save_minion(assistant)
+```
+</TabItem>
+</Tabs>

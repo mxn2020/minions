@@ -12,8 +12,8 @@
     "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-web run build",
     "test": "pnpm --filter minions-sdk run test",
     "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint",
-    "deploy:docs": "pnpm --filter minions-docs run build && NETLIFY_SITE_ID=1475df2e-cdf5-47c9-a74d-a7546b5588db netlify deploy --dir apps/docs/dist --prod --no-build",
-    "deploy:web": "pnpm --filter minions-web run build && NETLIFY_SITE_ID=dc7f9774-63cf-420d-8553-a713d8f6c2dd netlify deploy --dir apps/web/dist --prod --no-build",
+    "deploy:docs": "pnpm --filter minions-docs run build && netlify deploy --dir apps/docs/dist --prod",
+    "deploy:web": "pnpm --filter minions-web run build && netlify deploy --dir apps/web/dist --prod",
     "deploy": "pnpm run deploy:docs && pnpm run deploy:web"
   },
   "engines": {
