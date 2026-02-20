@@ -12,12 +12,14 @@ touching the rest of the SDK.
 from __future__ import annotations
 
 from .adapter import StorageAdapter, StorageFilter
+from .filter_utils import apply_filter
 from .memory_storage_adapter import MemoryStorageAdapter
 from .json_file_storage_adapter import JsonFileStorageAdapter
 
 __all__ = [
     "StorageAdapter",
     "StorageFilter",
+    "apply_filter",
     "MemoryStorageAdapter",
     "JsonFileStorageAdapter",
 ]

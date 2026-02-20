@@ -1,0 +1,159 @@
+---
+title: Storage Adapters
+description: Using Storage Adapters to persist Minions data to memory, JSON files, or databases.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Minions relies on a storage-agnostic model. By default, it operates entirely in-memory using JavaScript object references, but you can plug in `StorageAdapter` implementations to persist your `Minion`s to virtually any backend architecture.
+
+## How Storage Adapters Work
+
+Storage Adapters are classes that bridge the Minions SDK lifecycle events (`createMinion`, `updateMinion`, `softDelete`, etc.) with physical databases, file systems, or distributed cloud storage.
+
+The SDK includes several built-in adapters out of the box to get you started:
+
+*   **MemoryStorageAdapter**: Persists data locally in memory using standard Maps (great for tests and ephemeral scripts).
+*   **JsonFileStorageAdapter**: Persists data to a local `.json` file containing serialized entries. Ideal for quick local persistence or CLI scripts.
+
+You can also build your own `StorageAdapter` to connect Minions to completely different databases such as PostgreSQL, MongoDB, Redis, or PlanetScale.
+
+---
+
+## Built-In Adapters
+
+### In-Memory Storage
+
+The default memory adapter stores all Data in runtime RAM. Data is lost upon application exit. Note that `MemoryStorageAdapter` operates synchronously despite using `async` signatures (to match the unified `StorageAdapter` interface).
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+import { MemoryStorageAdapter } from 'minions-sdk/storage';
+import { TypeRegistry, noteType, createMinion } from 'minions-sdk';
+
+const registry = new TypeRegistry();
+registry.register(noteType);
+
+const adapter = new MemoryStorageAdapter(registry);
+await adapter.initialize(); // Required before doing operations
+
+// Now use adapter methods to persist minions:
+const { minion } = createMinion({
+  title: "Example Note",
+  minionTypeId: "note",
+  fields: { content: "Saved in memory!" }
+}, noteType);
+
+await adapter.saveMinion(minion);
+const storedMinion = await adapter.getMinion(minion.id);
+
+console.log(storedMinion?.title); // > "Example Note"
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions.storage import MemoryStorageAdapter
+from minions import TypeRegistry, note_type, create_minion
+
+registry = TypeRegistry()
+registry.register(note_type)
+
+adapter = MemoryStorageAdapter(registry)
+# Note: In python, no async init is strictly required for this class
+
+minion, _ = create_minion({
+    "title": "Example Note",
+    "minionTypeId": "note",
+    "fields": { "content": "Saved in memory!" }
+}, note_type)
+
+adapter.save_minion(minion)
+
+stored_minion = adapter.get_minion(minion.id)
+print(stored_minion.title) # > "Example Note"
+```
+
+</TabItem>
+</Tabs>
+
+### JSON File Storage
+
+The JSON file adapter is a step up from memory, persisting the entire graph into a local flat `.json` file that gets updated incrementally. Perfect for simple CLI tools or single-tenant local servers.
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+import { JsonFileStorageAdapter } from 'minions-sdk/storage';
+import { TypeRegistry, noteType, createMinion } from 'minions-sdk';
+import path from 'path';
+
+const registry = new TypeRegistry();
+registry.register(noteType);
+
+const dbPath = path.join(process.cwd(), 'database.json');
+const adapter = new JsonFileStorageAdapter(registry, dbPath);
+
+// Loads file from disk if it exists; creates it otherwise:
+await adapter.initialize();
+
+const { minion } = createMinion({
+  title: "Persistent Note",
+  minionTypeId: "note",
+  fields: { content: "Saved to disk!" }
+}, noteType);
+
+// Writes minion and syncs to JSON:
+await adapter.saveMinion(minion);
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions.storage import JsonFileStorageAdapter
+from minions import TypeRegistry, note_type, create_minion
+import os
+
+registry = TypeRegistry()
+registry.register(note_type)
+
+db_path = os.path.join(os.getcwd(), 'database.json')
+adapter = JsonFileStorageAdapter(registry, db_path)
+
+# Ensure the DB file is initialized:
+adapter.initialize()
+
+minion, _ = create_minion({
+    "title": "Persistent Note",
+    "minionTypeId": "note",
+    "fields": { "content": "Saved to disk!" }
+}, note_type)
+
+adapter.save_minion(minion)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## The Adapter Interface (`StorageAdapter`)
+
+If you want to create a custom database plugin natively, your class needs to implement methods satisfying the `StorageAdapter` base class (TS) or `Adapter` Protocol (Python).
+
+### Methods to Implement
+
+1.  `saveMinion(minion: Minion): Promise<void>` / `save_minion(minion)` — Upsert behavior.
+2.  `getMinion(id: string): Promise<Minion | null>` / `get_minion(id)`
+3.  `deleteMinion(id: string): Promise<void>` / `delete_minion(id)` — Removes minion permanently.
+4.  `listMinions(options?: { minionTypeId?: string, limit?: number, offset?: number }): Promise<Minion[]>`
+5.  `saveRelation(relation: Relation): Promise<void>` / `save_relation(relation)`
+6.  `deleteRelation(id: string): Promise<void>` / `delete_relation(id)`
+7.  `getRelations(options?: { sourceId?: string, targetId?: string, type?: RelationType }): Promise<Relation[]>`
+
+For heavy production loads, a custom SQL / NoSQL backing implementation of this interface is recommended.

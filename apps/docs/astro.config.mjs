@@ -50,6 +50,7 @@ export default defineConfig({
             { label: 'Relation Types', link: '/reference/relation-types/' },
             { label: 'Built-in Types', link: '/reference/builtin-types/' },
             { label: 'Conformance', link: '/reference/conformance/' },
+            { label: 'Storage Adapters', link: '/guides/storage/' },
           ],
         },
         {

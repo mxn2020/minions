@@ -21,6 +21,9 @@ scanning the root directory.  All subsequent reads hit the index first
 (O(1)), falling back to disk only when the entry is missing (which should
 not happen in normal usage).  Writes update both disk and the index
 atomically (from the caller's perspective).
+
+Writes use a write-to-tmp-then-rename pattern to avoid partial writes
+corrupting data if the process crashes mid-write.
 """
 
 from __future__ import annotations
@@ -33,6 +36,7 @@ from typing import Optional
 
 from ..types import Minion
 from .adapter import StorageAdapter, StorageFilter
+from .filter_utils import apply_filter
 
 
 def _shard_dir(root_dir: Path, id: str) -> Path:
@@ -44,27 +48,6 @@ def _shard_dir(root_dir: Path, id: str) -> Path:
 def _file_path(root_dir: Path, id: str) -> Path:
     """Return the full path to the JSON file for the given minion *id*."""
     return _shard_dir(root_dir, id) / f"{id}.json"
-
-
-def _apply_filter(minions: list[Minion], filter: StorageFilter) -> list[Minion]:
-    """Apply a :class:`StorageFilter` to a list of minions."""
-    result = minions
-
-    if not filter.include_deleted:
-        result = [m for m in result if not m.deleted_at]
-    if filter.minion_type_id is not None:
-        result = [m for m in result if m.minion_type_id == filter.minion_type_id]
-    if filter.status is not None:
-        result = [m for m in result if m.status == filter.status]
-    if filter.tags:
-        result = [m for m in result if all(t in (m.tags or []) for t in filter.tags)]
-
-    result = result[filter.offset:]
-
-    if filter.limit is not None:
-        result = result[: filter.limit]
-
-    return result
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -103,7 +86,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
     async def _build_index(self) -> None:
         """Walk the sharded directory tree and populate the in-memory index."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, self._build_index_sync)
 
     def _build_index_sync(self) -> None:
@@ -133,20 +116,22 @@ class JsonFileStorageAdapter(StorageAdapter):
         return self._index.get(id)
 
     async def set(self, minion: Minion) -> None:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, self._write_sync, minion)
         self._index[minion.id] = minion
 
     def _write_sync(self, minion: Minion) -> None:
         directory = _shard_dir(self._root_dir, minion.id)
         directory.mkdir(parents=True, exist_ok=True)
-        path = _file_path(self._root_dir, minion.id)
-        path.write_text(json.dumps(minion.to_dict(), indent=2), encoding="utf-8")
+        target = _file_path(self._root_dir, minion.id)
+        tmp = target.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(minion.to_dict(), indent=2), encoding="utf-8")
+        os.replace(str(tmp), str(target))
 
     async def delete(self, id: str) -> None:
         self._index.pop(id, None)
         path = _file_path(self._root_dir, id)
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, self._unlink_sync, path)
 
     @staticmethod
@@ -160,7 +145,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         all_minions = list(self._index.values())
         if filter is None:
             return [m for m in all_minions if not m.deleted_at]
-        return _apply_filter(all_minions, filter)
+        return apply_filter(all_minions, filter)
 
     async def search(self, query: str) -> list[Minion]:
         if not query.strip():
@@ -171,5 +156,5 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return [
             m for m in all_minions
-            if all(token in (m.searchable_text or m.title.lower()) for token in tokens)
+            if all(token in (m.searchable_text or m.title).lower() for token in tokens)
         ]

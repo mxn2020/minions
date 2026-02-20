@@ -5,35 +5,7 @@
 
 import type { Minion } from '../types/index.js';
 import type { StorageAdapter, StorageFilter } from './StorageAdapter.js';
-
-/** Apply a {@link StorageFilter} to an array of minions. */
-function applyFilter(minions: Minion[], filter: StorageFilter): Minion[] {
-  let result = minions;
-
-  if (!filter.includeDeleted) {
-    result = result.filter((m) => !m.deletedAt);
-  }
-  if (filter.minionTypeId !== undefined) {
-    result = result.filter((m) => m.minionTypeId === filter.minionTypeId);
-  }
-  if (filter.status !== undefined) {
-    result = result.filter((m) => m.status === filter.status);
-  }
-  if (filter.tags && filter.tags.length > 0) {
-    result = result.filter((m) =>
-      filter.tags!.every((tag) => m.tags?.includes(tag)),
-    );
-  }
-
-  const offset = filter.offset ?? 0;
-  result = result.slice(offset);
-
-  if (filter.limit !== undefined) {
-    result = result.slice(0, filter.limit);
-  }
-
-  return result;
-}
+import { applyFilter } from './filterUtils.js';
 
 /**
  * Simple in-memory storage adapter.
@@ -72,7 +44,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     const all = Array.from(this.store.values()).filter((m) => !m.deletedAt);
 
     return all.filter((m) => {
-      const text = m.searchableText ?? m.title.toLowerCase();
+      const text = (m.searchableText ?? m.title).toLowerCase();
       return tokens.every((token) => text.includes(token));
     });
   }

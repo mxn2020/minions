@@ -26,6 +26,10 @@ export interface StorageFilter {
   limit?: number;
   /** Number of results to skip (for pagination). */
   offset?: number;
+  /** Sort results by this field. */
+  sortBy?: 'createdAt' | 'updatedAt' | 'title';
+  /** Sort direction. Defaults to ascending. */
+  sortOrder?: 'asc' | 'desc';
 }
 
 // ─── Adapter Interface ───────────────────────────────────────────────────────

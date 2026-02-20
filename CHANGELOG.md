@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2026-02-20
+
+### Changed
+- **Storage: shared `applyFilter` utility** — extracted duplicated filtering logic from `MemoryStorageAdapter` and `JsonFileStorageAdapter` into `filterUtils` (TypeScript) / `filter_utils` (Python)
+- **Storage: `sortBy` / `sortOrder` on `StorageFilter`** — allows sorting by `createdAt`, `updatedAt`, or `title` in ascending or descending order
+- **Storage: atomic writes** — `JsonFileStorageAdapter` now writes to a `.tmp` file then renames into place, preventing partial-write corruption on crash
+- **Storage: search case-sensitivity fix** — search fallback now always lowercases the title before matching
+- **Python: `asyncio.get_running_loop()`** — replaced deprecated `asyncio.get_event_loop()` for Python 3.12+ compatibility
+- **Client: `requireStorage()` guard** — replaced 5 inline `if (!this.storage)` checks with a single DRY helper (TypeScript), matching the existing Python pattern
+
+## [0.2.2] - 2026-02-20
+
+### Added
+- **Modular storage abstraction layer** for TypeScript and Python SDKs
+  - `StorageAdapter` interface / ABC — pluggable contract for all storage backends
+  - `MemoryStorageAdapter` — in-memory `Map`/`dict` storage for testing and ephemeral workloads
+  - `JsonFileStorageAdapter` — disk-based JSON persistence with sharded `ab/cd/uuid.json` directory layout and in-memory index
+  - `StorageFilter` — filtering by type, status, tags, soft-delete inclusion, limit/offset pagination
+  - Full-text search via pre-computed `searchableText` field
+- **`Minions` client storage integration** — `save()`, `load()`, `remove()`, `listMinions()`, `searchMinions()` methods
+- 32 new TypeScript tests and 35 new Python tests covering all adapter contracts and client integration
+
 ## [0.2.1] - 2026-02-20
 
 ### Added

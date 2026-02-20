@@ -29,6 +29,10 @@ class StorageFilter:
     limit: Optional[int] = None
     #: Number of results to skip (for pagination).
     offset: int = 0
+    #: Sort results by this field (``createdAt``, ``updatedAt``, or ``title``).
+    sort_by: Optional[str] = None
+    #: Sort direction (``asc`` or ``desc``). Defaults to ascending.
+    sort_order: str = "asc"
 
 
 class StorageAdapter(ABC):

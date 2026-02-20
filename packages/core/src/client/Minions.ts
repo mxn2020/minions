@@ -125,15 +125,20 @@ export class Minions {
 
     // ── Storage helpers ────────────────────────────────────────────────────
 
+    /** @throws {Error} if no storage adapter has been configured. */
+    private requireStorage(): StorageAdapter {
+        if (!this.storage) {
+            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
+        }
+        return this.storage;
+    }
+
     /**
      * Persist a minion to the configured storage adapter.
      * Throws if no storage adapter has been configured.
      */
     async save(minion: Minion): Promise<void> {
-        if (!this.storage) {
-            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
-        }
-        await this.storage.set(minion);
+        await this.requireStorage().set(minion);
     }
 
     /**
@@ -142,10 +147,7 @@ export class Minions {
      * Throws if no storage adapter has been configured.
      */
     async load(id: string): Promise<Minion | undefined> {
-        if (!this.storage) {
-            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
-        }
-        return this.storage.get(id);
+        return this.requireStorage().get(id);
     }
 
     /**
@@ -154,11 +156,8 @@ export class Minions {
      * Throws if no storage adapter has been configured.
      */
     async remove(minion: Minion): Promise<void> {
-        if (!this.storage) {
-            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
-        }
         hardDelete(minion, this.graph);
-        await this.storage.delete(minion.id);
+        await this.requireStorage().delete(minion.id);
     }
 
     /**
@@ -166,10 +165,7 @@ export class Minions {
      * Throws if no storage adapter has been configured.
      */
     async listMinions(filter?: StorageFilter): Promise<Minion[]> {
-        if (!this.storage) {
-            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
-        }
-        return this.storage.list(filter);
+        return this.requireStorage().list(filter);
     }
 
     /**
@@ -177,9 +173,7 @@ export class Minions {
      * Throws if no storage adapter has been configured.
      */
     async searchMinions(query: string): Promise<Minion[]> {
-        if (!this.storage) {
-            throw new Error('No storage adapter configured. Pass a `storage` option to the Minions constructor.');
-        }
-        return this.storage.search(query);
+        return this.requireStorage().search(query);
     }
 }
+

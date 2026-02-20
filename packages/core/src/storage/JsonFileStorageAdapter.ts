@@ -21,14 +21,18 @@
  * not happen in normal usage).  Writes update both disk and the index
  * atomically (from the caller's perspective).
  *
+ * Writes use a write-to-tmp-then-rename pattern to avoid partial writes
+ * corrupting data if the process crashes mid-write.
+ *
  * This adapter uses Node.js `node:fs/promises`, so it is only suitable for
  * server-side / CLI usage.
  */
 
-import { mkdir, readFile, writeFile, unlink, readdir } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, unlink, readdir, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Minion } from '../types/index.js';
 import type { StorageAdapter, StorageFilter } from './StorageAdapter.js';
+import { applyFilter } from './filterUtils.js';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -42,35 +46,6 @@ function shardPath(rootDir: string, id: string): string {
 /** Full path to the JSON file for a given minion id. */
 function filePath(rootDir: string, id: string): string {
   return join(shardPath(rootDir, id), `${id}.json`);
-}
-
-/** Apply a {@link StorageFilter} to an array of minions. */
-function applyFilter(minions: Minion[], filter: StorageFilter): Minion[] {
-  let result = minions;
-
-  if (!filter.includeDeleted) {
-    result = result.filter((m) => !m.deletedAt);
-  }
-  if (filter.minionTypeId !== undefined) {
-    result = result.filter((m) => m.minionTypeId === filter.minionTypeId);
-  }
-  if (filter.status !== undefined) {
-    result = result.filter((m) => m.status === filter.status);
-  }
-  if (filter.tags && filter.tags.length > 0) {
-    result = result.filter((m) =>
-      filter.tags!.every((tag) => m.tags?.includes(tag)),
-    );
-  }
-
-  const offset = filter.offset ?? 0;
-  result = result.slice(offset);
-
-  if (filter.limit !== undefined) {
-    result = result.slice(0, filter.limit);
-  }
-
-  return result;
 }
 
 // ─── Adapter ─────────────────────────────────────────────────────────────────
@@ -93,7 +68,7 @@ function applyFilter(minions: Minion[], filter: StorageFilter): Minion[] {
 export class JsonFileStorageAdapter implements StorageAdapter {
   private index: Map<string, Minion> = new Map();
 
-  private constructor(private readonly rootDir: string) {}
+  private constructor(private readonly rootDir: string) { }
 
   /**
    * Create (or open) a `JsonFileStorageAdapter` rooted at `rootDir`.
@@ -171,7 +146,13 @@ export class JsonFileStorageAdapter implements StorageAdapter {
   async set(minion: Minion): Promise<void> {
     const dir = shardPath(this.rootDir, minion.id);
     await mkdir(dir, { recursive: true });
-    await writeFile(filePath(this.rootDir, minion.id), JSON.stringify(minion, null, 2), 'utf8');
+
+    // Atomic write: write to a temp file, then rename into place
+    const target = filePath(this.rootDir, minion.id);
+    const tmp = `${target}.tmp`;
+    await writeFile(tmp, JSON.stringify(minion, null, 2), 'utf8');
+    await rename(tmp, target);
+
     this.index.set(minion.id, minion);
   }
 
@@ -199,7 +180,7 @@ export class JsonFileStorageAdapter implements StorageAdapter {
     const all = Array.from(this.index.values()).filter((m) => !m.deletedAt);
 
     return all.filter((m) => {
-      const text = m.searchableText ?? m.title.toLowerCase();
+      const text = (m.searchableText ?? m.title).toLowerCase();
       return tokens.every((token) => text.includes(token));
     });
   }
