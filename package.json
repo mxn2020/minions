@@ -11,10 +11,7 @@
   "scripts": {
     "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-web run build",
     "test": "pnpm --filter minions-sdk run test",
-    "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint",
-    "deploy:docs": "pnpm --filter minions-docs run build && netlify deploy --dir apps/docs/dist --prod",
-    "deploy:web": "pnpm --filter minions-web run build && netlify deploy --dir apps/web/dist --prod",
-    "deploy": "pnpm run deploy:docs && pnpm run deploy:web"
+    "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint"
   },
   "engines": {
     "node": ">=20"
