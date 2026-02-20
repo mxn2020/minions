@@ -253,19 +253,19 @@ def _validate_url(value: Any, field_def: FieldDefinition) -> list[ValidationErro
     if not isinstance(value, str):
         return [ValidationError(
             field=field_def.name,
-            message="Expected valid URL (http/https)",
+            message="Expected valid URL (http/https/ws/wss)",
             value=value,
         )]
 
     try:
         parsed = urlparse(value)
-        # Must have http/https scheme and a non-empty netloc (host)
-        if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        # Must have http/https/ws/wss scheme and a non-empty netloc (host)
+        if parsed.scheme not in ("http", "https", "ws", "wss") or not parsed.netloc:
             raise ValueError
     except Exception:
         return [ValidationError(
             field=field_def.name,
-            message="Expected valid URL (http/https)",
+            message="Expected valid URL (http/https/ws/wss)",
             value=value,
         )]
 

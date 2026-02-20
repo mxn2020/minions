@@ -36,10 +36,10 @@
     "docs": "typedoc"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "vitest": "^1.6.1",
-    "typedoc": "^0.28.0",
-    "typedoc-plugin-markdown": "^4.4.0"
+    "typedoc": "^0.28.17",
+    "typedoc-plugin-markdown": "^4.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)"
 }
