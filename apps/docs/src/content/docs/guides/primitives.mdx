@@ -28,7 +28,7 @@ A **Minion** is a structured object instance — the fundamental unit of the sys
 
 ### Type Definition
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   interface Minion {
@@ -76,7 +76,7 @@ Status (`active`, `todo`, `in_progress`, `completed`, `cancelled`), priority (`l
 
 A **MinionType** defines the schema for a kind of minion. It specifies what fields are available, their types, and validation rules.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const agentType = {
@@ -108,7 +108,7 @@ Built-in types include: `note`, `link`, `file`, `contact`, `agent`, `team`, `tho
 
 A **Relation** is a typed, directional link between two minions. Relations create structure — hierarchies, dependencies, sequences.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   graph.add({

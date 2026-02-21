@@ -11,7 +11,7 @@ This tutorial walks you through building an AI agent with Minions, starting simp
 
 The simplest possible agent is a single minion:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { TypeRegistry, createMinion } from 'minions-sdk';
@@ -61,7 +61,7 @@ That's it. A complete, validated agent definition.
 
 Agents need to remember things. Create a thought minion and link it:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const thoughtType = registry.getBySlug('thought')!;
@@ -99,7 +99,7 @@ Agents need to remember things. Create a thought minion and link it:
 
 Define how the agent structures its output:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const promptType = registry.getBySlug('prompt-template')!;
@@ -137,7 +137,7 @@ Define how the agent structures its output:
 
 Use relations to build the tree:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { RelationGraph } from 'minions-sdk';
@@ -170,7 +170,7 @@ Use relations to build the tree:
 
 Create a test case to verify agent quality:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const testType = registry.getBySlug('test-case')!;

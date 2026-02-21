@@ -7,7 +7,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 All public exports from `minions-sdk`. The library is framework-agnostic, storage-agnostic, and has zero runtime dependencies.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import {
@@ -80,7 +80,7 @@ All public exports from `minions-sdk`. The library is framework-agnostic, storag
 
 Validate a single field value against its `FieldDefinition`.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   function validateField(value: unknown, field: FieldDefinition): ValidationError[]
@@ -104,7 +104,7 @@ Returns a list of `ValidationError` objects. Empty list means valid.
 
 Validate all fields of a minion against a `MinionType` schema.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   function validateFields(
@@ -156,7 +156,7 @@ Array/list containing all 10 built-in types.
 
 An in-memory registry for `MinionType` objects. Pre-loaded with all built-in types by default.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const registry = new TypeRegistry(loadBuiltins?: boolean);
@@ -189,7 +189,7 @@ An in-memory registry for `MinionType` objects. Pre-loaded with all built-in typ
 
 In-memory relation graph manager. Provides utilities to add, remove, query, and traverse typed relations between minions.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   const graph = new RelationGraph();
@@ -230,7 +230,7 @@ In-memory relation graph manager. Provides utilities to add, remove, query, and 
 
 ## Lifecycle
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   // Create — generates id, timestamps, validates, applies defaults

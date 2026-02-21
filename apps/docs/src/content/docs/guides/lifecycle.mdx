@@ -15,7 +15,7 @@ When you create a minion:
 4. Default values from the schema are applied
 5. `status` defaults to `"active"` if not specified
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { createMinion } from 'minions-sdk';
@@ -50,7 +50,7 @@ When you create a minion:
 
 Updates merge new field values with existing ones. `updatedAt` is refreshed.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { updateMinion } from 'minions-sdk';
@@ -77,7 +77,7 @@ Updates merge new field values with existing ones. `updatedAt` is refreshed.
 
 Soft delete marks a minion as deleted without removing it. Relations are preserved.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { softDelete } from 'minions-sdk';
@@ -102,7 +102,7 @@ Soft delete marks a minion as deleted without removing it. Relations are preserv
 
 Restoring clears the deletion markers.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { restoreMinion } from 'minions-sdk';
@@ -125,7 +125,7 @@ Restoring clears the deletion markers.
 
 Hard delete permanently removes the minion. All relations involving it must also be removed.
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { hardDelete } from 'minions-sdk';

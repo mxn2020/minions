@@ -11,7 +11,7 @@ The Minions SDK includes a **pluggable storage abstraction layer** that lets you
 
 The simplest way to use storage is through the `Minions` client:
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript
@@ -58,7 +58,7 @@ print(loaded.title)  # > "Hello"
 
 Stores all data in a runtime `Map` (TypeScript) or `dict` (Python). Data is lost when the process exits. Ideal for **tests** and ephemeral scripts.
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript
@@ -95,7 +95,7 @@ The two-level shard prefix keeps directories small even with millions of minions
 - ✅ Files are human-readable and git-friendly
 - ⚠️ Server-side / CLI only (uses `node:fs`)
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript
@@ -143,7 +143,7 @@ All methods throw if no storage adapter is configured.
 
 The `listMinions()` method accepts a `StorageFilter` to control the result set:
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript
@@ -186,7 +186,7 @@ results = await minions.list_minions(StorageFilter(
 
 The `searchMinions()` method performs case-insensitive, multi-token search against the pre-computed `searchableText` field (built from the minion's title, description, and string fields):
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript
@@ -214,7 +214,7 @@ results = await minions.search_minions("quantum computing")
 
 To connect Minions to a different backend (PostgreSQL, MongoDB, Redis, Supabase, etc.), implement the `StorageAdapter` interface:
 
-<Tabs>
+<Tabs syncKey="lang">
 <TabItem label="TypeScript">
 
 ```typescript

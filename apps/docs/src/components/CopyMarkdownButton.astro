@@ -10,6 +10,29 @@ import Default from '@astrojs/starlight/components/Head.astro';
 
 <Default {...Astro.props}><slot /></Default>
 
+<!-- Cross-page language tab persistence -->
+<script>
+  const STORAGE_KEY = 'starlight-synced-tabs__lang';
+
+  function persistLanguageChoice() {
+    // Listen for clicks on tab buttons inside synced tab groups
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('[role="tab"]');
+      if (!btn) return;
+      const tablist = btn.closest('[role="tablist"]');
+      if (!tablist) return;
+      // Only persist for our lang-synced tab groups
+      const panel = tablist.closest('starlight-tabs');
+      if (!panel?.getAttribute('data-sync-key')) return;
+      const label = btn.textContent?.trim();
+      if (label) localStorage.setItem(STORAGE_KEY, label);
+    });
+  }
+
+  document.addEventListener('astro:page-load', persistLanguageChoice);
+  persistLanguageChoice();
+</script>
+
 <script>
   function createCopyButton() {
     // Skip on the introduction/index page

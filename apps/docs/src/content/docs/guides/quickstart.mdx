@@ -7,7 +7,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Installation
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```bash
   pnpm add minions-sdk
@@ -22,7 +22,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Create Your First Agent
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { Minions } from 'minions-sdk';
@@ -65,7 +65,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Link Minions Together
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { Minions } from 'minions-sdk';
@@ -106,7 +106,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 If you need finer-grained control and tree-shaking, you can bypass the central client and use the underlying standalone functions:
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```typescript
   import { TypeRegistry, createMinion, RelationGraph } from 'minions-sdk';
@@ -137,7 +137,7 @@ If you need finer-grained control and tree-shaking, you can bypass the central c
 
 ## Validate a Minion File
 
-<Tabs>
+<Tabs syncKey="lang">
   <TabItem label="TypeScript">
   ```bash
   npx minions-cli validate my-agent.json
