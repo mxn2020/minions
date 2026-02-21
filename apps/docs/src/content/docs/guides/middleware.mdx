@@ -1,0 +1,288 @@
+---
+title: Middleware
+description: Intercept and customize minion operations with the middleware pipeline and storage hooks.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The Minions SDK provides two complementary mechanisms for adding custom logic around operations:
+
+- **Middleware Pipeline** — intercepts all `Minions` client operations (create, update, delete, save, load, etc.)
+- **Storage Hooks** — intercepts storage-level operations only (get, set, delete, list, search)
+
+Use these for logging, authorization, auditing, caching, encryption, analytics, and more.
+
+---
+
+## Middleware Pipeline
+
+Middleware follows a **Koa-style onion model**: each middleware can run logic before *and* after the core operation by placing code on either side of the `next()` call.
+
+```
+mw1-before → mw2-before → core operation → mw2-after → mw1-after
+```
+
+### Basic Usage
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+import { Minions, type MinionMiddleware } from 'minions-sdk';
+
+const logger: MinionMiddleware = async (ctx, next) => {
+  console.log(`→ ${ctx.operation}`, ctx.args);
+  await next();
+  console.log(`← ${ctx.operation}`, ctx.result);
+};
+
+const minions = new Minions({ middleware: [logger] });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import Minions
+
+async def logger(ctx, next_fn):
+    print(f"→ {ctx.operation}", ctx.args)
+    await next_fn()
+    print(f"← {ctx.operation}", ctx.result)
+
+minions = Minions(middleware=[logger])
+```
+
+</TabItem>
+</Tabs>
+
+### The Context Object
+
+Every middleware receives a `MinionContext` with:
+
+| Property | Description |
+|----------|-------------|
+| `operation` | The operation being intercepted (`create`, `update`, `save`, `load`, etc.) |
+| `args` | Operation arguments (e.g. `{ typeSlug, input }` for create) |
+| `result` | Set by the core operation — `undefined`/`None` before `next()` |
+| `metadata` | Free-form dict for sharing state between middleware |
+
+### Supported Operations
+
+| Operation | When it fires |
+|-----------|--------------|
+| `create` | `minions.create()` |
+| `update` | `minions.update()` |
+| `softDelete` / `soft_delete` | `minions.softDelete()` / `minions.soft_delete()` |
+| `hardDelete` / `hard_delete` | `minions.hardDelete()` / `minions.hard_delete()` |
+| `restore` | `minions.restore()` |
+| `save` | `minions.save()` |
+| `load` | `minions.load()` |
+| `remove` | `minions.remove()` |
+| `list` | `minions.listMinions()` / `minions.list_minions()` |
+| `search` | `minions.searchMinions()` / `minions.search_minions()` |
+
+### Short-Circuiting
+
+Skip `next()` to prevent the core operation from executing. Set `ctx.result` manually if the caller expects a return value:
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+const authGuard: MinionMiddleware = async (ctx, next) => {
+  if (!ctx.metadata.userId) {
+    throw new Error('Unauthorized');
+  }
+  await next();
+};
+
+const cache: MinionMiddleware = async (ctx, next) => {
+  if (ctx.operation === 'load') {
+    const cached = myCache.get(ctx.args.id as string);
+    if (cached) {
+      ctx.result = cached;  // skip storage entirely
+      return;
+    }
+  }
+  await next();
+};
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+async def auth_guard(ctx, next_fn):
+    if "user_id" not in ctx.metadata:
+        raise RuntimeError("Unauthorized")
+    await next_fn()
+
+async def cache(ctx, next_fn):
+    if ctx.operation == "load":
+        cached = my_cache.get(ctx.args["id"])
+        if cached:
+            ctx.result = cached  # skip storage entirely
+            return
+    await next_fn()
+```
+
+</TabItem>
+</Tabs>
+
+### Cross-Middleware Communication
+
+Use `ctx.metadata` to pass data between middleware:
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+const addUserId: MinionMiddleware = async (ctx, next) => {
+  ctx.metadata.userId = getCurrentUser();
+  await next();
+};
+
+const auditLog: MinionMiddleware = async (ctx, next) => {
+  await next();
+  await recordAudit(ctx.operation, ctx.metadata.userId, ctx.result);
+};
+
+const minions = new Minions({ middleware: [addUserId, auditLog] });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+async def add_user_id(ctx, next_fn):
+    ctx.metadata["user_id"] = get_current_user()
+    await next_fn()
+
+async def audit_log(ctx, next_fn):
+    await next_fn()
+    await record_audit(ctx.operation, ctx.metadata["user_id"], ctx.result)
+
+minions = Minions(middleware=[add_user_id, audit_log])
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Storage Hooks (`withHooks`)
+
+For storage-only concerns, `withHooks` wraps any `StorageAdapter` with before/after callbacks — no changes to the `Minions` client needed.
+
+### Basic Usage
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+import { withHooks, MemoryStorageAdapter, Minions } from 'minions-sdk';
+
+const storage = withHooks(new MemoryStorageAdapter(), {
+  beforeSet: async (minion) => {
+    console.log('Saving:', minion.title);
+    return minion; // return transformed minion, or void
+  },
+  afterGet: async (id, result) => {
+    if (result) metrics.increment('reads');
+  },
+});
+
+const minions = new Minions({ storage });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import Minions, MemoryStorageAdapter
+from minions.storage import with_hooks, StorageHooks
+
+async def on_before_set(minion):
+    print("Saving:", minion.title)
+    return minion  # return transformed minion, or None
+
+async def on_after_get(id, result):
+    if result:
+        metrics.increment("reads")
+
+storage = with_hooks(MemoryStorageAdapter(), StorageHooks(
+    before_set=on_before_set,
+    after_get=on_after_get,
+))
+
+minions = Minions(storage=storage)
+```
+
+</TabItem>
+</Tabs>
+
+### Available Hooks
+
+| Hook | Signature | Notes |
+|------|-----------|-------|
+| `beforeGet` | `(id) → void` | Fires before `get()` |
+| `afterGet` | `(id, result) → void` | Fires after `get()` |
+| `beforeSet` | `(minion) → Minion?` | Can return a transformed minion |
+| `afterSet` | `(minion) → void` | Fires after `set()` |
+| `beforeDelete` | `(id) → void` | Fires before `delete()` |
+| `afterDelete` | `(id) → void` | Fires after `delete()` |
+| `beforeList` | `(filter?) → void` | Fires before `list()` |
+| `afterList` | `(results, filter?) → void` | Fires after `list()` |
+| `beforeSearch` | `(query) → void` | Fires before `search()` |
+| `afterSearch` | `(results, query) → void` | Fires after `search()` |
+
+### Data Transformation
+
+`beforeSet` can return a new minion to replace the original before storage:
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+const storage = withHooks(innerAdapter, {
+  beforeSet: async (minion) => ({
+    ...minion,
+    fields: { ...minion.fields, savedAt: new Date().toISOString() },
+  }),
+});
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+import dataclasses
+from datetime import datetime, timezone
+
+async def stamp_save_time(minion):
+    return dataclasses.replace(minion, fields={
+        **minion.fields,
+        "saved_at": datetime.now(timezone.utc).isoformat(),
+    })
+
+storage = with_hooks(inner, StorageHooks(before_set=stamp_save_time))
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Choosing Between Middleware and Storage Hooks
+
+| | Middleware | Storage Hooks |
+|-|-----------|---------------|
+| **Scope** | All client operations | Storage operations only |
+| **Short-circuit** | ✅ Skip `next()` | ❌ Not supported |
+| **Transform data** | Via `ctx.result` | Via `beforeSet` return |
+| **Order-aware** | ✅ Onion model | ✅ Sequential |
+| **No client changes** | Needs `middleware` config | Just wrap the adapter |
+
+> [!TIP]
+> Use **middleware** for cross-cutting logic across all operations (auth, logging, metrics). Use **storage hooks** for storage-specific concerns (encryption, caching, auditing writes).

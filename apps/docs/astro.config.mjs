@@ -47,6 +47,7 @@ export default defineConfig({
             { label: 'Layer Model', link: '/guides/layers/' },
             { label: 'Lifecycle', link: '/guides/lifecycle/' },
             { label: 'Schema Evolution', link: '/guides/evolution/' },
+            { label: 'Middleware & Hooks', link: '/guides/middleware/' },
           ],
         },
         {

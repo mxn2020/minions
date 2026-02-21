@@ -102,7 +102,7 @@ import { Minions } from 'minions-sdk';
 const minions = new Minions();
 
 // Create an Agent minion
-const agent = minions.create('agent', {
+const agent = await minions.create('agent', {
   title: 'Research Assistant',
   fields: {
     role: 'researcher',
@@ -112,7 +112,7 @@ const agent = minions.create('agent', {
 });
 
 // Create a Skill minion and link it
-const skill = minions.create('note', { title: 'Web Search Skill' });
+const skill = await minions.create('note', { title: 'Web Search Skill' });
 agent.linkTo(skill.data.id, 'parent_of');
 
 // Traverse relations
@@ -131,7 +131,7 @@ from minions import Minions
 minions = Minions()
 
 # Create an Agent minion
-agent = minions.create("agent", {
+agent = await minions.create("agent", {
     "title": "Research Assistant",
     "fields": {
         "role": "researcher",
@@ -140,7 +140,7 @@ agent = minions.create("agent", {
 })
 
 # Create a Skill minion and link it
-skill = minions.create("note", {"title": "Web Search Skill"})
+skill = await minions.create("note", {"title": "Web Search Skill"})
 agent.link_to(skill.data.id, "parent_of")
 
 # Traverse relations
@@ -181,6 +181,8 @@ Current AI agent frameworks give you execution but no **structure**. Your agent'
 - **Validation** — fields are schema-driven and validated
 - **Relations** — typed links between any objects
 - **Evolution** — schemas change, existing data migrates cleanly
+- **Middleware** — intercept and customize any operation with a composable pipeline
+- **Storage hooks** — add before/after logic around storage reads and writes
 - **Framework agnostic** — works with any runtime, any storage
 
 ## Project Structure

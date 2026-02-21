@@ -33,11 +33,23 @@ All public exports from `minions-sdk`. The library is framework-agnostic, storag
     // Relations
     RelationGraph,
 
+    // Client
+    Minions,
+
+    // Middleware
+    type MinionMiddleware, type MinionContext, type MinionOperation,
+    runMiddleware,
+
     // Lifecycle
     createMinion, updateMinion, softDelete, hardDelete, restoreMinion,
 
     // Evolution
     migrateMinion,
+
+    // Storage
+    type StorageAdapter, type StorageFilter, type StorageHooks,
+    MemoryStorageAdapter, JsonFileStorageAdapter,
+    withHooks,
 
     // Utilities
     generateId, now, SPEC_VERSION,
@@ -61,10 +73,17 @@ All public exports from `minions-sdk`. The library is framework-agnostic, storag
       TypeRegistry,
       # Relations
       RelationGraph,
+      # Client
+      Minions, MinionWrapper, MinionPlugin,
+      # Middleware
+      MinionMiddleware, MinionContext, MinionOperation, run_middleware,
       # Lifecycle
       create_minion, update_minion, soft_delete, hard_delete, restore_minion,
       # Evolution
       migrate_minion,
+      # Storage
+      StorageAdapter, StorageFilter, MemoryStorageAdapter, JsonFileStorageAdapter,
+      with_hooks, StorageHooks,
       # Utilities
       generate_id, now, SPEC_VERSION,
   )
@@ -270,6 +289,156 @@ In-memory relation graph manager. Provides utilities to add, remove, query, and 
 </Tabs>
 
 > **Note:** `hardDelete` / `hard_delete` handles **relation cleanup only** (this is intentional — Minions is storage-agnostic). After calling it, **you must also remove the minion object from your storage layer** (array, database, etc.).
+
+---
+
+## Minions Client
+
+The central facade for the Minions ecosystem. Orchestrates `TypeRegistry`, `RelationGraph`, and supports optional middleware and storage.
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```typescript
+  const minions = new Minions({
+    storage?: StorageAdapter,
+    middleware?: MinionMiddleware[],
+    plugins?: MinionPlugin[],
+  });
+
+  // All lifecycle methods are async
+  await minions.create(typeSlug, input);     // → MinionWrapper
+  await minions.update(minion, input);       // → MinionWrapper
+  await minions.softDelete(minion);          // → MinionWrapper
+  await minions.hardDelete(minion);          // → void
+  await minions.restore(minion);             // → MinionWrapper
+
+  // Storage methods (requires storage adapter)
+  await minions.save(minion);               // → void
+  await minions.load(id);                   // → Minion | undefined
+  await minions.remove(minion);             // → void
+  await minions.listMinions(filter?);       // → Minion[]
+  await minions.searchMinions(query);       // → Minion[]
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  minions = Minions(
+      storage=None,          # Optional[StorageAdapter]
+      middleware=None,       # Optional[list[MinionMiddleware]]
+      plugins=None,          # Optional[list[MinionPlugin]]
+  )
+
+  # All lifecycle methods are async
+  await minions.create(type_slug, input_data)  # → MinionWrapper
+  await minions.update(minion, input_data)     # → MinionWrapper
+  await minions.soft_delete(minion)            # → MinionWrapper
+  await minions.hard_delete(minion)            # → None
+  await minions.restore(minion)                # → MinionWrapper
+
+  # Storage methods (requires storage adapter)
+  await minions.save(minion)                  # → None
+  await minions.load(id)                      # → Minion | None
+  await minions.remove(minion)                # → None
+  await minions.list_minions(filter)           # → list[Minion]
+  await minions.search_minions(query)          # → list[Minion]
+  ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Middleware
+
+### `MinionMiddleware`
+
+A callable that intercepts any `Minions` client operation. Follows a Koa-style onion model.
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```typescript
+  type MinionMiddleware = (ctx: MinionContext, next: NextFn) => Promise<void>;
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  MinionMiddleware = Callable[[MinionContext, NextFn], Awaitable[None]]
+  ```
+  </TabItem>
+</Tabs>
+
+### `MinionContext`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `operation` | `MinionOperation` | The operation being intercepted |
+| `args` | `Record<string, any>` / `dict` | Operation arguments |
+| `result` | `any` | Set by the core operation after `next()` |
+| `metadata` | `Record<string, any>` / `dict` | Free-form cross-middleware state |
+
+### `MinionOperation`
+
+`"create"` \| `"update"` \| `"softDelete"` \| `"hardDelete"` \| `"restore"` \| `"save"` \| `"load"` \| `"remove"` \| `"list"` \| `"search"`
+
+### `runMiddleware` / `run_middleware`
+
+Execute a middleware pipeline manually (used internally by the `Minions` client).
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```typescript
+  function runMiddleware(
+    middlewares: MinionMiddleware[],
+    ctx: MinionContext,
+    core: () => Promise<void>,
+  ): Promise<void>
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  async def run_middleware(
+      middlewares: list[MinionMiddleware],
+      ctx: MinionContext,
+      core: Callable[[], Awaitable[None]],
+  ) -> None
+  ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Storage Hooks
+
+### `withHooks` / `with_hooks`
+
+Wrap any `StorageAdapter` with before/after hooks.
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```typescript
+  function withHooks(adapter: StorageAdapter, hooks: StorageHooks): StorageAdapter
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  def with_hooks(adapter: StorageAdapter, hooks: StorageHooks) -> StorageAdapter
+  ```
+  </TabItem>
+</Tabs>
+
+### `StorageHooks`
+
+| Hook | Signature | Notes |
+|------|-----------|-------|
+| `beforeGet` | `(id) → void` | |
+| `afterGet` | `(id, result?) → void` | |
+| `beforeSet` | `(minion) → Minion?` | Can return a transformed minion |
+| `afterSet` | `(minion) → void` | |
+| `beforeDelete` | `(id) → void` | |
+| `afterDelete` | `(id) → void` | |
+| `beforeList` | `(filter?) → void` | |
+| `afterList` | `(results, filter?) → void` | |
+| `beforeSearch` | `(query) → void` | |
+| `afterSearch` | `(results, query) → void` | |
 
 ---
 

@@ -21,7 +21,7 @@ const storage = await JsonFileStorageAdapter.create('./data/minions');
 const minions = new Minions({ storage });
 
 // Create and persist a minion
-const note = minions.create('note', { title: 'Hello', fields: { content: 'World' } });
+const note = await minions.create('note', { title: 'Hello', fields: { content: 'World' } });
 await minions.save(note.data);
 
 // Load it back
@@ -39,7 +39,7 @@ storage = await JsonFileStorageAdapter.create("./data/minions")
 minions = Minions(storage=storage)
 
 # Create and persist a minion
-note = minions.create("note", {"title": "Hello", "fields": {"content": "World"}})
+note = await minions.create("note", {"title": "Hello", "fields": {"content": "World"}})
 await minions.save(note.data)
 
 # Load it back
@@ -207,6 +207,62 @@ results = await minions.search_minions("quantum computing")
 
 > [!TIP]
 > Search automatically excludes soft-deleted minions. An empty query returns all non-deleted minions.
+
+---
+
+## Storage Hooks (`withHooks`)
+
+Wrap any `StorageAdapter` with before/after hooks for cross-cutting storage concerns like logging, encryption, or metrics — without changing the `Minions` client configuration.
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+import { withHooks, MemoryStorageAdapter, Minions } from 'minions-sdk';
+
+const storage = withHooks(new MemoryStorageAdapter(), {
+  beforeSet: async (minion) => {
+    // Transform data before writing
+    return { ...minion, fields: { ...minion.fields, savedAt: new Date().toISOString() } };
+  },
+  afterGet: async (id, result) => {
+    if (result) console.log('Loaded:', result.title);
+  },
+});
+
+const minions = new Minions({ storage });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import Minions, MemoryStorageAdapter
+from minions.storage import with_hooks, StorageHooks
+
+async def stamp_save(minion):
+    import dataclasses
+    return dataclasses.replace(minion, fields={**minion.fields, "saved_at": "now"})
+
+async def log_load(id, result):
+    if result:
+        print("Loaded:", result.title)
+
+storage = with_hooks(MemoryStorageAdapter(), StorageHooks(
+    before_set=stamp_save,
+    after_get=log_load,
+))
+
+minions = Minions(storage=storage)
+```
+
+</TabItem>
+</Tabs>
+
+Available hooks: `beforeGet`, `afterGet`, `beforeSet` (can transform), `afterSet`, `beforeDelete`, `afterDelete`, `beforeList`, `afterList`, `beforeSearch`, `afterSearch`.
+
+> [!TIP]
+> See the [Middleware & Hooks guide](/guides/middleware/) for the full reference and comparison with the client-level middleware pipeline.
 
 ---
 
