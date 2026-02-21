@@ -11,18 +11,22 @@ export default defineConfig({
     starlight({
       title: 'Minions',
       description: 'A universal structured object system for AI agents',
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: '/og-image.png' } },
+      ],
       components: {
         Head: './src/components/CopyMarkdownButton.astro',
       },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions' },
-        { icon: 'external', label: 'Playground', href: 'https://app.minions.wtf' },
+        { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/mnx/' },
+        { icon: 'external', label: 'App', href: 'https://www.minions.wtf' },
       ],
       sidebar: [
         {
           label: 'Getting Started',
           items: [
-            { label: 'Introduction', link: '/' },
+            { label: 'Introduction', link: '/guides/introduction/' },
             { label: 'Quick Start', link: '/guides/quickstart/' },
             { label: 'Contributing', link: '/guides/contributing/' },
           ],

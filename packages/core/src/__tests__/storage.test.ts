@@ -152,6 +152,43 @@ function runAdapterTests(name: string, factory: () => Promise<StorageAdapter>) {
             const results = await adapter.search('');
             expect(results.length).toBeGreaterThanOrEqual(2);
         });
+
+        it('should sort by title ascending', async () => {
+            const m1 = makeNote('Zebra', 'z');
+            const m2 = makeNote('Apple', 'a');
+            const m3 = makeNote('Mango', 'm');
+            await adapter.set(m1);
+            await adapter.set(m2);
+            await adapter.set(m3);
+            const sorted = await adapter.list({ sortBy: 'title', sortOrder: 'asc' });
+            const titles = sorted.map((m) => m.title);
+            expect(titles).toEqual([...titles].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+        });
+
+        it('should sort by title descending', async () => {
+            const m1 = makeNote('Zebra', 'z');
+            const m2 = makeNote('Apple', 'a');
+            const m3 = makeNote('Mango', 'm');
+            await adapter.set(m1);
+            await adapter.set(m2);
+            await adapter.set(m3);
+            const sorted = await adapter.list({ sortBy: 'title', sortOrder: 'desc' });
+            const titles = sorted.map((m) => m.title);
+            expect(titles).toEqual([...titles].sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase())));
+        });
+
+        it('should sort combined with limit and offset', async () => {
+            const m1 = makeNote('Zebra', 'z');
+            const m2 = makeNote('Apple', 'a');
+            const m3 = makeNote('Mango', 'm');
+            await adapter.set(m1);
+            await adapter.set(m2);
+            await adapter.set(m3);
+            // Sort by title asc => Apple, Mango, Zebra — take 1 from offset 1 => Mango
+            const page = await adapter.list({ sortBy: 'title', sortOrder: 'asc', limit: 1, offset: 1 });
+            expect(page).toHaveLength(1);
+            expect(page[0].title).toBe('Mango');
+        });
     });
 }
 

@@ -174,6 +174,40 @@ class SharedAdapterTests:
         results = run(self.adapter.search(""))
         assert len(results) >= 2
 
+    def test_sort_by_title_ascending(self):
+        m1 = make_note("Zebra", "z")
+        m2 = make_note("Apple", "a")
+        m3 = make_note("Mango", "m")
+        run(self.adapter.set(m1))
+        run(self.adapter.set(m2))
+        run(self.adapter.set(m3))
+        results = run(self.adapter.list(StorageFilter(sort_by="title", sort_order="asc")))
+        titles = [m.title for m in results]
+        assert titles == sorted(titles, key=str.lower)
+
+    def test_sort_by_title_descending(self):
+        m1 = make_note("Zebra", "z")
+        m2 = make_note("Apple", "a")
+        m3 = make_note("Mango", "m")
+        run(self.adapter.set(m1))
+        run(self.adapter.set(m2))
+        run(self.adapter.set(m3))
+        results = run(self.adapter.list(StorageFilter(sort_by="title", sort_order="desc")))
+        titles = [m.title for m in results]
+        assert titles == sorted(titles, key=str.lower, reverse=True)
+
+    def test_sort_combined_with_limit_and_offset(self):
+        m1 = make_note("Zebra", "z")
+        m2 = make_note("Apple", "a")
+        m3 = make_note("Mango", "m")
+        run(self.adapter.set(m1))
+        run(self.adapter.set(m2))
+        run(self.adapter.set(m3))
+        # Sort by title asc => Apple, Mango, Zebra — take 1 from offset 1 => Mango
+        page = run(self.adapter.list(StorageFilter(sort_by="title", sort_order="asc", limit=1, offset=1)))
+        assert len(page) == 1
+        assert page[0].title == "Mango"
+
 
 class TestMemoryStorageAdapter(SharedAdapterTests):
     def setup_method(self):
@@ -237,6 +271,15 @@ class TestJsonFileStorageAdapterSharedContract:
 
     def test_search_empty_query_returns_all(self):
         SharedAdapterTests.test_search_empty_query_returns_all(self)
+
+    def test_sort_by_title_ascending(self):
+        SharedAdapterTests.test_sort_by_title_ascending(self)
+
+    def test_sort_by_title_descending(self):
+        SharedAdapterTests.test_sort_by_title_descending(self)
+
+    def test_sort_combined_with_limit_and_offset(self):
+        SharedAdapterTests.test_sort_combined_with_limit_and_offset(self)
 
 
 class TestJsonFileStorageAdapterSpecific:

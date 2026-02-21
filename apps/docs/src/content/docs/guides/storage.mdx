@@ -1,140 +1,180 @@
 ---
 title: Storage Adapters
-description: Using Storage Adapters to persist Minions data to memory, JSON files, or databases.
+description: Persist minions to memory, local JSON files, or custom backends using the pluggable StorageAdapter system.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-Minions relies on a storage-agnostic model. By default, it operates entirely in-memory using JavaScript object references, but you can plug in `StorageAdapter` implementations to persist your `Minion`s to virtually any backend architecture.
+The Minions SDK includes a **pluggable storage abstraction layer** that lets you persist minions to virtually any backend. By default, the SDK operates entirely in-memory, but you can plug in a `StorageAdapter` to write to disk, a database, or a cloud service.
 
-## How Storage Adapters Work
+## Quick Start
 
-Storage Adapters are classes that bridge the Minions SDK lifecycle events (`createMinion`, `updateMinion`, `softDelete`, etc.) with physical databases, file systems, or distributed cloud storage.
+The simplest way to use storage is through the `Minions` client:
 
-The SDK includes several built-in adapters out of the box to get you started:
+<Tabs>
+<TabItem label="TypeScript">
 
-*   **MemoryStorageAdapter**: Persists data locally in memory using standard Maps (great for tests and ephemeral scripts).
-*   **JsonFileStorageAdapter**: Persists data to a local `.json` file containing serialized entries. Ideal for quick local persistence or CLI scripts.
+```typescript
+import { Minions, JsonFileStorageAdapter } from 'minions-sdk';
 
-You can also build your own `StorageAdapter` to connect Minions to completely different databases such as PostgreSQL, MongoDB, Redis, or PlanetScale.
+const storage = await JsonFileStorageAdapter.create('./data/minions');
+const minions = new Minions({ storage });
+
+// Create and persist a minion
+const note = minions.create('note', { title: 'Hello', fields: { content: 'World' } });
+await minions.save(note.data);
+
+// Load it back
+const loaded = await minions.load(note.data.id);
+console.log(loaded?.title); // > "Hello"
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import Minions, JsonFileStorageAdapter
+
+storage = await JsonFileStorageAdapter.create("./data/minions")
+minions = Minions(storage=storage)
+
+# Create and persist a minion
+note = minions.create("note", {"title": "Hello", "fields": {"content": "World"}})
+await minions.save(note.data)
+
+# Load it back
+loaded = await minions.load(note.data.id)
+print(loaded.title)  # > "Hello"
+```
+
+</TabItem>
+</Tabs>
 
 ---
 
 ## Built-In Adapters
 
-### In-Memory Storage
+### MemoryStorageAdapter
 
-The default memory adapter stores all Data in runtime RAM. Data is lost upon application exit. Note that `MemoryStorageAdapter` operates synchronously despite using `async` signatures (to match the unified `StorageAdapter` interface).
+Stores all data in a runtime `Map` (TypeScript) or `dict` (Python). Data is lost when the process exits. Ideal for **tests** and ephemeral scripts.
 
 <Tabs>
 <TabItem label="TypeScript">
 
 ```typescript
-import { MemoryStorageAdapter } from 'minions-sdk/storage';
-import { TypeRegistry, noteType, createMinion } from 'minions-sdk';
+import { Minions, MemoryStorageAdapter } from 'minions-sdk';
 
-const registry = new TypeRegistry();
-registry.register(noteType);
-
-const adapter = new MemoryStorageAdapter(registry);
-await adapter.initialize(); // Required before doing operations
-
-// Now use adapter methods to persist minions:
-const { minion } = createMinion({
-  title: "Example Note",
-  minionTypeId: "note",
-  fields: { content: "Saved in memory!" }
-}, noteType);
-
-await adapter.saveMinion(minion);
-const storedMinion = await adapter.getMinion(minion.id);
-
-console.log(storedMinion?.title); // > "Example Note"
+const storage = new MemoryStorageAdapter();
+const minions = new Minions({ storage });
 ```
 
 </TabItem>
 <TabItem label="Python">
 
 ```python
-from minions.storage import MemoryStorageAdapter
-from minions import TypeRegistry, note_type, create_minion
+from minions import Minions, MemoryStorageAdapter
 
-registry = TypeRegistry()
-registry.register(note_type)
-
-adapter = MemoryStorageAdapter(registry)
-# Note: In python, no async init is strictly required for this class
-
-minion, _ = create_minion({
-    "title": "Example Note",
-    "minionTypeId": "note",
-    "fields": { "content": "Saved in memory!" }
-}, note_type)
-
-adapter.save_minion(minion)
-
-stored_minion = adapter.get_minion(minion.id)
-print(stored_minion.title) # > "Example Note"
+storage = MemoryStorageAdapter()
+minions = Minions(storage=storage)
 ```
 
 </TabItem>
 </Tabs>
 
-### JSON File Storage
+### JsonFileStorageAdapter
 
-The JSON file adapter is a step up from memory, persisting the entire graph into a local flat `.json` file that gets updated incrementally. Perfect for simple CLI tools or single-tenant local servers.
+Persists each minion as a **pretty-printed JSON file** in a sharded directory layout:
+
+```
+<rootDir>/<id[0:2]>/<id[2:4]>/<id>.json
+```
+
+The two-level shard prefix keeps directories small even with millions of minions. An in-memory index is built on startup for O(1) lookups.
+
+- ✅ Writes are **atomic** (write-to-tmp-then-rename) — safe against crashes
+- ✅ Files are human-readable and git-friendly
+- ⚠️ Server-side / CLI only (uses `node:fs`)
 
 <Tabs>
 <TabItem label="TypeScript">
 
 ```typescript
-import { JsonFileStorageAdapter } from 'minions-sdk/storage';
-import { TypeRegistry, noteType, createMinion } from 'minions-sdk';
-import path from 'path';
+import { Minions, JsonFileStorageAdapter } from 'minions-sdk';
 
-const registry = new TypeRegistry();
-registry.register(noteType);
-
-const dbPath = path.join(process.cwd(), 'database.json');
-const adapter = new JsonFileStorageAdapter(registry, dbPath);
-
-// Loads file from disk if it exists; creates it otherwise:
-await adapter.initialize();
-
-const { minion } = createMinion({
-  title: "Persistent Note",
-  minionTypeId: "note",
-  fields: { content: "Saved to disk!" }
-}, noteType);
-
-// Writes minion and syncs to JSON:
-await adapter.saveMinion(minion);
+const storage = await JsonFileStorageAdapter.create('./data/minions');
+const minions = new Minions({ storage });
 ```
 
 </TabItem>
 <TabItem label="Python">
 
 ```python
-from minions.storage import JsonFileStorageAdapter
-from minions import TypeRegistry, note_type, create_minion
-import os
+from minions import Minions, JsonFileStorageAdapter
 
-registry = TypeRegistry()
-registry.register(note_type)
+storage = await JsonFileStorageAdapter.create("./data/minions")
+minions = Minions(storage=storage)
+```
 
-db_path = os.path.join(os.getcwd(), 'database.json')
-adapter = JsonFileStorageAdapter(registry, db_path)
+</TabItem>
+</Tabs>
 
-# Ensure the DB file is initialized:
-adapter.initialize()
+> [!NOTE]
+> Use the async factory method `create()` — the constructor is private (TS) or should not be called directly. `create()` ensures the directory exists and the in-memory index is populated.
 
-minion, _ = create_minion({
-    "title": "Persistent Note",
-    "minionTypeId": "note",
-    "fields": { "content": "Saved to disk!" }
-}, note_type)
+---
 
-adapter.save_minion(minion)
+## Client Storage Methods
+
+When a storage adapter is configured on the `Minions` client, these methods become available:
+
+| Method | Description |
+|--------|-------------|
+| `save(minion)` | Persist a minion (upsert) |
+| `load(id)` | Load a minion by ID (returns `undefined`/`None` if not found) |
+| `remove(minion)` | Delete from storage and remove all relations |
+| `listMinions(filter?)` | List minions with optional filtering |
+| `searchMinions(query)` | Full-text search across minions |
+
+All methods throw if no storage adapter is configured.
+
+---
+
+## Filtering and Sorting
+
+The `listMinions()` method accepts a `StorageFilter` to control the result set:
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+const results = await minions.listMinions({
+  minionTypeId: 'note',         // Only notes
+  status: 'active',             // Only active
+  tags: ['ai', 'research'],     // Must have all tags
+  includeDeleted: false,        // Exclude soft-deleted (default)
+  sortBy: 'title',              // Sort by 'title', 'createdAt', or 'updatedAt'
+  sortOrder: 'asc',             // 'asc' or 'desc'
+  limit: 10,                    // Page size
+  offset: 0,                    // Skip N results
+});
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import StorageFilter
+
+results = await minions.list_minions(StorageFilter(
+    minion_type_id="note",         # Only notes
+    status="active",               # Only active
+    tags=["ai", "research"],       # Must have all tags
+    include_deleted=False,         # Exclude soft-deleted (default)
+    sort_by="title",               # Sort by 'title', 'createdAt', or 'updatedAt'
+    sort_order="asc",              # 'asc' or 'desc'
+    limit=10,                      # Page size
+    offset=0,                      # Skip N results
+))
 ```
 
 </TabItem>
@@ -142,18 +182,90 @@ adapter.save_minion(minion)
 
 ---
 
-## The Adapter Interface (`StorageAdapter`)
+## Full-Text Search
 
-If you want to create a custom database plugin natively, your class needs to implement methods satisfying the `StorageAdapter` base class (TS) or `Adapter` Protocol (Python).
+The `searchMinions()` method performs case-insensitive, multi-token search against the pre-computed `searchableText` field (built from the minion's title, description, and string fields):
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+// Find minions mentioning both "quantum" and "computing"
+const results = await minions.searchMinions('quantum computing');
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+# Find minions mentioning both "quantum" and "computing"
+results = await minions.search_minions("quantum computing")
+```
+
+</TabItem>
+</Tabs>
+
+> [!TIP]
+> Search automatically excludes soft-deleted minions. An empty query returns all non-deleted minions.
+
+---
+
+## Custom Adapters
+
+To connect Minions to a different backend (PostgreSQL, MongoDB, Redis, Supabase, etc.), implement the `StorageAdapter` interface:
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+import type { StorageAdapter, StorageFilter } from 'minions-sdk';
+import type { Minion } from 'minions-sdk';
+
+export class PostgresStorageAdapter implements StorageAdapter {
+  async get(id: string): Promise<Minion | undefined> { /* ... */ }
+  async set(minion: Minion): Promise<void> { /* ... */ }
+  async delete(id: string): Promise<void> { /* ... */ }
+  async list(filter?: StorageFilter): Promise<Minion[]> { /* ... */ }
+  async search(query: string): Promise<Minion[]> { /* ... */ }
+}
+
+// Use it like any other adapter:
+const storage = new PostgresStorageAdapter(/* connection config */);
+const minions = new Minions({ storage });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions.storage import StorageAdapter, StorageFilter
+from minions.types import Minion
+from typing import Optional
+
+class PostgresStorageAdapter(StorageAdapter):
+    async def get(self, id: str) -> Optional[Minion]: ...
+    async def set(self, minion: Minion) -> None: ...
+    async def delete(self, id: str) -> None: ...
+    async def list(self, filter: Optional[StorageFilter] = None) -> list[Minion]: ...
+    async def search(self, query: str) -> list[Minion]: ...
+
+# Use it like any other adapter:
+storage = PostgresStorageAdapter(# connection config)
+minions = Minions(storage=storage)
+```
+
+</TabItem>
+</Tabs>
 
 ### Methods to Implement
 
-1.  `saveMinion(minion: Minion): Promise<void>` / `save_minion(minion)` — Upsert behavior.
-2.  `getMinion(id: string): Promise<Minion | null>` / `get_minion(id)`
-3.  `deleteMinion(id: string): Promise<void>` / `delete_minion(id)` — Removes minion permanently.
-4.  `listMinions(options?: { minionTypeId?: string, limit?: number, offset?: number }): Promise<Minion[]>`
-5.  `saveRelation(relation: Relation): Promise<void>` / `save_relation(relation)`
-6.  `deleteRelation(id: string): Promise<void>` / `delete_relation(id)`
-7.  `getRelations(options?: { sourceId?: string, targetId?: string, type?: RelationType }): Promise<Relation[]>`
+| Method | Signature | Behavior |
+|--------|-----------|----------|
+| `get` | `(id) → Minion?` | Return `undefined`/`None` if not found |
+| `set` | `(minion) → void` | Upsert — insert or overwrite |
+| `delete` | `(id) → void` | Resolve silently if missing |
+| `list` | `(filter?) → Minion[]` | Apply filtering, sorting, pagination |
+| `search` | `(query) → Minion[]` | Case-insensitive token matching |
 
-For heavy production loads, a custom SQL / NoSQL backing implementation of this interface is recommended.
+> [!TIP]
+> Use the shared `applyFilter()` utility (exported from `minions-sdk`) to handle `StorageFilter` logic in your custom adapter — no need to reimplement filtering/sorting.

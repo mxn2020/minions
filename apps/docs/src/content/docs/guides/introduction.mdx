@@ -1,0 +1,52 @@
+---
+title: Introduction
+description: What is Minions? A universal structured object system for AI agents.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What is Minions?
+
+**Minions** is a universal structured object system for AI agents. It provides a small, powerful set of primitives — **Minions** (instances), **MinionTypes** (schemas), and **Relations** (typed links) — that let you model, validate, persist, and evolve any kind of structured data.
+
+Think of it as a schema-driven object graph: every piece of data has a known type, every field is validated, every connection is explicit, and the whole structure can evolve over time without breaking existing data.
+
+## Who is it for?
+
+- **AI engineers** building agent systems that need structured memory, tool definitions, or prompt storage
+- **Full-stack developers** who want typed, validated objects without a database schema migration tool
+- **Tool builders** creating CLIs, dashboards, or APIs that manage structured entities
+
+## Core Design Principles
+
+<CardGrid>
+  <Card title="Three Primitives" icon="pencil">
+    Everything is a **Minion** (instance), typed by a **MinionType** (schema), connected via **Relations** (typed links). No more, no less.
+  </Card>
+  <Card title="Progressive Complexity" icon="add-document">
+    Start flat. Add relations when you need hierarchy. Add storage when you need persistence. The SDK never forces structure you don't need yet.
+  </Card>
+  <Card title="Schema-Driven Validation" icon="approve-check">
+    Every field is validated at creation and update time. 12 field types (string, number, date, url, enum, json, etc.) with configurable constraints.
+  </Card>
+  <Card title="Framework Agnostic" icon="setting">
+    Zero dependencies. Works in Node.js, Deno, Bun, browsers, and Python 3.11+. Bring your own storage, your own runtime, your own AI framework.
+  </Card>
+</CardGrid>
+
+## The Ecosystem
+
+Minions is the core SDK. The broader ecosystem includes:
+
+| Project | Description |
+|---------|-------------|
+| **[minions-sdk](https://github.com/mxn2020/minions)** | Core TypeScript & Python SDK (this project) |
+| **[minions-prompts](https://github.com/mxn2020/minions-prompts)** | Version-controlled prompt engineering system |
+| **[minions-openclaw](https://github.com/mxn2020/minions-openclaw)** | OpenClaw Gateway instance manager |
+
+## Next Steps
+
+- **[Quick Start](/guides/quickstart/)** — Install the SDK and create your first minion in 5 minutes
+- **[Primitives](/guides/primitives/)** — Deep dive into Minions, MinionTypes, and Relations
+- **[Storage Adapters](/guides/storage/)** — Persist minions to disk with JSON or custom backends
+- **[Build an AI Agent](/tutorial/agent/)** — Full tutorial building a research assistant agent
