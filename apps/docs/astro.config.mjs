@@ -35,6 +35,7 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Introduction', link: '/guides/introduction/' },
+            { label: 'Installation', link: '/guides/installation/' },
             { label: 'Quick Start', link: '/guides/quickstart/' },
             { label: 'Contributing', link: '/guides/contributing/' },
           ],
@@ -57,12 +58,17 @@ export default defineConfig({
         {
           label: 'Reference',
           items: [
-            { label: 'API Reference', link: '/reference/api-reference/' },
             { label: 'Field Types', link: '/reference/field-types/' },
             { label: 'Relation Types', link: '/reference/relation-types/' },
             { label: 'Built-in Types', link: '/reference/builtin-types/' },
             { label: 'Conformance', link: '/reference/conformance/' },
             { label: 'Storage Adapters', link: '/guides/storage/' },
+          ],
+        },
+        {
+          label: 'API Reference',
+          items: [
+            { label: 'API Reference', link: '/reference/api-reference/' },
           ],
         },
         {

@@ -1,0 +1,79 @@
+---
+title: Installation
+description: Install the Minions SDK for TypeScript or Python.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Package Managers
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```bash
+  # pnpm (recommended)
+  pnpm add minions-sdk
+
+  # npm
+  npm install minions-sdk
+
+  # yarn
+  yarn add minions-sdk
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```bash
+  # pip
+  pip install minions-sdk
+
+  # poetry
+  poetry add minions-sdk
+
+  # uv
+  uv add minions-sdk
+  ```
+  </TabItem>
+</Tabs>
+
+## Requirements
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  - **Node.js** 18 or later
+  - **TypeScript** 5.0+ (recommended)
+  </TabItem>
+  <TabItem label="Python">
+  - **Python** 3.10 or later
+  </TabItem>
+</Tabs>
+
+## Verify Installation
+
+<Tabs syncKey="lang">
+  <TabItem label="TypeScript">
+  ```typescript
+  import { Minions } from 'minions-sdk';
+  const m = new Minions();
+  console.log('Minions SDK loaded ✓');
+  ```
+  </TabItem>
+  <TabItem label="Python">
+  ```python
+  from minions import Minions
+  m = Minions()
+  print('Minions SDK loaded ✓')
+  ```
+  </TabItem>
+</Tabs>
+
+## CLI (Optional)
+
+The Minions CLI provides schema validation and code generation utilities:
+
+```bash
+npx minions-cli --help
+```
+
+## Next Steps
+
+- Follow the [Quick Start](/guides/quickstart/) to create your first minion
+- Learn about the [three core primitives](/guides/primitives/)
