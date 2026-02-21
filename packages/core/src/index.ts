@@ -76,10 +76,12 @@ export { generateId, now } from './utils.js';
 
 // ─── Client ──────────────────────────────────────────────────────────────────
 export { Minions, MinionWrapper, type MinionsConfig, type MinionPlugin } from './client/index.js';
+export type { MinionMiddleware, MinionContext, MinionOperation, NextFn } from './client/index.js';
+export { runMiddleware } from './client/index.js';
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
-export type { StorageAdapter, StorageFilter } from './storage/index.js';
-export { MemoryStorageAdapter, applyFilter } from './storage/index.js';
+export type { StorageAdapter, StorageFilter, StorageHooks } from './storage/index.js';
+export { MemoryStorageAdapter, applyFilter, withHooks } from './storage/index.js';
 
 /**
  * Current specification version — auto-generated from package.json

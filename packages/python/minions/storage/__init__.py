@@ -15,6 +15,7 @@ from .adapter import StorageAdapter, StorageFilter
 from .filter_utils import apply_filter
 from .memory_storage_adapter import MemoryStorageAdapter
 from .json_file_storage_adapter import JsonFileStorageAdapter
+from .with_hooks import with_hooks, StorageHooks
 
 __all__ = [
     "StorageAdapter",
@@ -22,4 +23,6 @@ __all__ = [
     "apply_filter",
     "MemoryStorageAdapter",
     "JsonFileStorageAdapter",
+    "with_hooks",
+    "StorageHooks",
 ]

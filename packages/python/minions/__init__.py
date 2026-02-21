@@ -92,11 +92,11 @@ from .evolution import migrate_minion
 
 # ─── Client ───────────────────────────────────────────────────────────────────
 
-from .client import Minions, MinionWrapper, MinionPlugin
+from .client import Minions, MinionWrapper, MinionPlugin, MinionMiddleware, MinionContext, MinionOperation, run_middleware
 
 # ─── Storage ──────────────────────────────────────────────────────────────────
 
-from .storage import StorageAdapter, StorageFilter, MemoryStorageAdapter, JsonFileStorageAdapter
+from .storage import StorageAdapter, StorageFilter, MemoryStorageAdapter, JsonFileStorageAdapter, with_hooks, StorageHooks
 
 # ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -154,9 +154,15 @@ __all__ = [
     "Minions",
     "MinionWrapper",
     "MinionPlugin",
+    "MinionMiddleware",
+    "MinionContext",
+    "MinionOperation",
+    "run_middleware",
     # Storage
     "StorageAdapter",
     "StorageFilter",
     "MemoryStorageAdapter",
     "JsonFileStorageAdapter",
+    "with_hooks",
+    "StorageHooks",
 ]

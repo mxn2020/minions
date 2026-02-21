@@ -33,7 +33,7 @@ def make_note(title: str, content: str):
 
 def run(coro):
     """Convenience wrapper to run a coroutine in tests."""
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ─── Shared adapter tests ─────────────────────────────────────────────────────
@@ -342,15 +342,15 @@ class TestMinionsClientWithStorage:
         self.minions = Minions(storage=self.storage)
 
     def test_save_and_load(self):
-        wrapper = self.minions.create("note", {"title": "Stored Note", "fields": {"content": "hello"}})
+        wrapper = run(self.minions.create("note", {"title": "Stored Note", "fields": {"content": "hello"}}))
         run(self.minions.save(wrapper.data))
         loaded = run(self.minions.load(wrapper.data.id))
         assert loaded is not None
         assert loaded.title == "Stored Note"
 
     def test_remove_from_storage_and_graph(self):
-        a = self.minions.create("note", {"title": "A", "fields": {"content": "a"}})
-        b = self.minions.create("note", {"title": "B", "fields": {"content": "b"}})
+        a = run(self.minions.create("note", {"title": "A", "fields": {"content": "a"}}))
+        b = run(self.minions.create("note", {"title": "B", "fields": {"content": "b"}}))
         a.link_to(b.data.id, "relates_to")
         run(self.minions.save(a.data))
         run(self.minions.save(b.data))
@@ -361,8 +361,8 @@ class TestMinionsClientWithStorage:
         assert len(self.minions.graph.get_from_source(a.data.id)) == 0
 
     def test_list_and_search_minions(self):
-        n1 = self.minions.create("note", {"title": "Machine Learning", "fields": {"content": "neural networks"}})
-        n2 = self.minions.create("note", {"title": "Cooking", "fields": {"content": "pasta recipe"}})
+        n1 = run(self.minions.create("note", {"title": "Machine Learning", "fields": {"content": "neural networks"}}))
+        n2 = run(self.minions.create("note", {"title": "Cooking", "fields": {"content": "pasta recipe"}}))
         run(self.minions.save(n1.data))
         run(self.minions.save(n2.data))
 
@@ -375,7 +375,7 @@ class TestMinionsClientWithStorage:
 
     def test_raises_without_adapter(self):
         minions = Minions()
-        n = minions.create("note", {"title": "X", "fields": {"content": "y"}})
+        n = run(minions.create("note", {"title": "X", "fields": {"content": "y"}}))
 
         with pytest.raises(RuntimeError, match="No storage adapter configured"):
             run(minions.save(n.data))
@@ -387,3 +387,129 @@ class TestMinionsClientWithStorage:
             run(minions.list_minions())
         with pytest.raises(RuntimeError, match="No storage adapter configured"):
             run(minions.search_minions("query"))
+
+
+# ─── with_hooks storage proxy tests ──────────────────────────────────────────
+
+class TestWithHooks:
+    def setup_method(self):
+        self.inner = MemoryStorageAdapter()
+
+    def test_passthrough_no_hooks(self):
+        from minions.storage import with_hooks, StorageHooks
+        hooked = with_hooks(self.inner, StorageHooks())
+        minion = make_note("Passthrough", "content")
+        run(hooked.set(minion))
+        loaded = run(hooked.get(minion.id))
+        assert loaded is not None
+        assert loaded.title == "Passthrough"
+
+    def test_before_set_transform(self):
+        import dataclasses
+        from minions.storage import with_hooks, StorageHooks
+
+        async def transform(minion):
+            return dataclasses.replace(minion, title=minion.title.upper())
+
+        hooked = with_hooks(self.inner, StorageHooks(before_set=transform))
+        minion = make_note("hello", "world")
+        run(hooked.set(minion))
+        loaded = run(self.inner.get(minion.id))
+        assert loaded.title == "HELLO"
+
+    def test_after_set_callback(self):
+        from minions.storage import with_hooks, StorageHooks
+        captured = [None]
+
+        async def on_after(minion):
+            captured[0] = minion
+
+        hooked = with_hooks(self.inner, StorageHooks(after_set=on_after))
+        minion = make_note("AfterSet", "test")
+        run(hooked.set(minion))
+        assert captured[0] is not None
+        assert captured[0].title == "AfterSet"
+
+    def test_before_and_after_get(self):
+        from minions.storage import with_hooks, StorageHooks
+        log = []
+
+        async def before(id):
+            log.append(f"before:{id}")
+
+        async def after(id, result):
+            log.append(f"after:{id}:{result.title if result else 'None'}")
+
+        hooked = with_hooks(self.inner, StorageHooks(before_get=before, after_get=after))
+        minion = make_note("GetHooks", "data")
+        run(self.inner.set(minion))
+
+        run(hooked.get(minion.id))
+        run(hooked.get("nonexistent"))
+
+        assert log == [
+            f"before:{minion.id}",
+            f"after:{minion.id}:GetHooks",
+            "before:nonexistent",
+            "after:nonexistent:None",
+        ]
+
+    def test_before_and_after_delete(self):
+        from minions.storage import with_hooks, StorageHooks
+        log = []
+
+        async def before(id):
+            log.append(f"before:{id}")
+
+        async def after(id):
+            log.append(f"after:{id}")
+
+        hooked = with_hooks(self.inner, StorageHooks(before_delete=before, after_delete=after))
+        minion = make_note("DeleteHooks", "data")
+        run(self.inner.set(minion))
+        run(hooked.delete(minion.id))
+
+        assert log == [f"before:{minion.id}", f"after:{minion.id}"]
+        assert run(self.inner.get(minion.id)) is None
+
+    def test_after_list(self):
+        from minions.storage import with_hooks, StorageHooks
+        count = [0]
+
+        async def on_after(results, _filter):
+            count[0] = len(results)
+
+        hooked = with_hooks(self.inner, StorageHooks(after_list=on_after))
+        run(self.inner.set(make_note("A", "a")))
+        run(self.inner.set(make_note("B", "b")))
+        run(hooked.list())
+        assert count[0] == 2
+
+    def test_before_and_after_search(self):
+        from minions.storage import with_hooks, StorageHooks
+        query_log = [None]
+        count = [0]
+
+        async def before(query):
+            query_log[0] = query
+
+        async def after(results, query):
+            count[0] = len(results)
+
+        hooked = with_hooks(self.inner, StorageHooks(before_search=before, after_search=after))
+        run(self.inner.set(make_note("Quantum Physics", "entanglement")))
+        run(hooked.search("quantum"))
+
+        assert query_log[0] == "quantum"
+        assert count[0] == 1
+
+    def test_hook_error_propagation(self):
+        from minions.storage import with_hooks, StorageHooks
+
+        async def failing(_minion):
+            raise RuntimeError("Hook failed")
+
+        hooked = with_hooks(self.inner, StorageHooks(before_set=failing))
+        with pytest.raises(RuntimeError, match="Hook failed"):
+            run(hooked.set(make_note("Error", "test")))
+

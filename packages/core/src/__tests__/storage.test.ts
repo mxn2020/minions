@@ -251,7 +251,7 @@ describe('Minions client with storage', () => {
         const storage = new MemoryStorageAdapter();
         const minions = new Minions({ storage });
 
-        const wrapper = minions.create('note', { title: 'Stored Note', fields: { content: 'hello' } });
+        const wrapper = await minions.create('note', { title: 'Stored Note', fields: { content: 'hello' } });
         await minions.save(wrapper.data);
 
         const loaded = await minions.load(wrapper.data.id);
@@ -264,8 +264,8 @@ describe('Minions client with storage', () => {
         const storage = new MemoryStorageAdapter();
         const minions = new Minions({ storage });
 
-        const a = minions.create('note', { title: 'A', fields: { content: 'a' } });
-        const b = minions.create('note', { title: 'B', fields: { content: 'b' } });
+        const a = await minions.create('note', { title: 'A', fields: { content: 'a' } });
+        const b = await minions.create('note', { title: 'B', fields: { content: 'b' } });
         a.linkTo(b.data.id, 'relates_to');
         await minions.save(a.data);
         await minions.save(b.data);
@@ -281,8 +281,8 @@ describe('Minions client with storage', () => {
         const storage = new MemoryStorageAdapter();
         const minions = new Minions({ storage });
 
-        const n1 = minions.create('note', { title: 'Machine Learning', fields: { content: 'neural networks' } });
-        const n2 = minions.create('note', { title: 'Cooking', fields: { content: 'pasta recipe' } });
+        const n1 = await minions.create('note', { title: 'Machine Learning', fields: { content: 'neural networks' } });
+        const n2 = await minions.create('note', { title: 'Cooking', fields: { content: 'pasta recipe' } });
         await minions.save(n1.data);
         await minions.save(n2.data);
 
@@ -297,12 +297,148 @@ describe('Minions client with storage', () => {
     it('should throw when storage methods called without adapter', async () => {
         const { Minions } = await import('../client/index.js');
         const minions = new Minions();
-        const n = minions.create('note', { title: 'X', fields: { content: 'y' } });
+        const n = await minions.create('note', { title: 'X', fields: { content: 'y' } });
 
         await expect(minions.save(n.data)).rejects.toThrow('No storage adapter configured');
         await expect(minions.load('any-id')).rejects.toThrow('No storage adapter configured');
         await expect(minions.remove(n.data)).rejects.toThrow('No storage adapter configured');
         await expect(minions.listMinions()).rejects.toThrow('No storage adapter configured');
         await expect(minions.searchMinions('query')).rejects.toThrow('No storage adapter configured');
+    });
+});
+
+// ─── withHooks storage proxy ─────────────────────────────────────────────────
+
+describe('withHooks', () => {
+    it('should pass through when no hooks are provided', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        const hooked = withHooks(inner, {});
+
+        const minion = makeNote('Passthrough', 'content');
+        await hooked.set(minion);
+        const loaded = await hooked.get(minion.id);
+        expect(loaded).toBeDefined();
+        expect(loaded!.title).toBe('Passthrough');
+    });
+
+    it('should call beforeSet and allow transformation', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+
+        const hooked = withHooks(inner, {
+            beforeSet: async (minion) => {
+                return { ...minion, title: minion.title.toUpperCase() };
+            },
+        });
+
+        const minion = makeNote('hello', 'world');
+        await hooked.set(minion);
+        const loaded = await inner.get(minion.id);
+        expect(loaded!.title).toBe('HELLO');
+    });
+
+    it('should call afterSet with the stored minion', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        let afterSetMinion: any;
+
+        const hooked = withHooks(inner, {
+            afterSet: async (minion) => {
+                afterSetMinion = minion;
+            },
+        });
+
+        const minion = makeNote('AfterSet', 'test');
+        await hooked.set(minion);
+        expect(afterSetMinion).toBeDefined();
+        expect(afterSetMinion.title).toBe('AfterSet');
+    });
+
+    it('should call beforeGet and afterGet', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        const log: string[] = [];
+
+        const hooked = withHooks(inner, {
+            beforeGet: async (id) => { log.push(`before:${id}`); },
+            afterGet: async (id, result) => { log.push(`after:${id}:${result?.title ?? 'undefined'}`); },
+        });
+
+        const minion = makeNote('GetHooks', 'data');
+        await inner.set(minion);
+
+        await hooked.get(minion.id);
+        await hooked.get('nonexistent');
+
+        expect(log).toEqual([
+            `before:${minion.id}`,
+            `after:${minion.id}:GetHooks`,
+            'before:nonexistent',
+            'after:nonexistent:undefined',
+        ]);
+    });
+
+    it('should call beforeDelete and afterDelete', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        const log: string[] = [];
+
+        const hooked = withHooks(inner, {
+            beforeDelete: async (id) => { log.push(`before:${id}`); },
+            afterDelete: async (id) => { log.push(`after:${id}`); },
+        });
+
+        const minion = makeNote('DeleteHooks', 'data');
+        await inner.set(minion);
+        await hooked.delete(minion.id);
+
+        expect(log).toEqual([`before:${minion.id}`, `after:${minion.id}`]);
+        expect(await inner.get(minion.id)).toBeUndefined();
+    });
+
+    it('should call beforeList and afterList', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        let listCount = 0;
+
+        const hooked = withHooks(inner, {
+            afterList: async (results) => { listCount = results.length; },
+        });
+
+        await inner.set(makeNote('A', 'a'));
+        await inner.set(makeNote('B', 'b'));
+        await hooked.list();
+
+        expect(listCount).toBe(2);
+    });
+
+    it('should call beforeSearch and afterSearch', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+        let searchQuery = '';
+        let searchCount = 0;
+
+        const hooked = withHooks(inner, {
+            beforeSearch: async (query) => { searchQuery = query; },
+            afterSearch: async (results) => { searchCount = results.length; },
+        });
+
+        await inner.set(makeNote('Quantum Physics', 'entanglement'));
+        await hooked.search('quantum');
+
+        expect(searchQuery).toBe('quantum');
+        expect(searchCount).toBe(1);
+    });
+
+    it('should propagate errors from hooks', async () => {
+        const { withHooks } = await import('../storage/withHooks.js');
+        const inner = new MemoryStorageAdapter();
+
+        const hooked = withHooks(inner, {
+            beforeSet: async () => { throw new Error('Hook failed'); },
+        });
+
+        await expect(hooked.set(makeNote('Error', 'test'))).rejects.toThrow('Hook failed');
     });
 });
