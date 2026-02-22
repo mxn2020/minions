@@ -27,15 +27,15 @@ export default function Footer() {
                         <ul className="space-y-2 text-sm text-muted">
                             <li><a href={getDocsUrl()} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Documentation</a></li>
                             <li><a href={getBlogUrl()} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Blog</a></li>
-                            <li><a href="https://github.com/mxn2020/minions/blob/main/spec/v0.1.md" className="hover:text-primary transition-colors">Specification</a></li>
-                            <li><a href="https://github.com/mxn2020/minions" className="hover:text-primary transition-colors">GitHub</a></li>
-                            <li><a href="https://www.npmjs.com/package/minions-sdk" className="hover:text-primary transition-colors">NPM</a></li>
+                            <li><a href="https://github.com/mxn2020/minions/blob/main/spec/v0.1.md" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Specification</a></li>
+                            <li><a href="https://github.com/mxn2020/minions" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">GitHub</a></li>
+                            <li><a href="https://www.npmjs.com/package/minions-sdk" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">NPM</a></li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="text-sm font-semibold text-primary mb-4">Legal</h3>
                         <ul className="space-y-2 text-sm text-muted">
-                            <li><a href="https://github.com/mxn2020/minions/blob/main/LICENSE" className="hover:text-primary transition-colors">License (MIT)</a></li>
+                            <li><a href="https://github.com/mxn2020/minions/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">License (MIT)</a></li>
                         </ul>
                     </div>
                 </div>

@@ -25,6 +25,7 @@ export default defineConfig({
       ],
       components: {
         Head: './src/components/CopyMarkdownButton.astro',
+        SocialIcons: './src/components/SocialIcons.astro',
       },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions' },

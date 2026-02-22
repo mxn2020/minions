@@ -1,22 +1,24 @@
 ---
 const navLinks = [
   { text: 'Blog', href: '/' },
-  { text: 'Docs', href: 'https://minions.help' },
-  { text: 'Playground', href: 'https://app.minions.wtf' },
-  { text: 'GitHub', href: 'https://github.com/mxn2020/minions' }
+  { text: 'Docs', href: 'https://minions.help', external: true },
+  { text: 'Playground', href: 'https://www.minions.wtf', external: true },
+  { text: 'GitHub', href: 'https://github.com/mxn2020/minions', external: true }
 ];
 ---
 
 <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background/80 border-b border-border">
   <div class="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-    <a href="https://minions.help" class="flex items-center space-x-2 no-underline group hover:opacity-80 transition-opacity">
+    <a href="/" class="flex items-center space-x-2 no-underline group hover:opacity-80 transition-opacity">
       <span class="font-mono text-xl font-bold text-primary group-hover:text-accent transition-colors">⚡ minions</span>
     </a>
     
     <nav class="hidden md:flex items-center space-x-6">
       {navLinks.map(link => (
         <a 
-          href={link.href} 
+          href={link.href}
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
           class="text-sm font-medium text-muted hover:text-primary transition-colors"
         >
           {link.text}
@@ -25,8 +27,7 @@ const navLinks = [
     </nav>
     
     <div class="flex items-center md:hidden">
-      <!-- Mobile menu button can be here, keeping simple for now -->
-      <a href="https://github.com/mxn2020/minions" class="text-sm font-medium text-muted hover:text-primary transition-colors">
+      <a href="https://github.com/mxn2020/minions" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-muted hover:text-primary transition-colors">
         GitHub
       </a>
     </div>

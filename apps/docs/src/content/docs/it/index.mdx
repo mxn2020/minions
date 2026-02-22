@@ -1,0 +1,49 @@
+---
+title: Minions
+description: Un sistema universale di oggetti strutturati per agenti IA — interrogabile, annidabile, evolvibile e leggibile dall'IA.
+template: splash
+hero:
+  tagline: I tuoi agenti IA hanno bisogno di una casa. Minions offre loro una struttura interrogabile, annidabile, evolvibile e leggibile dall'IA.
+  actions:
+    - text: Prova il Playground
+      link: https://www.minions.wtf
+      icon: rocket
+      variant: primary
+    - text: Avvio rapido
+      link: /it/guides/quickstart/
+      icon: right-arrow
+      variant: secondary
+    - text: Vedi su GitHub
+      link: https://github.com/mxn2020/minions
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Inizia qui
+
+<CardGrid>
+  <LinkCard title="Avvio rapido" description="Installa l'SDK e crea il tuo primo minion in meno di 5 minuti." href="/it/guides/quickstart/" />
+  <LinkCard title="Concetti chiave" description="Scopri Minions, MinionTypes, Relations e il modello a livelli." href="/it/guides/primitives/" />
+  <LinkCard title="Riferimento API" description="Riferimento completo per gli SDK TypeScript e Python." href="/it/reference/api-reference/" />
+  <LinkCard title="Adattatori di archiviazione" description="Persisti i minions in file JSON, memoria o backend personalizzati." href="/it/guides/storage/" />
+</CardGrid>
+
+---
+
+## Perché Minions?
+
+<CardGrid stagger>
+  <Card title="Tre primitive semplici" icon="pencil">
+    Tutto è costruito da **Minions** (istanze), **MinionTypes** (schemi) e **Relations** (collegamenti tipizzati).
+  </Card>
+  <Card title="Complessità progressiva" icon="add-document">
+    Inizia con un singolo agente piatto. Cresci verso strutture annidate con memoria, competenze e team — senza necessità di migrazione.
+  </Card>
+  <Card title="Validazione basata su schema" icon="approve-check">
+    Ogni campo viene validato rispetto al suo schema di tipo. Niente più incertezze sulla forma dei dati del tuo agente.
+  </Card>
+  <Card title="Agnostico rispetto al framework" icon="setting">
+    Funziona con qualsiasi backend di archiviazione, qualsiasi runtime, qualsiasi framework IA. TypeScript e Python puri, senza opinioni sull'infrastruttura.
+  </Card>
+</CardGrid>

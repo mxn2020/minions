@@ -1,0 +1,49 @@
+---
+title: Minions
+description: Ein universelles strukturiertes Objektsystem für KI-Agenten — abfragbar, verschachtelbar, erweiterbar und KI-lesbar.
+template: splash
+hero:
+  tagline: Ihre KI-Agenten brauchen ein Zuhause. Minions bietet ihnen eine strukturierte Umgebung, die abfragbar, verschachtelbar, erweiterbar und KI-lesbar ist.
+  actions:
+    - text: Playground ausprobieren
+      link: https://www.minions.wtf
+      icon: rocket
+      variant: primary
+    - text: Schnellstart
+      link: /de/guides/quickstart/
+      icon: right-arrow
+      variant: secondary
+    - text: Auf GitHub ansehen
+      link: https://github.com/mxn2020/minions
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Hier starten
+
+<CardGrid>
+  <LinkCard title="Schnellstart" description="Installieren Sie das SDK und erstellen Sie Ihren ersten Minion in unter 5 Minuten." href="/de/guides/quickstart/" />
+  <LinkCard title="Kernkonzepte" description="Lernen Sie Minions, MinionTypes, Relations und das Schichtmodell kennen." href="/de/guides/primitives/" />
+  <LinkCard title="API-Referenz" description="Vollständige Referenz für TypeScript und Python SDKs." href="/de/reference/api-reference/" />
+  <LinkCard title="Storage-Adapter" description="Persistieren Sie Minions in JSON-Dateien, Speicher oder benutzerdefinierten Backends." href="/de/guides/storage/" />
+</CardGrid>
+
+---
+
+## Warum Minions?
+
+<CardGrid stagger>
+  <Card title="Drei einfache Primitive" icon="pencil">
+    Alles basiert auf **Minions** (Instanzen), **MinionTypes** (Schemas) und **Relations** (typisierte Verknüpfungen).
+  </Card>
+  <Card title="Progressive Komplexität" icon="add-document">
+    Beginnen Sie mit einem einzelnen flachen Agenten. Wachsen Sie zu verschachtelten Strukturen mit Gedächtnis, Fähigkeiten und Teams — keine Migration nötig.
+  </Card>
+  <Card title="Schema-gesteuerte Validierung" icon="approve-check">
+    Jedes Feld wird gegen sein Typschema validiert. Kein Rätselraten mehr über die Form Ihrer Agentendaten.
+  </Card>
+  <Card title="Framework-agnostisch" icon="setting">
+    Funktioniert mit jedem Storage-Backend, jeder Laufzeitumgebung, jedem KI-Framework. Reines TypeScript & Python, keine Meinungen zur Infrastruktur.
+  </Card>
+</CardGrid>

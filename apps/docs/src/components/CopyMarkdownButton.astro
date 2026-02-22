@@ -35,9 +35,11 @@ import Default from '@astrojs/starlight/components/Head.astro';
 
 <script>
   function createCopyButton() {
-    // Skip on the introduction/index page
+    // Skip on landing / splash pages (root and locale roots like /de/, /es/, etc.)
     const path = window.location.pathname.replace(/\/$/, '') || '';
-    if (path === '' || path === '/') return;
+    if (path === '' || path === '/' || /^\/[a-z]{2}$/.test(path)) return;
+    // Also skip if the page uses the splash template
+    if (document.querySelector('[data-page-template="splash"]') || document.querySelector('.hero')) return;
 
     // Find the page title
     const titleEl = document.querySelector('.content-panel h1, article h1, main h1');
