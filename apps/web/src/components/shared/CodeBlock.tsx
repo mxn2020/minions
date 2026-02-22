@@ -4,6 +4,7 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 import { javascript } from '@codemirror/lang-javascript';
+import { EditorView } from '@codemirror/view';
 import { Copy, Check } from 'lucide-react';
 import { useClipboard } from '../../hooks/useClipboard';
 import { useMemo } from 'react';
@@ -19,16 +20,20 @@ export function CodeBlock({ code, language = 'json', title, className = '' }: Co
     const { copy, copied } = useClipboard();
 
     const extensions = useMemo(() => {
+        const exts = [EditorView.lineWrapping];
         switch (language) {
             case 'typescript':
             case 'javascript':
             case 'ts':
             case 'js':
-                return [javascript({ typescript: language === 'typescript' || language === 'ts' })];
+                exts.push(javascript({ typescript: language === 'typescript' || language === 'ts' }));
+                break;
             case 'json':
             default:
-                return [json()];
+                exts.push(json());
+                break;
         }
+        return exts;
     }, [language]);
 
     return (
