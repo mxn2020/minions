@@ -1,0 +1,61 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "release-type": "node",
+    "include-component-in-tag": false,
+    "include-v-in-tag": true,
+    "changelog-sections": [
+        {
+            "type": "feat",
+            "section": "Features"
+        },
+        {
+            "type": "fix",
+            "section": "Bug Fixes"
+        },
+        {
+            "type": "perf",
+            "section": "Performance"
+        },
+        {
+            "type": "refactor",
+            "section": "Refactoring"
+        },
+        {
+            "type": "docs",
+            "section": "Documentation"
+        },
+        {
+            "type": "chore",
+            "section": "Miscellaneous"
+        },
+        {
+            "type": "ci",
+            "section": "CI/CD",
+            "hidden": true
+        },
+        {
+            "type": "test",
+            "section": "Tests",
+            "hidden": true
+        },
+        {
+            "type": "style",
+            "section": "Styles",
+            "hidden": true
+        }
+    ],
+    "packages": {
+        ".": {
+            "changelog-path": "CHANGELOG.md",
+            "extra-files": [
+                "packages/core/package.json",
+                "packages/cli/package.json",
+                {
+                    "type": "toml",
+                    "path": "packages/python/pyproject.toml",
+                    "jsonpath": "$.project.version"
+                }
+            ]
+        }
+    }
+}
