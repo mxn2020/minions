@@ -9,6 +9,7 @@ export default defineConfig({
   site: siteUrl,
   integrations: [
     starlight({
+      customCss: ['./src/styles/custom.css'],
       title: 'Minions',
       description: 'A universal structured object system for AI agents',
       defaultLocale: 'root',
