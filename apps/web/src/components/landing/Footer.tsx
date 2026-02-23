@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Coffee } from 'lucide-react';
 
 export default function Footer() {
     const getDocsUrl = () => {
@@ -39,13 +40,24 @@ export default function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center bg-background gap-2">
+                <div className="mt-12 pt-8 border-t border-border flex flex-col items-center justify-between gap-4 bg-background md:flex-row">
                     <p className="text-xs text-muted">
                         © {new Date().getFullYear()} Minions Contributors. All rights reserved.
                     </p>
-                    <p className="text-xs text-muted">
-                        Created by <a href="https://the-mehdi.com" target="_blank" rel="noreferrer" className="text-primary hover:underline">Mehdi Nabhani</a>
-                    </p>
+                    <div className="flex items-center gap-4">
+                        <p className="text-xs text-muted">
+                            Created by <a href="https://the-mehdi.com" target="_blank" rel="noreferrer" className="text-primary hover:underline">Mehdi Nabhani</a>
+                        </p>
+                        <a
+                            href="https://buymeacoffee.com/mxn2020"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted transition-colors duration-200 hover:-translate-y-0.5 hover:text-primary"
+                            title="Buy Me a Coffee"
+                        >
+                            <Coffee size={18} />
+                        </a>
+                    </div>
                 </div>
             </div>
         </footer>
