@@ -1,0 +1,54 @@
+---
+title: "Introducing Minions Bundles: Domain-Driven Data"
+description: "A new way to map your business domains straight into the Minions AI ecosystem."
+pubDate: "Feb 24 2026"
+heroImage: "/blog-placeholder-4.jpg"
+---
+
+Today we are excited to announce a massive enhancement to the Minions ecosystem: **Minions Bundles**.
+
+If you've been using Minions, you are likely familiar with **Toolboxes** (like `minions-tasks` and `minions-prompts`) which provide active logic, agents, and skills to execute workflows. A key gap, however, has been how to structure the *data* that these agents operate on.
+
+## The Nouns of your Business
+
+Bundles are designed to be the "nouns" of your application. While a toolbox gives your agent the *skill* to "Update a Lead", a **Bundle** defines what a `Lead` actually is. 
+
+Bundles are comprised of:
+- **MinionTypes**: The definitive JSON Schemas specifying what shape of data your objects have.
+- **Relations**: Structured links between different types (e.g. A `Deal` belongs to a `Lead`).
+- **Views**: Configurations determining how these objects are visualized in user interfaces.
+
+## Scaffolding a Bundle Monorepo
+
+We've shipped a brand new CLI, `create-minions-bundle`, designed to make curating a bundle completely frictionless.
+
+You write a simple, declarative `TOML` file:
+
+\`\`\`toml
+[bundle]
+name = "minions-bundles-crm"
+description = "CRM pipeline bundle — leads, deals, interactions"
+
+[[types]]
+id = "bundle-crm-lead"
+name = "Lead"
+slug = "lead"
+icon = "👤"
+description = "A potential customer"
+
+[[types.fields]]
+name = "source"
+type = "string"
+\`\`\`
+
+And the scaffolder takes care of the rest! By running `npx create-minions-bundle crm.toml`, it generates a beautiful, heavily-configured `pnpm` workspace featuring:
+- A `packages/core` TypeScript library exposing the SDK for node environments.
+- A `packages/python` Poetry library exposing the exact same types for Python data science workflows.
+- A `packages/cli` command line utility to interact with your specific data models.
+- Three web applications (`apps/docs`, `apps/web`, `apps/blog`) to help you document and showcase your bundle internally or to the world.
+
+## The Future of AI Integration
+
+By separating the execution logic (Toolboxes) from the data models (Bundles), Minions enables incredible composability. You can install the official `minions-bundles-crm` to get standard CRM types, and pair it with your own proprietary Toolboxes to orchestrate sales workflows completely autonomously.
+
+Check out the [Bundles Guide](/guides/bundles) to learn more and scaffold your first bundle today!

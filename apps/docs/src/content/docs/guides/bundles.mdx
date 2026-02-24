@@ -1,0 +1,48 @@
+---
+title: Bundles vs Toolboxes
+description: Learn the difference between Minions toolboxes (for active agents) and bundles (for domain-specific data definitions).
+---
+
+The Minions ecosystem provides two ways to consume and extend the Minions platform: **Toolboxes** and **Bundles**. 
+
+Both are structured as full monorepos that provide a unified developer experience containing a core TypeScript library, a Python bindings package, a CLI, and interactive frontends (Docs, Web app, Blog).
+
+## What are Toolboxes?
+
+**Toolboxes** contain *active* components:
+- **Agents**: Configured AI identities ready to execute logic.
+- **Skills**: Functions, tools, and capabilities that agents can use to perform actions.
+
+Toolboxes are designed to give agents the "verbs" they need to interact with external systems (e.g., `minions-tasks` provides project management skills, `minions-prompts` provides prompt-generation skills).
+
+## What are Bundles?
+
+**Bundles** contain *passive* components (data definitions):
+- **MinionTypes**: JSON schemas and typescript interfaces defining the shape of your data.
+- **Relations**: Definitions of how different MinionTypes connect to one another.
+- **Views**: Configurations for how this data should be displayed in user interfaces.
+
+Bundles provide the "nouns" of your system. For example, `minions-bundles-crm` defines types like `Lead`, `Deal`, and `Interaction`. 
+
+### Defining a Bundle
+
+Bundles are generated automatically using the `create-minions-bundle` scaffolder. You simply define your domain models in a declarative `TOML` configuration file, and the scaffolder builds a robust, cross-language monorepo:
+
+\`\`\`toml
+[bundle]
+name = "minions-bundles-crm"
+description = "CRM pipeline bundle"
+
+[[types]]
+id = "bundle-crm-lead"
+name = "Lead"
+slug = "lead"
+icon = "👤"
+description = "A potential customer"
+
+[[types.fields]]
+name = "source"
+type = "string"
+\`\`\`
+
+Running the scaffolder (`create-minions-bundle crm.toml`) automatically generates the monorepo with cross-language SDKs, a CLI tool to manage your resources, and ready-to-deploy interactive documentation sites mapping straight to your domain models.
