@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2026-02-25
+
+### Added
+- **YamlFileStorageAdapter** — new disk-based storage adapter that persists minions as human-readable YAML files
+  - Same sharded directory layout as `JsonFileStorageAdapter` (`<rootDir>/<id[0:2]>/<id[2:4]>/<id>.yaml`)
+  - Built-in zero-dependency YAML serializer/parser — no external YAML library required
+  - Supports all Minion field types: strings (including multi-line), numbers, booleans, dates, arrays, nested objects, null
+  - Atomic writes via write-to-tmp-then-rename pattern
+  - In-memory index for O(1) lookups, built on startup
+  - Exported from `minions-sdk/node` alongside `JsonFileStorageAdapter`
+- **YAML adapter test suite** — 24 new tests: full shared contract suite + YAML-specific tests for persistence, sharded file layout, YAML format verification, roundtrip serialization, and auto-creation of root directories
+- **`toYaml` / `parseYaml` utility exports** — available from `minions-sdk/node` for standalone YAML conversion
+
 ## [0.2.3] - 2026-02-20
 
 ### Changed

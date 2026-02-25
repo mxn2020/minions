@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { MemoryStorageAdapter } from '../storage/MemoryStorageAdapter.js';
 import { JsonFileStorageAdapter } from '../storage/JsonFileStorageAdapter.js';
+import { YamlFileStorageAdapter } from '../storage/YamlFileStorageAdapter.js';
 import { createMinion } from '../lifecycle/index.js';
 import { noteType, agentType } from '../schemas/index.js';
 import type { StorageAdapter } from '../storage/StorageAdapter.js';
@@ -240,6 +241,81 @@ describe('JsonFileStorageAdapter', () => {
         const adapter = await JsonFileStorageAdapter.create(nested);
         const minion = makeNote('Deep', 'dir');
         await expect(adapter.set(minion)).resolves.toBeUndefined();
+    });
+});
+
+describe('YamlFileStorageAdapter', () => {
+    let tmpDir: string;
+
+    beforeEach(async () => {
+        tmpDir = await mkdtemp(join(tmpdir(), 'minions-yaml-test-'));
+    });
+
+    afterEach(async () => {
+        await rm(tmpDir, { recursive: true, force: true });
+    });
+
+    runAdapterTests('shared contract', () => YamlFileStorageAdapter.create(tmpDir));
+
+    it('should persist data across adapter instances (reload from disk)', async () => {
+        const adapter1 = await YamlFileStorageAdapter.create(tmpDir);
+        const minion = makeNote('Persistent YAML', 'should survive reload');
+        await adapter1.set(minion);
+
+        // Create a fresh adapter pointing at the same directory
+        const adapter2 = await YamlFileStorageAdapter.create(tmpDir);
+        const loaded = await adapter2.get(minion.id);
+        expect(loaded).toBeDefined();
+        expect(loaded!.id).toBe(minion.id);
+        expect(loaded!.title).toBe('Persistent YAML');
+    });
+
+    it('should write sharded YAML files', async () => {
+        const adapter = await YamlFileStorageAdapter.create(tmpDir);
+        const minion = makeNote('Sharded YAML', 'test');
+        await adapter.set(minion);
+
+        // Verify the file was written in a sharded path
+        const hex = minion.id.replace(/-/g, '');
+        const l1 = hex.slice(0, 2);
+        const l2 = hex.slice(2, 4);
+        const { access } = await import('node:fs/promises');
+        await expect(access(join(tmpDir, l1, l2, `${minion.id}.yaml`))).resolves.toBeUndefined();
+    });
+
+    it('should write valid YAML (not JSON) to disk', async () => {
+        const adapter = await YamlFileStorageAdapter.create(tmpDir);
+        const minion = makeNote('YAML Format', 'verify file format');
+        await adapter.set(minion);
+
+        const hex = minion.id.replace(/-/g, '');
+        const filePath = join(tmpDir, hex.slice(0, 2), hex.slice(2, 4), `${minion.id}.yaml`);
+        const content = await readFile(filePath, 'utf8');
+
+        // Should NOT be JSON
+        expect(() => JSON.parse(content)).toThrow();
+        // Should contain YAML-style key: value pairs
+        expect(content).toContain('title: YAML Format');
+        expect(content).toContain('id: ');
+    });
+
+    it('should create rootDir if it does not exist', async () => {
+        const nested = join(tmpDir, 'deep', 'path');
+        const adapter = await YamlFileStorageAdapter.create(nested);
+        const minion = makeNote('Deep YAML', 'dir');
+        await expect(adapter.set(minion)).resolves.toBeUndefined();
+    });
+
+    it('should roundtrip fields through YAML serialization', async () => {
+        const adapter1 = await YamlFileStorageAdapter.create(tmpDir);
+        const minion = makeNote('Roundtrip', 'content with special: chars');
+        await adapter1.set(minion);
+
+        const adapter2 = await YamlFileStorageAdapter.create(tmpDir);
+        const loaded = await adapter2.get(minion.id);
+        expect(loaded).toBeDefined();
+        expect(loaded!.title).toBe('Roundtrip');
+        expect(loaded!.fields?.content).toBe('content with special: chars');
     });
 });
 

@@ -1,0 +1,12 @@
+name: minions
+description: A universal structured object system for AI agents & systems
+tier: idea
+lane: minions
+priority: medium
+oss: true
+stack: [javascript]
+repo: "https://github.com/mxn2020/minions"
+deploy_url: null
+last_active: 2026-02-24
+tags: []
+notes: 

@@ -181,6 +181,7 @@ Current AI agent frameworks give you execution but no **structure**. Your agent'
 - **Validation** — fields are schema-driven and validated
 - **Relations** — typed links between any objects
 - **Evolution** — schemas change, existing data migrates cleanly
+- **Pluggable storage** — memory, JSON files, YAML files, or bring your own backend
 - **Middleware** — intercept and customize any operation with a composable pipeline
 - **Storage hooks** — add before/after logic around storage reads and writes
 - **Framework agnostic** — works with any runtime, any storage

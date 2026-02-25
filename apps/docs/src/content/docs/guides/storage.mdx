@@ -121,6 +121,48 @@ minions = Minions(storage=storage)
 > [!NOTE]
 > Use the async factory method `create()` — the constructor is private (TS) or should not be called directly. `create()` ensures the directory exists and the in-memory index is populated.
 
+### YamlFileStorageAdapter
+
+Persists each minion as a **human-readable YAML file** in the same sharded directory layout:
+
+```
+<rootDir>/<id[0:2]>/<id[2:4]>/<id>.yaml
+```
+
+Identical architecture to `JsonFileStorageAdapter` but uses YAML for maximum readability and git-friendliness. Includes a **built-in zero-dependency YAML serializer** — no external YAML library required.
+
+- ✅ Writes are **atomic** (write-to-tmp-then-rename)
+- ✅ Human-readable and git-friendly
+- ✅ Zero external dependencies for YAML handling
+- ⚠️ Server-side / CLI only (uses `node:fs`)
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+import { Minions } from 'minions-sdk';
+import { YamlFileStorageAdapter } from 'minions-sdk/node';
+
+const storage = await YamlFileStorageAdapter.create('./data/minions');
+const minions = new Minions({ storage });
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from minions import Minions, YamlFileStorageAdapter
+
+storage = await YamlFileStorageAdapter.create("./data/minions")
+minions = Minions(storage=storage)
+```
+
+</TabItem>
+</Tabs>
+
+> [!TIP]
+> The `toYaml()` and `parseYaml()` utilities are also exported from `minions-sdk/node` for standalone YAML conversion outside of the storage layer.
+
 ---
 
 ## Client Storage Methods
