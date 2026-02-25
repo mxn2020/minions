@@ -62,7 +62,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install build tools
-        run: pip install hatch
+        run: |
+          pip install --upgrade pip virtualenv
+          pip install hatch
 
       - name: Run tests
         working-directory: packages/python
