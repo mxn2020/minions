@@ -1,7 +1,0 @@
-# Web app (Vite + React) — Netlify config
-# Base directory in Netlify dashboard: apps/web
-
-[build]
-  command = "pnpm run build"
-  publish = "apps/web/dist"
-
