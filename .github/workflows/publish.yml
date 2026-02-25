@@ -62,9 +62,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install build tools
-        run: |
-          pip install --upgrade pip virtualenv
-          pip install hatch
+        run: pip install build
 
       - name: Run tests
         working-directory: packages/python
@@ -74,7 +72,7 @@ jobs:
 
       - name: Build package
         working-directory: packages/python
-        run: hatch build
+        run: python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
