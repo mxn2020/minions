@@ -1,6 +1,6 @@
 {
   "name": "minions-cli",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "CLI tool for the Minions structured object system",
   "license": "MIT",
   "repository": {
