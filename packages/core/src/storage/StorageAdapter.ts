@@ -10,6 +10,35 @@
 
 import type { Minion } from '../types/index.js';
 
+// ─── Options ─────────────────────────────────────────────────────────────────
+
+/**
+ * Options for file-based storage adapters.
+ *
+ * When `directoryMode` is enabled, each minion is stored as a directory
+ * containing a primary data file (`minion.json` / `minion.yaml`) plus
+ * optional attachment files:
+ *
+ * ```
+ *   <rootDir>/<shard>/<uuid>/
+ *     ├── minion.yaml      ← the Minion object
+ *     └── ...              ← attachments
+ * ```
+ *
+ * When disabled (the default), the original flat layout is used:
+ *
+ * ```
+ *   <rootDir>/<shard>/<uuid>.yaml
+ * ```
+ */
+export interface FileStorageOptions {
+  /**
+   * Use directory-per-minion layout, enabling attachment file storage.
+   * Default: `false` (flat file).
+   */
+  directoryMode?: boolean;
+}
+
 // ─── Filter / Query ──────────────────────────────────────────────────────────
 
 /** Options for filtering the result set when listing minions. */
@@ -73,4 +102,35 @@ export interface StorageAdapter {
    * Returns minions where `searchableText` contains every token in the query.
    */
   search(query: string): Promise<Minion[]>;
+
+  // ── Attachment file operations (optional) ──────────────────────────────
+  //
+  // These methods are available when the adapter supports directory mode.
+  // Adapters that don't support attachments simply omit them.
+
+  /**
+   * Write an attachment file for a minion.
+   * The file is stored alongside the minion's primary data file.
+   * Overwrites if the file already exists.
+   */
+  putFile?(id: string, filename: string, data: Uint8Array): Promise<void>;
+
+  /**
+   * Read an attachment file for a minion.
+   * Returns `undefined` if the file or minion does not exist.
+   */
+  getFile?(id: string, filename: string): Promise<Uint8Array | undefined>;
+
+  /**
+   * Delete an attachment file for a minion.
+   * Resolves silently if the file does not exist.
+   */
+  deleteFile?(id: string, filename: string): Promise<void>;
+
+  /**
+   * List all attachment filenames for a minion.
+   * Returns an empty array if the minion has no attachments or
+   * the adapter is not in directory mode.
+   */
+  listFiles?(id: string): Promise<string[]>;
 }

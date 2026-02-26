@@ -518,3 +518,244 @@ describe('withHooks', () => {
         await expect(hooked.set(makeNote('Error', 'test'))).rejects.toThrow('Hook failed');
     });
 });
+
+// ─── Directory Mode Tests ───────────────────────────────────────────────────
+
+describe('JsonFileStorageAdapter (directory mode)', () => {
+    let tmpDir: string;
+    let adapter: JsonFileStorageAdapter;
+
+    beforeEach(async () => {
+        tmpDir = await mkdtemp(join(tmpdir(), 'json-dir-'));
+        adapter = await JsonFileStorageAdapter.create(tmpDir, { directoryMode: true });
+    });
+
+    afterEach(async () => {
+        await rm(tmpDir, { recursive: true });
+    });
+
+    it('should store minion in directory layout', async () => {
+        const minion = makeNote('DirTest', 'content');
+        await adapter.set(minion);
+        const result = await adapter.get(minion.id);
+        expect(result).toBeDefined();
+        expect(result!.title).toBe('DirTest');
+
+        // Verify the file is in <id>/minion.json
+        const hex = minion.id.replace(/-/g, '');
+        const expectedPath = join(tmpDir, hex.slice(0, 2), hex.slice(2, 4), minion.id, 'minion.json');
+        const raw = await readFile(expectedPath, 'utf8');
+        expect(JSON.parse(raw).title).toBe('DirTest');
+    });
+
+    it('should delete entire directory on delete', async () => {
+        const minion = makeNote('DeleteDir', 'test');
+        await adapter.set(minion);
+        await adapter.putFile(minion.id, 'extra.txt', new TextEncoder().encode('hello'));
+        await adapter.delete(minion.id);
+        expect(await adapter.get(minion.id)).toBeUndefined();
+        expect(await adapter.listFiles(minion.id)).toEqual([]);
+    });
+});
+
+describe('YamlFileStorageAdapter (directory mode)', () => {
+    let tmpDir: string;
+    let adapter: YamlFileStorageAdapter;
+
+    beforeEach(async () => {
+        tmpDir = await mkdtemp(join(tmpdir(), 'yaml-dir-'));
+        adapter = await YamlFileStorageAdapter.create(tmpDir, { directoryMode: true });
+    });
+
+    afterEach(async () => {
+        await rm(tmpDir, { recursive: true });
+    });
+
+    it('should store minion in directory layout', async () => {
+        const minion = makeNote('YamlDirTest', 'content');
+        await adapter.set(minion);
+        const result = await adapter.get(minion.id);
+        expect(result).toBeDefined();
+        expect(result!.title).toBe('YamlDirTest');
+
+        // Verify the file is in <id>/minion.yaml
+        const hex = minion.id.replace(/-/g, '');
+        const expectedPath = join(tmpDir, hex.slice(0, 2), hex.slice(2, 4), minion.id, 'minion.yaml');
+        const raw = await readFile(expectedPath, 'utf8');
+        expect(raw).toContain('YamlDirTest');
+    });
+
+    it('should delete entire directory on delete', async () => {
+        const minion = makeNote('DeleteDir', 'test');
+        await adapter.set(minion);
+        await adapter.putFile(minion.id, 'notes.md', new TextEncoder().encode('# Notes'));
+        await adapter.delete(minion.id);
+        expect(await adapter.get(minion.id)).toBeUndefined();
+        expect(await adapter.listFiles(minion.id)).toEqual([]);
+    });
+});
+
+// ─── File Operations Tests ──────────────────────────────────────────────────
+
+function runFileOperationTests(
+    name: string,
+    factory: () => Promise<StorageAdapter & {
+        putFile: (id: string, filename: string, data: Uint8Array) => Promise<void>;
+        getFile: (id: string, filename: string) => Promise<Uint8Array | undefined>;
+        deleteFile: (id: string, filename: string) => Promise<void>;
+        listFiles: (id: string) => Promise<string[]>;
+    }>,
+) {
+    describe(`${name} — file operations`, () => {
+        let adapter: Awaited<ReturnType<typeof factory>>;
+
+        beforeEach(async () => {
+            adapter = await factory();
+        });
+
+        it('should store and retrieve a file', async () => {
+            const minion = makeNote('WithFile', 'content');
+            await adapter.set(minion);
+
+            const data = new TextEncoder().encode('Hello, World!');
+            await adapter.putFile(minion.id, 'greeting.txt', data);
+
+            const result = await adapter.getFile(minion.id, 'greeting.txt');
+            expect(result).toBeDefined();
+            expect(new TextDecoder().decode(result!)).toBe('Hello, World!');
+        });
+
+        it('should list attachment files (excluding primary)', async () => {
+            const minion = makeNote('MultiFiles', 'content');
+            await adapter.set(minion);
+
+            await adapter.putFile(minion.id, 'readme.md', new TextEncoder().encode('# Readme'));
+            await adapter.putFile(minion.id, 'data.csv', new TextEncoder().encode('a,b,c'));
+
+            const files = await adapter.listFiles(minion.id);
+            expect(files.sort()).toEqual(['data.csv', 'readme.md']);
+        });
+
+        it('should delete a specific file', async () => {
+            const minion = makeNote('DeleteFile', 'content');
+            await adapter.set(minion);
+
+            await adapter.putFile(minion.id, 'temp.txt', new TextEncoder().encode('temp'));
+            await adapter.deleteFile(minion.id, 'temp.txt');
+
+            const result = await adapter.getFile(minion.id, 'temp.txt');
+            expect(result).toBeUndefined();
+        });
+
+        it('should return undefined for non-existent file', async () => {
+            const minion = makeNote('NoFile', 'content');
+            await adapter.set(minion);
+
+            const result = await adapter.getFile(minion.id, 'missing.txt');
+            expect(result).toBeUndefined();
+        });
+
+        it('should return empty array for minion with no files', async () => {
+            const files = await adapter.listFiles('non-existent-id');
+            expect(files).toEqual([]);
+        });
+
+        it('should overwrite existing file on putFile', async () => {
+            const minion = makeNote('Overwrite', 'content');
+            await adapter.set(minion);
+
+            await adapter.putFile(minion.id, 'file.txt', new TextEncoder().encode('v1'));
+            await adapter.putFile(minion.id, 'file.txt', new TextEncoder().encode('v2'));
+
+            const result = await adapter.getFile(minion.id, 'file.txt');
+            expect(new TextDecoder().decode(result!)).toBe('v2');
+        });
+
+        it('should handle binary data', async () => {
+            const minion = makeNote('Binary', 'content');
+            await adapter.set(minion);
+
+            const binary = new Uint8Array([0x00, 0xFF, 0x42, 0x89, 0xAB]);
+            await adapter.putFile(minion.id, 'binary.bin', binary);
+
+            const result = await adapter.getFile(minion.id, 'binary.bin');
+            expect(result).toBeDefined();
+            expect(Array.from(result!)).toEqual([0x00, 0xFF, 0x42, 0x89, 0xAB]);
+        });
+    });
+}
+
+// Run file operation tests for all adapters
+let fileTmpDirs: string[] = [];
+
+afterEach(async () => {
+    for (const d of fileTmpDirs) {
+        await rm(d, { recursive: true }).catch(() => { });
+    }
+    fileTmpDirs = [];
+});
+
+runFileOperationTests('MemoryStorageAdapter', async () => {
+    return new MemoryStorageAdapter();
+});
+
+runFileOperationTests('JsonFileStorageAdapter (directory mode)', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'json-fileops-'));
+    fileTmpDirs.push(dir);
+    return JsonFileStorageAdapter.create(dir, { directoryMode: true });
+});
+
+runFileOperationTests('YamlFileStorageAdapter (directory mode)', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'yaml-fileops-'));
+    fileTmpDirs.push(dir);
+    return YamlFileStorageAdapter.create(dir, { directoryMode: true });
+});
+
+// ─── Mixed Mode Reading Tests ───────────────────────────────────────────────
+
+describe('Mixed mode reading', () => {
+    let tmpDir: string;
+
+    beforeEach(async () => {
+        tmpDir = await mkdtemp(join(tmpdir(), 'mixed-'));
+    });
+
+    afterEach(async () => {
+        await rm(tmpDir, { recursive: true });
+    });
+
+    it('JSON adapter should read both flat and directory entries', async () => {
+        // Write a minion in flat mode
+        const flatAdapter = await JsonFileStorageAdapter.create(tmpDir);
+        const flatMinion = makeNote('FlatEntry', 'flat content');
+        await flatAdapter.set(flatMinion);
+
+        // Write another in directory mode
+        const dirAdapter = await JsonFileStorageAdapter.create(tmpDir, { directoryMode: true });
+        const dirMinion = makeNote('DirEntry', 'dir content');
+        await dirAdapter.set(dirMinion);
+
+        // A new adapter (either mode) should find both
+        const reader = await JsonFileStorageAdapter.create(tmpDir);
+        const all = await reader.list();
+        const titles = all.map(m => m.title).sort();
+        expect(titles).toContain('FlatEntry');
+        expect(titles).toContain('DirEntry');
+    });
+
+    it('YAML adapter should read both flat and directory entries', async () => {
+        const flatAdapter = await YamlFileStorageAdapter.create(tmpDir);
+        const flatMinion = makeNote('FlatYaml', 'flat');
+        await flatAdapter.set(flatMinion);
+
+        const dirAdapter = await YamlFileStorageAdapter.create(tmpDir, { directoryMode: true });
+        const dirMinion = makeNote('DirYaml', 'dir');
+        await dirAdapter.set(dirMinion);
+
+        const reader = await YamlFileStorageAdapter.create(tmpDir);
+        const all = await reader.list();
+        const titles = all.map(m => m.title).sort();
+        expect(titles).toContain('FlatYaml');
+        expect(titles).toContain('DirYaml');
+    });
+});

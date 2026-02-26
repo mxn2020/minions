@@ -6,11 +6,15 @@
  * Identical architecture to {@link JsonFileStorageAdapter} but persists
  * minions as human-readable YAML files instead of JSON.
  *
- * Directory layout
- * ────────────────
- * Each minion is stored as a YAML file:
- *
+ * Directory layout (flat mode — default)
+ * ──────────────────────────────────────
  *   <rootDir>/<id[0..1]>/<id[2..3]>/<id>.yaml
+ *
+ * Directory layout (directory mode — opt-in)
+ * ──────────────────────────────────────────
+ *   <rootDir>/<id[0..1]>/<id[2..3]>/<id>/
+ *     ├── minion.yaml     ← the Minion object
+ *     └── ...             ← attachment files
  *
  * The two-level shard prefix keeps individual directories small even when
  * millions of minions are stored, while still being human-readable and
@@ -21,6 +25,9 @@
  * An in-memory `Map<id, Minion>` is populated at construction time by
  * scanning the root directory.  All subsequent reads hit the index first
  * (O(1)), falling back to disk only when the entry is missing.
+ *
+ * The adapter can **read both flat and directory layouts** regardless of
+ * its configured mode, so migration is seamless.
  *
  * Writes use a write-to-tmp-then-rename pattern to avoid partial writes
  * corrupting data if the process crashes mid-write.
@@ -35,10 +42,10 @@
  * server-side / CLI usage.
  */
 
-import { mkdir, readFile, writeFile, unlink, readdir, rename } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, unlink, readdir, rename, rm, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Minion } from '../types/index.js';
-import type { StorageAdapter, StorageFilter } from './StorageAdapter.js';
+import type { StorageAdapter, StorageFilter, FileStorageOptions } from './StorageAdapter.js';
 import { applyFilter } from './filterUtils.js';
 
 // ─── YAML Serializer (zero dependencies) ─────────────────────────────────────
@@ -294,10 +301,23 @@ function shardPath(rootDir: string, id: string): string {
     return join(rootDir, hex.slice(0, 2), hex.slice(2, 4));
 }
 
-/** Full path to the YAML file for a given minion id. */
-function yamlFilePath(rootDir: string, id: string): string {
+/** Flat-mode path: `shard/<id>.yaml` */
+function flatFilePath(rootDir: string, id: string): string {
     return join(shardPath(rootDir, id), `${id}.yaml`);
 }
+
+/** Directory-mode directory: `shard/<id>/` */
+function minionDir(rootDir: string, id: string): string {
+    return join(shardPath(rootDir, id), id);
+}
+
+/** Directory-mode primary file: `shard/<id>/minion.yaml` */
+function dirFilePath(rootDir: string, id: string): string {
+    return join(minionDir(rootDir, id), 'minion.yaml');
+}
+
+/** Name of the primary data file inside a minion directory. */
+const PRIMARY_FILE = 'minion.yaml';
 
 // ─── Adapter ─────────────────────────────────────────────────────────────────
 
@@ -309,26 +329,45 @@ function yamlFilePath(rootDir: string, id: string): string {
  * import { Minions } from 'minions-sdk';
  * import { YamlFileStorageAdapter } from 'minions-sdk/node';
  *
+ * // Flat mode (default)
  * const storage = await YamlFileStorageAdapter.create('./data/minions');
- * const minions = new Minions({ storage });
  *
+ * // Directory mode (enables attachments)
+ * const storage = await YamlFileStorageAdapter.create('./data/minions', { directoryMode: true });
+ *
+ * const minions = new Minions({ storage });
  * const wrapper = await minions.create('note', { title: 'Hello', fields: { content: 'World' } });
  * await minions.save(wrapper.data);
+ *
+ * // Attach a file (directory mode only)
+ * await storage.putFile(wrapper.data.id, 'readme.md', Buffer.from('# Hello'));
  * ```
  */
 export class YamlFileStorageAdapter implements StorageAdapter {
     private index: Map<string, Minion> = new Map();
+    private readonly directoryMode: boolean;
 
-    private constructor(private readonly rootDir: string) { }
+    private constructor(
+        private readonly rootDir: string,
+        options?: FileStorageOptions,
+    ) {
+        this.directoryMode = options?.directoryMode ?? false;
+    }
 
     /**
      * Create (or open) a `YamlFileStorageAdapter` rooted at `rootDir`.
      *
      * The directory is created if it does not yet exist.  All existing YAML
      * files underneath it are loaded into the in-memory index.
+     *
+     * @param options - Optional. Set `directoryMode: true` to enable
+     *   directory-per-minion layout with attachment file support.
      */
-    static async create(rootDir: string): Promise<YamlFileStorageAdapter> {
-        const adapter = new YamlFileStorageAdapter(rootDir);
+    static async create(
+        rootDir: string,
+        options?: FileStorageOptions,
+    ): Promise<YamlFileStorageAdapter> {
+        const adapter = new YamlFileStorageAdapter(rootDir, options);
         await adapter.init();
         return adapter;
     }
@@ -343,6 +382,9 @@ export class YamlFileStorageAdapter implements StorageAdapter {
     /**
      * Walk the sharded directory tree and populate the in-memory index.
      * Missing or malformed files are silently skipped.
+     *
+     * Detects both flat files (`<id>.yaml`) and directory entries
+     * (`<id>/minion.yaml`) so the adapter can read data written in either mode.
      */
     private async buildIndex(): Promise<void> {
         let shardDirs: string[];
@@ -363,17 +405,40 @@ export class YamlFileStorageAdapter implements StorageAdapter {
 
             for (const l2 of l2Dirs) {
                 const l2Path = join(l1Path, l2);
-                let files: string[];
+                let entries: string[];
                 try {
-                    files = await readdir(l2Path);
+                    entries = await readdir(l2Path);
                 } catch {
                     continue;
                 }
 
-                for (const file of files) {
-                    if (!file.endsWith('.yaml') && !file.endsWith('.yml')) continue;
+                for (const entry of entries) {
+                    const entryPath = join(l2Path, entry);
+
+                    // Case 1: flat file  →  <id>.yaml / <id>.yml
+                    if (entry.endsWith('.yaml') || entry.endsWith('.yml')) {
+                        try {
+                            const raw = await readFile(entryPath, 'utf8');
+                            const parsed = parseYaml(raw);
+                            const minion = parsed as unknown as Minion;
+                            if (minion.id) {
+                                this.index.set(minion.id, minion);
+                            }
+                        } catch (err) {
+                            const code = (err as NodeJS.ErrnoException).code;
+                            if (code === 'ENOENT' || code === 'EACCES' || code === 'EISDIR') continue;
+                            if (err instanceof Error && err.message.includes('parse')) continue;
+                            throw err;
+                        }
+                        continue;
+                    }
+
+                    // Case 2: directory  →  <id>/minion.yaml
                     try {
-                        const raw = await readFile(join(l2Path, file), 'utf8');
+                        const info = await stat(entryPath);
+                        if (!info.isDirectory()) continue;
+                        const primaryPath = join(entryPath, PRIMARY_FILE);
+                        const raw = await readFile(primaryPath, 'utf8');
                         const parsed = parseYaml(raw);
                         const minion = parsed as unknown as Minion;
                         if (minion.id) {
@@ -381,8 +446,7 @@ export class YamlFileStorageAdapter implements StorageAdapter {
                         }
                     } catch (err) {
                         const code = (err as NodeJS.ErrnoException).code;
-                        if (code === 'ENOENT' || code === 'EACCES' || code === 'EISDIR') continue;
-                        // Skip parse errors silently
+                        if (code === 'ENOENT' || code === 'EACCES' || code === 'ENOTDIR') continue;
                         if (err instanceof Error && err.message.includes('parse')) continue;
                         throw err;
                     }
@@ -398,23 +462,44 @@ export class YamlFileStorageAdapter implements StorageAdapter {
     }
 
     async set(minion: Minion): Promise<void> {
-        const dir = shardPath(this.rootDir, minion.id);
-        await mkdir(dir, { recursive: true });
-
-        // Atomic write: write to a temp file, then rename into place
-        const target = yamlFilePath(this.rootDir, minion.id);
-        const tmp = `${target}.tmp`;
         const yamlContent = toYaml(minion as unknown as Record<string, unknown>);
-        await writeFile(tmp, yamlContent + '\n', 'utf8');
-        await rename(tmp, target);
+
+        if (this.directoryMode) {
+            const dir = minionDir(this.rootDir, minion.id);
+            await mkdir(dir, { recursive: true });
+            const target = dirFilePath(this.rootDir, minion.id);
+            const tmp = `${target}.tmp`;
+            await writeFile(tmp, yamlContent + '\n', 'utf8');
+            await rename(tmp, target);
+        } else {
+            const dir = shardPath(this.rootDir, minion.id);
+            await mkdir(dir, { recursive: true });
+            const target = flatFilePath(this.rootDir, minion.id);
+            const tmp = `${target}.tmp`;
+            await writeFile(tmp, yamlContent + '\n', 'utf8');
+            await rename(tmp, target);
+        }
 
         this.index.set(minion.id, minion);
     }
 
     async delete(id: string): Promise<void> {
         this.index.delete(id);
+
+        // Try directory-mode path first, then flat-mode path
+        const dir = minionDir(this.rootDir, id);
         try {
-            await unlink(yamlFilePath(this.rootDir, id));
+            const info = await stat(dir);
+            if (info.isDirectory()) {
+                await rm(dir, { recursive: true, force: true });
+                return;
+            }
+        } catch {
+            // Not a directory, try flat
+        }
+
+        try {
+            await unlink(flatFilePath(this.rootDir, id));
         } catch {
             // Silently ignore missing files
         }
@@ -438,6 +523,57 @@ export class YamlFileStorageAdapter implements StorageAdapter {
             const text = (m.searchableText ?? m.title).toLowerCase();
             return tokens.every((token) => text.includes(token));
         });
+    }
+
+    // ── Attachment file operations ───────────────────────────────────────────
+
+    async putFile(id: string, filename: string, data: Uint8Array): Promise<void> {
+        const dir = minionDir(this.rootDir, id);
+        await mkdir(dir, { recursive: true });
+
+        // If a flat file exists and we're adding attachments, migrate it
+        if (!this.directoryMode) {
+            const flatPath = flatFilePath(this.rootDir, id);
+            try {
+                const raw = await readFile(flatPath, 'utf8');
+                await writeFile(join(dir, PRIMARY_FILE), raw, 'utf8');
+                await unlink(flatPath);
+            } catch {
+                // No flat file to migrate
+            }
+        }
+
+        const filePath = join(dir, filename);
+        await writeFile(filePath, data);
+    }
+
+    async getFile(id: string, filename: string): Promise<Uint8Array | undefined> {
+        const fp = join(minionDir(this.rootDir, id), filename);
+        try {
+            const buf = await readFile(fp);
+            return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+        } catch {
+            return undefined;
+        }
+    }
+
+    async deleteFile(id: string, filename: string): Promise<void> {
+        const filePath = join(minionDir(this.rootDir, id), filename);
+        try {
+            await unlink(filePath);
+        } catch {
+            // Silently ignore missing files
+        }
+    }
+
+    async listFiles(id: string): Promise<string[]> {
+        const dir = minionDir(this.rootDir, id);
+        try {
+            const entries = await readdir(dir);
+            return entries.filter((e) => e !== PRIMARY_FILE);
+        } catch {
+            return [];
+        }
     }
 }
 

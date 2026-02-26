@@ -1,6 +1,6 @@
 {
   "name": "minions-sdk",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Framework-agnostic core library for the Minions structured object system",
   "license": "MIT",
   "repository": {

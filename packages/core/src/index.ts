@@ -80,7 +80,7 @@ export type { MinionMiddleware, MinionContext, MinionOperation, NextFn } from '.
 export { runMiddleware } from './client/index.js';
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
-export type { StorageAdapter, StorageFilter, StorageHooks } from './storage/index.js';
+export type { StorageAdapter, StorageFilter, StorageHooks, FileStorageOptions } from './storage/index.js';
 export { MemoryStorageAdapter, applyFilter, withHooks } from './storage/index.js';
 
 /**
