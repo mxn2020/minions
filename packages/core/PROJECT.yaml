@@ -1,0 +1,9 @@
+name: minions-sdk
+project_scope: child
+child_type: sdk
+parent_project: minions
+description: Framework-agnostic core library for the Minions structured object system
+priority: high
+deploy_url: null
+tags: [sdk, minions, npm, package, library]
+category: minion-toolbox

@@ -1,0 +1,9 @@
+name: minions-docs
+project_scope: child
+child_type: docs
+parent_project: minions
+description: Standard compliance definition for minions-docs
+priority: high
+deploy_url: null
+tags: [docs, minions, minion, toolbox, ecosystem]
+category: minion-toolbox

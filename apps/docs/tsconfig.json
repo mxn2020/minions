@@ -1,6 +1,7 @@
 {
-  "extends": "astro/tsconfigs/strict",
+  "extends": "astrostrict",
   "compilerOptions": {
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true
   }
 }

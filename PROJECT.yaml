@@ -1,5 +1,7 @@
 name: minions
-description: A universal structured object system for AI agents & systems
+project_scope: main
+project_type: monorepo
+description: "A universal structured object system for AI agents & systems"
 tier: idea
 lane: minions
 priority: medium
@@ -8,5 +10,7 @@ stack: [javascript]
 repo: "https://github.com/mxn2020/minions"
 deploy_url: null
 last_active: 2026-02-24
-tags: []
-notes: 
+tags: [minions, minion, toolbox, ecosystem]
+notes: null
+id: 3b2cca6f-a9cb-4c8f-8be7-ba2d795b0e65
+category: minion-toolbox

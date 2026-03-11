@@ -32,7 +32,10 @@ export type MinionOperation =
     | 'load'
     | 'remove'
     | 'list'
-    | 'search';
+    | 'search'
+    | 'listIndex'
+    | 'searchIndex'
+    | 'count';
 
 /**
  * Context object passed through the middleware pipeline.

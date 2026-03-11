@@ -48,3 +48,7 @@ PROMPT.md
 PROMPTS.md
 .claude
 .netlify
+
+# Added by AI Agent
+.env.*
+!.env.example

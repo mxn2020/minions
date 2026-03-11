@@ -38,9 +38,36 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
-    "docs": "typedoc"
+    "docs": "typedoc",
+    "dev": "echo 'no dev'",
+    "stop": "pkill -f 'vite.*core' || true"
+  },
+  "peerDependencies": {
+    "@neondatabase/serverless": ">=0.9.0",
+    "@supabase/supabase-js": ">=2.0.0",
+    "convex": ">=1.0.0",
+    "ioredis": ">=5.0.0",
+    "sql.js": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "convex": {
+      "optional": true
+    },
+    "@supabase/supabase-js": {
+      "optional": true
+    },
+    "sql.js": {
+      "optional": true
+    },
+    "ioredis": {
+      "optional": true
+    },
+    "@neondatabase/serverless": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "sql.js": "^1.14.1",
     "typedoc": "^0.28.17",
     "typedoc-plugin-markdown": "^4.10.0",
     "typescript": "^5.9.3",

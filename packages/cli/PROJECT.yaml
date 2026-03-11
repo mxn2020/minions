@@ -1,0 +1,9 @@
+name: minions-cli
+project_scope: child
+child_type: cli
+parent_project: minions
+description: CLI tool for the Minions structured object system
+priority: high
+deploy_url: null
+tags: [cli, minions, npm, package, library]
+category: minion-toolbox

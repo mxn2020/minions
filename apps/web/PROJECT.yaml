@@ -1,0 +1,9 @@
+name: minions-web
+project_scope: child
+child_type: web-app
+parent_project: minions
+description: Standard compliance definition for minions-web
+priority: high
+deploy_url: null
+tags: [web, minions, minion, toolbox, ecosystem]
+category: minion-toolbox

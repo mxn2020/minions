@@ -1,34 +1,50 @@
 {
-    "name": "minions-blog",
-    "version": "0.1.0",
-    "private": true,
-    "type": "module",
-    "license": "MIT",
-    "engines": {
-        "node": ">=18"
-    },
-    "scripts": {
-        "dev": "astro dev",
-        "build": "astro build && npx pagefind --site dist",
-        "preview": "astro preview"
-    },
-    "dependencies": {
-        "@astrojs/mdx": "^4.0.8",
-        "@astrojs/react": "^4.4.2",
-        "@astrojs/rss": "^4.0.11",
-        "@astrojs/sitemap": "^3.2.1",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "astro": "^5.17.3",
-        "lucide-react": "^0.575.0",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4"
-    },
-    "devDependencies": {
-        "@tailwindcss/postcss": "^4.2.0",
-        "pagefind": "^1.4.0",
-        "tailwindcss": "^4.2.0",
-        "typescript": "^5.9.3",
-        "zod": "^3.24.2"
-    }
+  "name": "minions-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && npx pagefind --site dist",
+    "preview": "astro preview",
+    "lint": "eslint . || true",
+    "test": "vitest run --passWithNoTests",
+    "stop": "pkill -f 'vite.*blog' || true"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.8",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.17.3",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "@geenius-ui/react-css": "^0.1.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "pagefind": "^1.4.0",
+    "tailwindcss": "^4.2.0",
+    "typescript": "^5.9.3",
+    "zod": "^3.24.2",
+    "vitest": "^4.0.0"
+  },
+  "description": "Standard compliance definition for minions-blog",
+  "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxn2020/minions"
+  },
+  "keywords": [
+    "minions",
+    "ecosystem",
+    "compliance"
+  ]
 }

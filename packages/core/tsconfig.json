@@ -4,10 +4,11 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "strict": true
   },
   "include": [
-    "src/**/*"
+    "src*"
   ],
   "exclude": [
     "node_modules",

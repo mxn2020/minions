@@ -81,7 +81,19 @@ export { runMiddleware } from './client/index.js';
 
 // ─── Storage ─────────────────────────────────────────────────────────────────
 export type { StorageAdapter, StorageFilter, StorageHooks, FileStorageOptions } from './storage/index.js';
-export { MemoryStorageAdapter, applyFilter, withHooks } from './storage/index.js';
+export type { ConvexClientLike, ConvexStorageOptions } from './storage/index.js';
+export type { SupabaseClientLike, SupabaseStorageOptions } from './storage/index.js';
+export { MemoryStorageAdapter, ConvexStorageAdapter, SupabaseStorageAdapter, applyFilter, withHooks } from './storage/index.js';
+
+// ─── Index Layer ─────────────────────────────────────────────────────────────
+export type { IndexAdapter, IndexEntry } from './index-layer/index.js';
+export { toIndexEntry, MemoryIndexAdapter } from './index-layer/index.js';
+export { RedisIndexAdapter } from './index-layer/index.js';
+export type { RedisClientLike, RedisIndexOptions } from './index-layer/index.js';
+export { NeonIndexAdapter } from './index-layer/index.js';
+export type { NeonClientLike, NeonIndexOptions } from './index-layer/index.js';
+export { SupabaseIndexAdapter } from './index-layer/index.js';
+export type { SupabaseIndexOptions } from './index-layer/index.js';
 
 /**
  * Current specification version — auto-generated from package.json

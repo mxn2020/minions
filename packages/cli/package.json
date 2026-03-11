@@ -28,13 +28,17 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "dev": "echo 'no dev'",
+    "test": "vitest run --passWithNoTests",
+    "stop": "pkill -f 'vite.*cli' || true"
   },
   "dependencies": {
     "minions-sdk": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
   },
   "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)"
 }

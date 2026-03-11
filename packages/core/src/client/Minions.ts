@@ -3,14 +3,30 @@ import { RelationGraph } from '../relations/index.js';
 import { createMinion, updateMinion, softDelete, hardDelete, restoreMinion } from '../lifecycle/index.js';
 import type { Minion, MinionType, CreateMinionInput, UpdateMinionInput, RelationType } from '../types/index.js';
 import type { StorageAdapter, StorageFilter } from '../storage/index.js';
+import type { IndexAdapter, IndexEntry } from '../index-layer/IndexAdapter.js';
+import { toIndexEntry } from '../index-layer/IndexAdapter.js';
 import type { MinionPlugin } from './Plugin.js';
 import type { MinionMiddleware, MinionContext, MinionOperation } from './Middleware.js';
 import { runMiddleware } from './Middleware.js';
 
 export interface MinionsConfig {
     plugins?: MinionPlugin[];
-    /** Optional storage adapter for persisting minions. */
+    /** Optional storage adapter for persisting minions (data layer). */
     storage?: StorageAdapter;
+    /**
+     * Optional index adapter for fast listing, filtering, and search.
+     *
+     * When configured alongside a `storage` adapter, the SDK keeps both
+     * layers in sync automatically: `save()` writes to both, `remove()`
+     * deletes from both.  The new `listIndex()` and `searchIndex()`
+     * methods query the index layer for lightweight `IndexEntry[]` results,
+     * which contain enough data for table/grid/list views without loading
+     * full minion objects.
+     *
+     * When not configured, the SDK falls back to single-layer mode,
+     * preserving full backwards compatibility.
+     */
+    index?: IndexAdapter;
     /**
      * Optional middleware pipeline.
      * Middleware functions are executed in order for every client operation.
@@ -83,6 +99,7 @@ export class Minions {
     public registry: TypeRegistry;
     public graph: RelationGraph;
     public storage?: StorageAdapter;
+    public index?: IndexAdapter;
 
     private _middleware: readonly MinionMiddleware[];
 
@@ -93,6 +110,7 @@ export class Minions {
         this.registry = new TypeRegistry();
         this.graph = new RelationGraph();
         this.storage = config?.storage;
+        this.index = config?.index;
         this._middleware = config?.middleware ?? [];
 
         if (config?.plugins) {
@@ -221,6 +239,9 @@ export class Minions {
     async save(minion: Minion): Promise<void> {
         await this._run('save', { minion }, async () => {
             await this.requireStorage().set(minion);
+            if (this.index) {
+                await this.index.upsert(toIndexEntry(minion));
+            }
         });
     }
 
@@ -246,6 +267,9 @@ export class Minions {
         await this._run('remove', { minion }, async () => {
             hardDelete(minion, this.graph);
             await this.requireStorage().delete(minion.id);
+            if (this.index) {
+                await this.index.remove(minion.id);
+            }
         });
     }
 
@@ -271,5 +295,65 @@ export class Minions {
         });
 
         return ctx.result as Minion[];
+    }
+
+    // ── Index layer helpers ────────────────────────────────────────────────
+
+    /**
+     * List minion index entries from the index layer.
+     *
+     * Returns lightweight {@link IndexEntry} objects containing enough data
+     * for table / grid / list views without loading full minion objects.
+     *
+     * When no index adapter is configured, falls back to the storage
+     * adapter's `list()` and converts the results to `IndexEntry[]`.
+     */
+    async listIndex(filter?: StorageFilter): Promise<IndexEntry[]> {
+        const ctx = await this._run('listIndex', { filter }, async (c) => {
+            if (this.index) {
+                c.result = await this.index.list(filter);
+            } else {
+                const minions = await this.requireStorage().list(filter);
+                c.result = minions.map(toIndexEntry);
+            }
+        });
+
+        return ctx.result as IndexEntry[];
+    }
+
+    /**
+     * Full-text search across the index layer.
+     *
+     * Returns lightweight {@link IndexEntry} objects.  When no index adapter
+     * is configured, falls back to the storage adapter's `search()`.
+     */
+    async searchIndex(query: string): Promise<IndexEntry[]> {
+        const ctx = await this._run('searchIndex', { query }, async (c) => {
+            if (this.index) {
+                c.result = await this.index.search(query);
+            } else {
+                const minions = await this.requireStorage().search(query);
+                c.result = minions.map(toIndexEntry);
+            }
+        });
+
+        return ctx.result as IndexEntry[];
+    }
+
+    /**
+     * Count minions matching a filter using the index layer.
+     * Falls back to `list().length` when no index is configured.
+     */
+    async countMinions(filter?: StorageFilter): Promise<number> {
+        const ctx = await this._run('count', { filter }, async (c) => {
+            if (this.index) {
+                c.result = await this.index.count(filter);
+            } else {
+                const minions = await this.requireStorage().list(filter);
+                c.result = minions.length;
+            }
+        });
+
+        return ctx.result as number;
     }
 }

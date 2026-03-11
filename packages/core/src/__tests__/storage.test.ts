@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import { MemoryStorageAdapter } from '../storage/MemoryStorageAdapter.js';
 import { JsonFileStorageAdapter } from '../storage/JsonFileStorageAdapter.js';
 import { YamlFileStorageAdapter } from '../storage/YamlFileStorageAdapter.js';
+import { ConvexStorageAdapter } from '../storage/ConvexStorageAdapter.js';
+import { SupabaseStorageAdapter } from '../storage/SupabaseStorageAdapter.js';
 import { createMinion } from '../lifecycle/index.js';
 import { noteType, agentType } from '../schemas/index.js';
 import type { StorageAdapter } from '../storage/StorageAdapter.js';
@@ -757,5 +759,281 @@ describe('Mixed mode reading', () => {
         const titles = all.map(m => m.title).sort();
         expect(titles).toContain('FlatYaml');
         expect(titles).toContain('DirYaml');
+    });
+});
+
+// ─── ConvexStorageAdapter (mock-based) ──────────────────────────────────────
+
+describe('ConvexStorageAdapter', () => {
+
+    function makeMockConvexClient(store: Map<string, string>) {
+        const fns = {
+            get: Symbol('get'),
+            list: Symbol('list'),
+            set: Symbol('set'),
+            delete: Symbol('delete'),
+        };
+
+        const client = {
+            query: async (ref: unknown, args?: Record<string, unknown>) => {
+                if (ref === fns.get) {
+                    const data = store.get(args!.id as string);
+                    return data ? { data } : null;
+                }
+                if (ref === fns.list) {
+                    return Array.from(store.values()).map((d) => ({ data: d }));
+                }
+                return null;
+            },
+            mutation: async (ref: unknown, args?: Record<string, unknown>) => {
+                if (ref === fns.set) {
+                    store.set(args!.id as string, args!.data as string);
+                }
+                if (ref === fns.delete) {
+                    store.delete(args!.id as string);
+                }
+            },
+        };
+
+        return { client, fns };
+    }
+
+    it('should store and retrieve a minion', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        const minion = makeNote('Convex Hello', 'world');
+        await adapter.set(minion);
+        const result = await adapter.get(minion.id);
+        expect(result).toBeDefined();
+        expect(result!.title).toBe('Convex Hello');
+    });
+
+    it('should return undefined for unknown id', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        expect(await adapter.get('non-existent')).toBeUndefined();
+    });
+
+    it('should delete a minion', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        const minion = makeNote('Delete me', 'bye');
+        await adapter.set(minion);
+        await adapter.delete(minion.id);
+        expect(await adapter.get(minion.id)).toBeUndefined();
+    });
+
+    it('should list non-deleted minions', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        const m1 = makeNote('A', 'a');
+        const m2 = { ...makeNote('B', 'b'), deletedAt: new Date().toISOString() };
+        await adapter.set(m1);
+        await adapter.set(m2);
+
+        const list = await adapter.list();
+        expect(list.map((m) => m.id)).toContain(m1.id);
+        expect(list.map((m) => m.id)).not.toContain(m2.id);
+    });
+
+    it('should search by keyword', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        const m1 = makeNote('Quantum Physics', 'entanglement');
+        const m2 = makeNote('Shopping', 'milk');
+        await adapter.set(m1);
+        await adapter.set(m2);
+
+        const results = await adapter.search('quantum');
+        expect(results.map((r) => r.id)).toContain(m1.id);
+        expect(results.map((r) => r.id)).not.toContain(m2.id);
+    });
+
+    it('should filter by minionTypeId', async () => {
+        const store = new Map<string, string>();
+        const { client, fns } = makeMockConvexClient(store);
+        const adapter = new ConvexStorageAdapter(client, { functions: fns as any });
+
+        const note = makeNote('Note', 'content');
+        const agent = createMinion({ title: 'Agent', fields: { role: 'tester', model: 'gpt-4' } }, agentType).minion;
+        await adapter.set(note);
+        await adapter.set(agent);
+
+        const notes = await adapter.list({ minionTypeId: noteType.id });
+        expect(notes.every((m) => m.minionTypeId === noteType.id)).toBe(true);
+    });
+});
+
+// ─── SupabaseStorageAdapter (mock-based) ────────────────────────────────────
+
+describe('SupabaseStorageAdapter', () => {
+
+    function makeMockSupabaseClient(store: Map<string, any>) {
+        function makeFilterBuilder(pendingResult: () => { data: any; error: any }): any {
+            const builder: any = {
+                eq(_col: string, val: unknown) {
+                    // For select().eq('id', val) — narrow to single item
+                    builder._eqId = val;
+                    return builder;
+                },
+                is() { return builder; },
+                neq() { return builder; },
+                not() { return builder; },
+                contains() { return builder; },
+                textSearch() {
+                    // Simulate textSearch failing so we fall back to client-side
+                    builder._textSearchFailed = true;
+                    return builder;
+                },
+                ilike() { return builder; },
+                order() { return builder; },
+                range() { return builder; },
+                limit() { return builder; },
+                single() {
+                    builder._single = true;
+                    return builder;
+                },
+                maybeSingle() {
+                    builder._single = true;
+                    return builder;
+                },
+                then(onfulfilled: any) {
+                    const result = pendingResult();
+                    // If eq('id', val) was called, filter down
+                    if (builder._eqId !== undefined) {
+                        const row = store.get(builder._eqId as string);
+                        if (builder._single) {
+                            return Promise.resolve({ data: row ? { data: row } : null, error: null }).then(onfulfilled);
+                        }
+                        const filtered = row ? [{ data: row }] : [];
+                        return Promise.resolve({ data: filtered, error: null }).then(onfulfilled);
+                    }
+                    if (builder._textSearchFailed) {
+                        return Promise.resolve({ data: null, error: { message: 'no fts' } }).then(onfulfilled);
+                    }
+                    return Promise.resolve(result).then(onfulfilled);
+                },
+            };
+            return builder;
+        }
+
+        const client = {
+            from(_table: string) {
+                return {
+                    select(_columns?: string) {
+                        return makeFilterBuilder(() => {
+                            const rows = Array.from(store.values()).map((m: any) => ({ data: m }));
+                            return { data: rows, error: null };
+                        });
+                    },
+                    upsert(values: any) {
+                        store.set(values.id, values.data);
+                        return makeFilterBuilder(() => ({ data: null, error: null }));
+                    },
+                    delete() {
+                        return {
+                            eq(_col: string, val: unknown) {
+                                store.delete(val as string);
+                                return {
+                                    then(onfulfilled: any) {
+                                        return Promise.resolve({ data: null, error: null }).then(onfulfilled);
+                                    },
+                                };
+                            },
+                        };
+                    },
+                    insert() {
+                        return makeFilterBuilder(() => ({ data: null, error: null }));
+                    },
+                    update() {
+                        return makeFilterBuilder(() => ({ data: null, error: null }));
+                    },
+                };
+            },
+        };
+
+        return client;
+    }
+
+    it('should store and retrieve a minion', async () => {
+        const store = new Map<string, any>();
+        const client = makeMockSupabaseClient(store);
+        const adapter = new SupabaseStorageAdapter(client as any);
+
+        const minion = makeNote('Supabase Hello', 'world');
+        await adapter.set(minion);
+        const result = await adapter.get(minion.id);
+        expect(result).toBeDefined();
+        expect(result!.title).toBe('Supabase Hello');
+    });
+
+    it('should return undefined for unknown id', async () => {
+        const store = new Map<string, any>();
+        const client = makeMockSupabaseClient(store);
+        const adapter = new SupabaseStorageAdapter(client as any);
+
+        expect(await adapter.get('non-existent')).toBeUndefined();
+    });
+
+    it('should delete a minion', async () => {
+        const store = new Map<string, any>();
+        const client = makeMockSupabaseClient(store);
+        const adapter = new SupabaseStorageAdapter(client as any);
+
+        const minion = makeNote('Delete me', 'bye');
+        await adapter.set(minion);
+        await adapter.delete(minion.id);
+        expect(await adapter.get(minion.id)).toBeUndefined();
+    });
+
+    it('should list minions', async () => {
+        const store = new Map<string, any>();
+        const client = makeMockSupabaseClient(store);
+        const adapter = new SupabaseStorageAdapter(client as any);
+
+        const m1 = makeNote('Alpha', 'a');
+        const m2 = makeNote('Beta', 'b');
+        await adapter.set(m1);
+        await adapter.set(m2);
+
+        const list = await adapter.list();
+        expect(list.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('should search with client-side fallback', async () => {
+        const store = new Map<string, any>();
+        const client = makeMockSupabaseClient(store);
+        const adapter = new SupabaseStorageAdapter(client as any);
+
+        const m1 = makeNote('Quantum Computing', 'qubits');
+        const m2 = makeNote('Cooking', 'pasta');
+        await adapter.set(m1);
+        await adapter.set(m2);
+
+        const results = await adapter.search('quantum');
+        expect(results.map((r) => r.id)).toContain(m1.id);
+        expect(results.map((r) => r.id)).not.toContain(m2.id);
+    });
+
+    it('should return the DDL from createTableSQL', () => {
+        const sql = SupabaseStorageAdapter.createTableSQL();
+        expect(sql).toContain('CREATE TABLE IF NOT EXISTS minions');
+        expect(sql).toContain('data');
+        expect(sql).toContain('JSONB');
+    });
+
+    it('should accept a custom table name', () => {
+        const sql = SupabaseStorageAdapter.createTableSQL('custom_minions');
+        expect(sql).toContain('CREATE TABLE IF NOT EXISTS custom_minions');
     });
 });

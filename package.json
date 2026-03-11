@@ -11,10 +11,24 @@
   "scripts": {
     "build": "pnpm --filter minions-sdk run build && pnpm --filter minions-cli run build && pnpm --filter minions-docs run build && pnpm --filter minions-blog run build && pnpm --filter minions-web run build",
     "test": "pnpm --filter minions-sdk run test",
-    "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint"
+    "lint": "pnpm --filter minions-sdk run build && pnpm --filter minions-sdk run lint && pnpm --filter minions-cli run lint",
+    "dev": "echo 'no dev'",
+    "stop": "pkill -f 'vite.*minions' || true"
   },
   "engines": {
     "node": ">=20"
   },
-  "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)"
+  "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxn2020/minions"
+  },
+  "keywords": [
+    "minions",
+    "ecosystem",
+    "compliance"
+  ],
+  "devDependencies": {
+    "vitest": "^4.0.0"
+  }
 }
