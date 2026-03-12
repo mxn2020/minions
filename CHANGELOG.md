@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/mxn2020/minions/compare/v0.2.4...v0.3.0) (2026-03-12)
+
+
+### Features
+
+* multi-file storage adapter (directory mode + attachments) ([ce847b3](https://github.com/mxn2020/minions/commit/ce847b3f99c1096817b9900e6ba4700fd50c5fd8))
+
+
+### Miscellaneous
+
+* add .project/ identity files (PROJECT, ACCOUNT, ROADMAP, IDEAS) ([847e54b](https://github.com/mxn2020/minions/commit/847e54b8acea94cb7e8162dfef13c7d6c799d0cc))
+* compliance audit - fix category, tags, and add configs ([363a5f3](https://github.com/mxn2020/minions/commit/363a5f31de47fc45a77e596f1a1ef47743d572e8))
+* remove Netlify config, switched to Vercel ([77e4280](https://github.com/mxn2020/minions/commit/77e4280fcb9d92a0ac7dec3833ee49d6ceabf63b))
+
 ## [0.2.4] - 2026-02-25
 
 ### Added
@@ -97,4 +111,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added npm metadata (`repository`, `homepage`, `keywords`) to `minions-sdk` and `minions-cli`
 - Added `engines: { node: ">=18" }` to `minions-cli` and `minions-web`
 - Added 404 page to `minions-web`
-
