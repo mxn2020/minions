@@ -83,7 +83,8 @@ export { runMiddleware } from './client/index.js';
 export type { StorageAdapter, StorageFilter, StorageHooks, FileStorageOptions } from './storage/index.js';
 export type { ConvexClientLike, ConvexStorageOptions } from './storage/index.js';
 export type { SupabaseClientLike, SupabaseStorageOptions } from './storage/index.js';
-export { MemoryStorageAdapter, ConvexStorageAdapter, SupabaseStorageAdapter, applyFilter, withHooks } from './storage/index.js';
+export type { KVNamespaceLike, CloudflareKVStorageOptions } from './storage/index.js';
+export { MemoryStorageAdapter, ConvexStorageAdapter, SupabaseStorageAdapter, CloudflareKVStorageAdapter, applyFilter, withHooks } from './storage/index.js';
 
 // ─── Index Layer ─────────────────────────────────────────────────────────────
 export type { IndexAdapter, IndexEntry } from './index-layer/index.js';

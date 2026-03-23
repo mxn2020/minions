@@ -1,6 +1,6 @@
 {
   "name": "minions-sdk",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Framework-agnostic core library for the Minions structured object system",
   "license": "MIT",
   "repository": {
@@ -47,7 +47,8 @@
     "@supabase/supabase-js": ">=2.0.0",
     "convex": ">=1.0.0",
     "ioredis": ">=5.0.0",
-    "sql.js": ">=1.0.0"
+    "sql.js": ">=1.0.0",
+    "@cloudflare/workers-types": ">=4.0.0"
   },
   "peerDependenciesMeta": {
     "convex": {
@@ -63,6 +64,9 @@
       "optional": true
     },
     "@neondatabase/serverless": {
+      "optional": true
+    },
+    "@cloudflare/workers-types": {
       "optional": true
     }
   },
